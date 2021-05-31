@@ -1,28 +1,23 @@
 const {info} = require("./logger");
-const {sendText} = require("./commands");
-const {runCommands} = require("./serialConnector");
+const commands = require("./commands");
 const {isFreeToSend} = require("./serialConnector");
-const {getMessages} = require("./commands");
-const {setConfig} = require("./commands");
-const {setAddress} = require("./commands");
-const {resetModule} = require("./commands");
+const {runCommands} = require("./serialConnector");
 
 setInterval(async () => {
     await runCommands();
 }, 50);
 
 (async ()=>{
-    resetModule();
-    setAddress(16);
-    setConfig(); // uses default config
-    getMessages();
+    commands.lora.resetModule();
+    commands.lora.setAddress(16);
+    commands.lora.setConfig(); // uses default config
+    commands.lora.getMessages();
     info('Start sending Hello');
     setInterval(() => {
         if (isFreeToSend()){
-            sendText('hello');
+            commands.lora.sendText('hello');
         }
     }, 5000);
-
 })();
 
 
