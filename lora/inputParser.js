@@ -1,20 +1,7 @@
-const routingTable = {};
-
-// define default values for routing
-const defaults = {
-    isBlacklisted: false
-};
-
-const addToRoutingTable = (source, parameter = {}) => {
-    if (!routingTable[source]) {
-        routingTable[source] = {
-            ...defaults,
-            ...parameter
-        }
-    }
-}
+import {addToRoutingTable} from "./routing";
+import {log} from "./logger";
 
 export const recievedData = ([source, size, bytes]) => {
     addToRoutingTable(source);
-    console.log(size, bytes);
+    log(size, bytes);
 }

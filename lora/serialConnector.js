@@ -1,4 +1,5 @@
 import {recievedData} from "./InputParser";
+import {info, log} from "./logger";
 
 const SerialPort = require('serialport')
 
@@ -21,12 +22,11 @@ export const runCommands = () => {
         return;
     }
     if (okCounter < commandBufferCounter ) {
-        console.log('Waiting for finishing previous commands');
         return ;
     }
 
     const command = commandBuffer.splice(0,1);
-    console.log('Execute ' + command);
+    info('Execute - ' + command);
 
     return new Promise((resolve, reject) => {
         commandBufferCounter++;
@@ -40,15 +40,13 @@ export const runCommands = () => {
 }
 
 parser.on('data', (...data) => {
-    console.log(data)
     if (data[0] === 'AT,OK') {
         okCounter++;
-        console.log('Got response from module', okCounter, commandBufferCounter);
         return;
     }
     if (data[0] === 'AT,SENDED') {
         okCounter++;
-        console.log('Sended Message successfully', okCounter, commandBufferCounter);
+        log('Sended Message successfully', okCounter, commandBufferCounter);
         return;
     }
     /*
@@ -59,10 +57,10 @@ parser.on('data', (...data) => {
     if (command === 'LR') {
         recievedData(datablock)
     }
-    console.info('GOT DATA');
+    info('INPUT DATA:', data);
 })
 
 // Open errors will be emitted as an error event
 port.on('error', function (err) {
-    console.log('Error: ', err.message)
+    log('Error: ', err.message)
 });

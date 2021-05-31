@@ -1,6 +1,7 @@
+const {info} = require("./logger");
+const {sendText} = require("./commands");
 const {runCommands} = require("./serialConnector");
 const {isFreeToSend} = require("./serialConnector");
-const {sendHello} = require("./commands");
 const {getMessages} = require("./commands");
 const {setConfig} = require("./commands");
 const {setAddress} = require("./commands");
@@ -11,13 +12,14 @@ setInterval(async () => {
 }, 50);
 
 (async ()=>{
-    await resetModule();
-    await setAddress(16);
-    await setConfig(); // uses default config
-    await getMessages();
-    setInterval(async () => {
+    resetModule();
+    setAddress(16);
+    setConfig(); // uses default config
+    getMessages();
+    info('Start sending Hello');
+    setInterval(() => {
         if (isFreeToSend()){
-            await sendHello();
+            sendText('hello');
         }
     }, 5000);
 
