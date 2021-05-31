@@ -8,12 +8,12 @@ const {resetModule} = require("./commands");
 
 setInterval(async () => {
     await runCommands();
-}, 10);
+}, 50);
 
 (async ()=>{
     await resetModule();
     await setAddress(16);
-    await setConfig();
+    await setConfig(); // uses default config
     await getMessages();
     setInterval(async () => {
         if (isFreeToSend()){

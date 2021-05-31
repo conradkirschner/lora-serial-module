@@ -1,3 +1,5 @@
+import {recievedData} from "./InputParser";
+
 const SerialPort = require('serialport')
 
 const port = new SerialPort('/dev/ttyS0', {
@@ -13,15 +15,17 @@ export const isFreeToSend = () => {
 export const sendCommand = (command) => {
     commandBuffer.push(command);
 }
+
 export const runCommands = () => {
     if (commandBuffer.length === 0) {
         return;
     }
-    const command = commandBuffer.splice(0,1);
     if (okCounter < commandBufferCounter ) {
         console.log('Waiting for finishing previous commands');
         return ;
     }
+
+    const command = commandBuffer.splice(0,1);
     console.log('Execute ' + command);
 
     return new Promise((resolve, reject) => {
@@ -34,6 +38,7 @@ export const runCommands = () => {
         });
     });
 }
+
 parser.on('data', (...data) => {
     console.log(data)
     if (data[0] === 'AT,OK') {
@@ -47,9 +52,13 @@ parser.on('data', (...data) => {
         return;
     }
     /*
-        Empfange von 0001 - 5 bytes => hello
-        [ 'LR,0001,05,hello' ]
-     */
+     Empfange von 0001 - 5 bytes => hello
+     [ 'LR,0001,05,hello' ]
+    */
+    const [command, ...datablock] = data.split(',');
+    if (command === 'LR') {
+        recievedData(datablock)
+    }
     console.info('GOT DATA');
 })
 
