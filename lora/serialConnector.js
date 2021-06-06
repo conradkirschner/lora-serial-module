@@ -49,6 +49,7 @@ parser.on('data', (...data) => {
         return;
     }
     if (data[0] === 'Vendor:Himalaya') {
+        okCounter++;
         return;
     }
     if (data[0] === 'AT,ERR:ERR:ERR:CPU_BUSY' || data[0] === 'CPU_BUSY') {
