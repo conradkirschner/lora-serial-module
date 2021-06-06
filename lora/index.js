@@ -1,5 +1,5 @@
 const {info} = require("./logger");
-const commands = require("./commands");
+import commands from './commands'
 const {isFreeToSend} = require("./serialConnector");
 const {runCommands} = require("./serialConnector");
 
