@@ -42,7 +42,9 @@ export const runCommands = () => {
 }
 
 parser.on('data', (...data) => {
+    log('Got Input:',data, okCounter, commandBufferCounter);
     if (data[0] === 'MODULE:HIMO-01M(V0.4)'){
+        okCounter++;
         return;
     }
     if (data[0] === 'Vendor:Himalaya'){
