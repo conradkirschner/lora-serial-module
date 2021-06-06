@@ -54,6 +54,7 @@ parser.on('data', (...data) => {
     if (data[0] === 'AT,ERR:ERR:ERR:CPU_BUSY') {
         // restore last command
         commandBuffer = [...[currentCommand],...commandBuffer];
+        okCounter++;
         return;
     }
     if (data[0] === 'AT,OK') {
