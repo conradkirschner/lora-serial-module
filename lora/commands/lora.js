@@ -25,9 +25,7 @@ export const setConfig =  (
     payloadLength = 8,
     preambleLength = 4
 ) => {
-    sendCommand(`AT+CFG=${rfFrequency},${power},${bandwidth},${spreadingFactor},${errorCoding},
-${crc},${implicitHeader},${rxSingleOn},${frequencyHopOn},${hopPeriod},${rxPacketTimeout},
-${payloadLength},${preambleLength}`)
+    sendCommand(`AT+CFG=${rfFrequency},${power},${bandwidth},${spreadingFactor},${errorCoding},${crc},${implicitHeader},${rxSingleOn},${frequencyHopOn},${hopPeriod},${rxPacketTimeout},${payloadLength},${preambleLength}`)
 }
 
 export const getMessages =  () => {
