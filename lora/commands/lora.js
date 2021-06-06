@@ -36,4 +36,5 @@ export const getMessages =  () => {
 export const sendText = (text) => {
     sendCommand(`AT+SEND=${text.length}`)
     sendCommand(text)
+    console.log('send text', text);
 }
