@@ -22,19 +22,21 @@ export const runCommands = () => {
         console.log('No Commands in Buffer');
         return;
     }
+    setTimeout(()=> {
+        currentCommand = commandBuffer.splice(0,1);
+        info('Execute - ' + currentCommand);
 
-    currentCommand = commandBuffer.splice(0,1);
-    info('Execute - ' + currentCommand);
-
-    return new Promise((resolve, reject) => {
-        commandBufferCounter++;
-        port.write(currentCommand + `\r\n`, function (err) {
-            if (err) {
-                reject();
-            }
-            resolve();
+        return new Promise((resolve, reject) => {
+            commandBufferCounter++;
+            port.write(currentCommand + `\r\n`, function (err) {
+                if (err) {
+                    reject();
+                }
+                resolve();
+            });
         });
-    });
+    }, 1000);
+
 }
 
 parser.on('data', (...data) => {
@@ -54,15 +56,15 @@ parser.on('data', (...data) => {
         return;
     }
     if (data[0] === 'AT,SENDED') {
-        log('Sended Message successfully', okCounter, commandBufferCounter);
+        log('Sended Message successfully', commandBufferCounter);
         return;
     }
     /*
      Empfange von 0001 - 5 bytes => hello
      [ 'LR,0001,05,hello' ]
     */
-    console.log(data);
-    const [command, ...datablock] = data.split(',');
+    console.log(data[0]);
+    const [command, ...datablock] = data[0].split(',');
     if (command === 'LR') {
         recievedData(datablock)
     }
