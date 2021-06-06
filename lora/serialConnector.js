@@ -11,7 +11,7 @@ const commandBuffer = [];
 let okCounter = 0;
 let commandBufferCounter = -1;
 export const isFreeToSend = () => {
-    return (commandBuffer.length === 0);
+    return (okCounter < commandBufferCounter);
 }
 export const sendCommand = (command) => {
     commandBuffer.push(command);
