@@ -9,7 +9,7 @@ const port = new SerialPort('/dev/ttyS0', {
 const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 const commandBuffer = [];
 let okCounter = 0;
-let commandBufferCounter = -1;
+let commandBufferCounter = 0;
 export const isFreeToSend = () => {
     return (okCounter < commandBufferCounter);
 }
@@ -22,7 +22,7 @@ export const runCommands = () => {
         console.log('No Commands in Buffer');
         return;
     }
-    if (okCounter < commandBufferCounter ) {
+    if (okCounter <= commandBufferCounter ) {
         console.log('Waiting for command execution');
         return ;
     }
