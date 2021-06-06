@@ -9,7 +9,6 @@ const port = new SerialPort('/dev/ttyS0', {
 const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 let commandBuffer = [];
 let currentCommand = null;
-let okCounter = 0;
 let commandBufferCounter = 0;
 export const isFreeToSend = () => {
     return (okCounter < commandBufferCounter);
@@ -22,10 +21,6 @@ export const runCommands = () => {
     if (commandBuffer.length === 0) {
         console.log('No Commands in Buffer');
         return;
-    }
-    if (  okCounter !== commandBufferCounter) {
-        console.log('Waiting for command execution', okCounter, commandBufferCounter);
-        return ;
     }
 
     currentCommand = commandBuffer.splice(0,1);
@@ -43,27 +38,22 @@ export const runCommands = () => {
 }
 
 parser.on('data', (...data) => {
-    log('Got Input:',data, okCounter, commandBufferCounter);
+    log('Got Input:',data, commandBufferCounter);
     if (data[0] === 'MODULE:HIMO-01M(V0.4)'){
-        okCounter++;
         return;
     }
     if (data[0] === 'Vendor:Himalaya') {
-        okCounter++;
         return;
     }
     if (data[0] === 'AT,ERR:ERR:ERR:CPU_BUSY' || data[0] === 'CPU_BUSY') {
         // restore last command
         commandBuffer = [...[currentCommand],...commandBuffer];
-        okCounter++;
         return;
     }
     if (data[0] === 'AT,OK') {
-        okCounter++;
         return;
     }
     if (data[0] === 'AT,SENDED') {
-        okCounter++;
         log('Sended Message successfully', okCounter, commandBufferCounter);
         return;
     }
