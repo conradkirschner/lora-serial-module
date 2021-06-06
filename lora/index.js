@@ -14,6 +14,7 @@ setInterval(async () => {
     commands.lora.getMessages();
     info('Start sending Hello');
     setInterval(() => {
+        console.log('can send', isFreeToSend())
         if (isFreeToSend()){
             commands.lora.sendText('hello');
         }
