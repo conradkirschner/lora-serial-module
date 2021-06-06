@@ -11,6 +11,7 @@ let commandBuffer = [];
 let currentCommand = null;
 let commandBufferCounter = 0;
 export const isFreeToSend = () => {
+    console.log(commandBuffer);
     return (commandBuffer.length === 0);
 }
 export const sendCommand = (command) => {
