@@ -53,6 +53,7 @@ parser.on('data', (...data) => {
      Empfange von 0001 - 5 bytes => hello
      [ 'LR,0001,05,hello' ]
     */
+    console.log(data);
     const [command, ...datablock] = data.split(',');
     if (command === 'LR') {
         recievedData(datablock)
