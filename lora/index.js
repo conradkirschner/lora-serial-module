@@ -8,8 +8,8 @@ setInterval(async () => {
 }, 3000);
 
 (async ()=>{
-    commands.lora.resetModule();
-    commands.lora.setAddress(16);
+    // commands.lora.resetModule();
+    // commands.lora.setAddress(16);
     commands.lora.setConfig(); // uses default config
     commands.lora.getMessages();
     info('Start sending Hello');
