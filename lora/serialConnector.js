@@ -40,6 +40,9 @@ export const runCommands = () => {
 }
 
 parser.on('data', (...data) => {
+    if (data === 'MODULE:HIMO-01M(V0.4)'){
+        return;
+    }
     if (data[0] === 'AT,OK') {
         okCounter++;
         return;
