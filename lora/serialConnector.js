@@ -1,4 +1,4 @@
-import {recievedData} from "./InputParser";
+import {recievedData} from "./inputParser";
 import {info, log} from "./logger";
 
 const SerialPort = require('serialport')
