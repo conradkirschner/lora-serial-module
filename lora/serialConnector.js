@@ -23,7 +23,7 @@ export const runCommands = () => {
         return;
     }
     if (  commandBufferCounter <= okCounter ) {
-        console.log('Waiting for command execution');
+        console.log('Waiting for command execution', okCounter, commandBufferCounter);
         return ;
     }
 
