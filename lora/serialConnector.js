@@ -9,7 +9,7 @@ const port = new SerialPort('/dev/ttyS0', {
 const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 const commandBuffer = [];
 let okCounter = 0;
-let commandBufferCounter = 0;
+let commandBufferCounter = -1;
 export const isFreeToSend = () => {
     return (commandBuffer.length === 0);
 }
