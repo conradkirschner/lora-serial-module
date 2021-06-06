@@ -7,7 +7,8 @@ const port = new SerialPort('/dev/ttyS0', {
     baudRate: 115200
 });
 const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
-const commandBuffer = [];
+let commandBuffer = [];
+let currentCommand = null;
 let okCounter = 0;
 let commandBufferCounter = 0;
 export const isFreeToSend = () => {
@@ -27,12 +28,12 @@ export const runCommands = () => {
         return ;
     }
 
-    const command = commandBuffer.splice(0,1);
-    info('Execute - ' + command);
+    currentCommand = commandBuffer.splice(0,1);
+    info('Execute - ' + currentCommand);
 
     return new Promise((resolve, reject) => {
         commandBufferCounter++;
-        port.write(command + `\r\n`, function (err) {
+        port.write(currentCommand + `\r\n`, function (err) {
             if (err) {
                 reject();
             }
@@ -47,7 +48,12 @@ parser.on('data', (...data) => {
         okCounter++;
         return;
     }
-    if (data[0] === 'Vendor:Himalaya'){
+    if (data[0] === 'Vendor:Himalaya') {
+        return;
+    }
+    if (data[0] === 'AT,ERR:ERR:ERR:CPU_BUSY') {
+        // restore last command
+        commandBuffer = [...[currentCommand],...commandBuffer];
         return;
     }
     if (data[0] === 'AT,OK') {
