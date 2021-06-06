@@ -43,6 +43,9 @@ parser.on('data', (...data) => {
     if (data[0] === 'MODULE:HIMO-01M(V0.4)'){
         return;
     }
+    if (data[0] === 'Vendor:Himalaya'){
+        return;
+    }
     if (data[0] === 'AT,OK') {
         okCounter++;
         return;
