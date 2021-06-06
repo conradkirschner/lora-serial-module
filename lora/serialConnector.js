@@ -19,9 +19,11 @@ export const sendCommand = (command) => {
 
 export const runCommands = () => {
     if (commandBuffer.length === 0) {
+        console.log('No Commands in Buffer');
         return;
     }
     if (okCounter < commandBufferCounter ) {
+        console.log('Waiting for command execution');
         return ;
     }
 
