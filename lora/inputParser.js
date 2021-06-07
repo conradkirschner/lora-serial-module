@@ -5,6 +5,7 @@ import {SEND_CHAT_MESSAGE} from "./commands/messaging";
 import {ROUTE_ERROR, ROUTE_REPLIES, ROUTE_REQUEST} from "./commands/routing";
 
 export const recievedData = ([source, size, bytes]) => {
+    getStatsFromLastMessage();
     addToRoutingTable(source);
     log(size, bytes);
     parseData(bytes);

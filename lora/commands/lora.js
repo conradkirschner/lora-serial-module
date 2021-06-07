@@ -10,6 +10,10 @@ export const setAddress =  (address) => {
     sendCommand(`AT+ADDR=${address}`);
 }
 
+export const getStatsFromLastMessage =  () => {
+    sendCommand(`AT+RSSI?`);
+}
+
 export const setConfig =  (
     rfFrequency = 433000000,
     power = 20,

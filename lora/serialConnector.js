@@ -6,6 +6,8 @@ const SerialPort = require('serialport')
 const port = new SerialPort('/dev/ttyS0', {
     baudRate: 115200
 });
+const lastMessageStats = {};
+
 const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 let commandBuffer = [];
 let currentCommand = null;
@@ -60,13 +62,18 @@ parser.on('data', (...data) => {
         log('Sended Message successfully', commandBufferCounter);
         return;
     }
+    if (!isNaN(parseInt(data[0].split(',')[1]))) {
+        lastMessageStats.db = parseInt(data[0].split(',')[1]);
+        log('Got Message with dB: ', commandBufferCounter);
+        return;
+    }
     /*
      Empfange von 0001 - 5 bytes => hello
      [ 'LR,0001,05,hello' ]
     */
-    console.log(data[0]);
     const [command, ...datablock] = data[0].split(',');
     if (command === 'LR') {
+        lastMessageStats.data = datablock;
         recievedData(datablock)
     }
     info('INPUT DATA:', data);
