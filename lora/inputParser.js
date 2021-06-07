@@ -3,7 +3,7 @@ import {log} from "./logger";
 import {SEPARATOR} from "./_global_constrains";
 import {SEND_CHAT_MESSAGE} from "./commands/messaging";
 import {ROUTE_ERROR, ROUTE_REPLIES, ROUTE_REQUEST} from "./commands/routing";
-import {sendText} from "./commands/lora";
+import {getStatsFromLastMessage, sendText} from "./commands/lora";
 
 export const recievedData = ([source, size, bytes]) => {
     getStatsFromLastMessage();
