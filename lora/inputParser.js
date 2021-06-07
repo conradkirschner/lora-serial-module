@@ -3,12 +3,14 @@ import {log} from "./logger";
 import {SEPARATOR} from "./_global_constrains";
 import {SEND_CHAT_MESSAGE} from "./commands/messaging";
 import {ROUTE_ERROR, ROUTE_REPLIES, ROUTE_REQUEST} from "./commands/routing";
+import {sendText} from "./commands/lora";
 
 export const recievedData = ([source, size, bytes]) => {
     getStatsFromLastMessage();
     addToRoutingTable(source);
     log(size, bytes);
     parseData(bytes);
+
 }
 const parseData = (data) => {
     const [command, ...dataBlock] = data.split(SEPARATOR)
