@@ -8,7 +8,7 @@ const defaults = {
 };
 
 export const addToRoutingTable = (source, parameter = {}) => {
-    log("Routing Table" + source);
+    log("Routing Table" + routingTable);
     if (!routingTable[source]) {
         routingTable[source] = {
             ...defaults,
