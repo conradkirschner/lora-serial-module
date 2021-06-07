@@ -77,6 +77,7 @@ parser.on('data', (...data) => {
     }
     if (!isNaN(parseInt(datablock[0]))) {
         lastMessageStats.db = parseInt(datablock[0]);
+        console.log(lastMessageStats.data);
         sendText(`Got answer from you -> ${lastMessageStats.data.split(',')[0]}<- ${lastMessageStats.timestamp}`);
         return;
     }
