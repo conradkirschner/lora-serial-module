@@ -17,6 +17,7 @@ const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 let commandBuffer = [];
 let currentCommand = null;
 let commandBufferCounter = 0;
+let commandBufferCounterOK = 0;
 export const isFreeToSend = () => {
     return (commandBuffer.length === 0);
 }
@@ -26,6 +27,9 @@ export const sendCommand = (command) => {
 
 export const runCommands = () => {
     if (commandBuffer.length === 0) {
+        return;
+    }
+    if (commandBufferCounterOK < commandBufferCounter) {
         return;
     }
     setTimeout(()=> {
@@ -57,7 +61,7 @@ parser.on('data', (...data) => {
         recievedData(datablock)
         return;
     }
-
+    commandBufferCounterOK++;
     if (data[0] === 'MODULE:HIMO-01M(V0.4)'){
         return;
     }
