@@ -29,9 +29,9 @@ export const runCommands = () => {
     if (commandBuffer.length === 0) {
         return;
     }
+    console.log(commandBufferCounter, commandBufferCounterOK);
     if (commandBufferCounter > commandBufferCounterOK) {
         console.log("waitig");
-        console.log(commandBufferCounter, commandBufferCounterOK);
         return;
     }
     setTimeout(()=> {
