@@ -17,7 +17,7 @@ const parser = port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
 let commandBuffer = [];
 let currentCommand = null;
 let commandBufferCounter = 0;
-let commandBufferCounterOK = 0;
+let commandBufferCounterOK = 1;
 export const isFreeToSend = () => {
     return (commandBuffer.length === 0);
 }
@@ -29,7 +29,7 @@ export const runCommands = () => {
     if (commandBuffer.length === 0) {
         return;
     }
-    if (commandBufferCounterOK < commandBufferCounter) {
+    if (commandBufferCounter < commandBufferCounterOK) {
         return;
     }
     setTimeout(()=> {
