@@ -16,6 +16,7 @@
     "@babel/preset-env": "^7.14.4"
   },
   "dependencies": {
-    "serialport": "^9.1.0"
+    "serialport": "^9.1.0",
+    "onoff": "^6.0.3",
   }
 }
