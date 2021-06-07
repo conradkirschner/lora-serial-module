@@ -2,7 +2,7 @@
  * RESET
  */
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-const RESET = new Gpio(18, 'out'); //use GPIO pin 4, and specify that it is output
+const RESET = new Gpio(18, 'in'); //use GPIO pin 4, and specify that it is output
 RESET.writeSync(1);
 RESET.writeSync(0);
 const {info} = require("./logger");
