@@ -1,3 +1,5 @@
+import {DEVICEID} from "./_global_constrains";
+
 const {info} = require("./logger");
 import commands from './commands'
 const {isFreeToSend} = require("./serialConnector");
@@ -9,7 +11,7 @@ setInterval(async () => {
 
 (async ()=>{
     commands.lora.resetModule();
-    commands.lora.setAddress(16);
+    commands.lora.setAddress(DEVICEID);
     commands.lora.setConfig(); // uses default config
     commands.lora.getMessages();
     info('Start sending Hello');

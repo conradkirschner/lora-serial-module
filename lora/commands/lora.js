@@ -1,14 +1,21 @@
 /**
  * Lora specific commands
  */
-import {lastMessageStats, sendCommand} from "../serialConnector";
+import {sendCommand} from "../serialConnector";
+import {log} from "../logger";
 
 export const resetModule = () => {
     sendCommand(`AT+RST`);
 }
 export const setAddress =  (address) => {
-    lastMessageStats.timestamp = new Date();
     sendCommand(`AT+ADDR=${address}`);
+}
+
+export const setDestination =  (address) => {
+    sendCommand(`AT+DEST=${address}`);
+}
+export const setBroadcast =  () => {
+    sendCommand(`AT+DEST=FFFF`);
 }
 
 export const getStatsFromLastMessage =  () => {
@@ -39,4 +46,10 @@ export const getMessages =  () => {
 export const sendText = (text) => {
     sendCommand(`AT+SEND=${text.length}`)
     sendCommand(text)
+    log('send text', text);
+}
+export const sendPackage = (bytes) => {
+    sendCommand(`AT+SEND=${bytes.length}`)
+    sendCommand(bytes);
+    log('send bytes', bytes);
 }
