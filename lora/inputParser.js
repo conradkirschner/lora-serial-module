@@ -29,6 +29,7 @@ const parseData = (source, data) => {
                 addToRoutingTable(source, { nodes: [rreq_data.originAddress]});
                 setDestination(source);
                 delete waitForRoute[rreq_data.originAddress];
+                log('Got Route:', source, { nodes: [rreq_data.originAddress]})
                 sendPackage(
                     createRREP( rreq_data.hopCount,  rreq_data.originAddress,  rreq_data.destinationAddress,  rreq_data.destinationSequenceNumber, ROUTE_LIFETIME)
                 );
