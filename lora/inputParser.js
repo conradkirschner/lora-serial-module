@@ -22,6 +22,8 @@ export const recievedData = ([source, size, bytes]) => {
 const parseData = (source, data) => {
     const [typeByte, ...restData] = data;
     const type = getType(typeByte);
+    log('Type', typeByte, type);
+
     switch (type) {
         case 'RREQ':
             const rreq_data = readRREQ(restData);
