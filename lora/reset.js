@@ -9,6 +9,6 @@ export function RESET_gpio() { //function to start blinking
 
 function endBlink() { //function to stop blinking
     RESET.writeSync(0); // Turn RESET off
-    RESET.unexport(); // Unexport GPIO to free resources
+    // RESET.unexport(); // Unexport GPIO to free resources
 }
 
