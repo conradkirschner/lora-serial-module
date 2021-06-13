@@ -44,9 +44,11 @@ ssh.connect({
      */
     .then(function() {
         ssh.execCommand('mkdir '+ user, { cwd: homePath }).then(function(result) {
+            console.log(result);
             ssh.execCommand('git clone ' + checkoutUrl, { cwd: homePath + '/' + user }).then(function(result) {
+                console.log(result);
                 ssh.execCommand('npm i && npm run start', { cwd: homePath + '/' + user + '/' + checkoutFolder }).then(function(result) {
-
+                    console.log(result);
                 });
             });
         })
