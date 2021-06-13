@@ -7,7 +7,7 @@ const {runCommands} = require("./serialConnector");
 
 setInterval(async () => {
     await runCommands();
-}, 2000);
+}, 3000);
 
 (async ()=>{
     commands.lora.resetModule();
