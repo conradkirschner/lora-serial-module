@@ -13,7 +13,8 @@ export const SEND_CHAT_MESSAGE = 'SEND_CHAT_MESSAGE';
 export const sendChatMessage = (deviceId, message) => {
     const route = getRoute(deviceId);
     if (route === null) {
-        sendPackage(create(1, 0, DEVICEID, messageSequenceId, deviceId, 1))
+        sendPackage(create(1, 0, DEVICEID, messageSequenceId, deviceId, 1));
+        return;
     }
     setAddress(route[0]);
     sendPackage(create(16, deviceId, messageSequenceId, message));

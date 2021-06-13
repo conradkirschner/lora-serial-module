@@ -1,7 +1,7 @@
 import {addToRoutingTable} from "./routing";
 import {log} from "./logger";
 import {getType} from "./packages/types";
-import {sendPackage, setBroadcast, setDestination} from "./commands/lora";
+import {getStatsFromLastMessage, sendPackage, setBroadcast, setDestination} from "./commands/lora";
 import {createPackage} from "./packages";
 import {create as createRREP, read as readRREP} from "./packages/RREP";
 import {create as createRREQ, read as readRREQ} from "./packages/RREQ";

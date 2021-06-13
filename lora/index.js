@@ -18,7 +18,7 @@ setInterval(async () => {
     setInterval(() => {
         console.log('can send', isFreeToSend())
         if (isFreeToSend()){
-            commands.lora.sendText('hello');
+            commands.messaging.sendChatMessage(13,'hello');
         }
     }, 6000);
 })();
