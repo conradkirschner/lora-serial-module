@@ -12,6 +12,7 @@ import {create as createSEND_HOP_ACK} from "./packages/SEND-HOP-ACK";
 import {create as createSEND_TEXT_REQUEST_ACK} from "./packages/SEND-TEXT-REQUEST-ACK";
 import {DEVICEID} from "./index";
 import {ROUTE_LIFETIME} from "./_global_constrains";
+import {waitForRoute} from "./commands/messaging";
 
 export const recievedData = ([source, size, bytes]) => {
     getStatsFromLastMessage();
@@ -27,6 +28,7 @@ const parseData = (source, data) => {
             if (rreq_data.destinationAddress === DEVICEID) {
                 addToRoutingTable(source, { nodes: [rreq_data.originAddress]});
                 setDestination(source);
+                delete waitForRoute[rreq_data.originAddress];
                 sendPackage(
                     createRREP( rreq_data.hopCount,  rreq_data.originAddress,  rreq_data.destinationAddress,  rreq_data.destinationSequenceNumber, ROUTE_LIFETIME)
                 );
