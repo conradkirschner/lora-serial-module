@@ -21,6 +21,6 @@ export const sendChatMessage = (deviceId, message) => {
         return;
     }
     setAddress(route[0]);
-    sendPackage(create(16, deviceId, messageSequenceId, message));
+    sendPackage(create(15, deviceId, messageSequenceId, message));
     messageSequenceId++;
 }
