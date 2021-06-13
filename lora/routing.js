@@ -52,6 +52,7 @@ export const addToRoutingTable = (source, parameter = { nodes: []}) => {
  */
 
 export const getRoute = (deviceId, routingTable) => {
+    if (!routingTable) return null;
     return Object.keys(routingTable).forEach(k => {
         const routingObject = routingTable[k];
         for (let i = 0; i < routingObject.nodes.length; i++) {
