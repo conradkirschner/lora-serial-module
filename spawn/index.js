@@ -45,7 +45,7 @@ ssh.connect({
     .then(function() {
         ssh.execCommand('rm -rf ' + user + ' & mkdir '+ user, { cwd: homePath }).then(function(result) {
             console.log(result);
-            ssh.exec('git clone ' + checkoutUrl, {
+            ssh.exec('git clone ' + checkoutUrl, [],{
                 cwd: homePath + '/' + user,
                 onStdout(chunk) {
                     console.log('stdoutChunk', chunk.toString('utf8'))
@@ -54,7 +54,7 @@ ssh.connect({
                     console.log('stderrChunk', chunk.toString('utf8'))
                 },
             })
-            ssh.exec('npm i && npm run start', {
+            ssh.exec('npm i && npm run start', [],{
                 cwd: homePath + '/' + user + '/' + checkoutFolder,
                 onStdout(chunk) {
                     console.log('stdoutChunk', chunk.toString('utf8'))
