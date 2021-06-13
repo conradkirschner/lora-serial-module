@@ -8,7 +8,7 @@ const {runCommands} = require("./serialConnector");
 RESET_gpio()
 setInterval(async () => {
     await runCommands();
-}, 1000);
+}, 800);
 
 (async ()=>{
     commands.lora.resetModule();
