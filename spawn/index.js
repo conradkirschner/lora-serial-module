@@ -4,7 +4,7 @@ const {NodeSSH} = require('node-ssh')
 require('dotenv').config()
 
 const ssh = new NodeSSH()
-const homePath = '/home/pi/';
+const homePath = '/home/pi';
 const user = 'conrad';
 const checkoutUrl = 'https://github.com/conradkirschner/lora-serial-module.git';
 const checkoutFolder = 'lora-serial-module';
