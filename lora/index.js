@@ -2,9 +2,10 @@ import {DEVICEID} from "./_global_constrains";
 
 const {info} = require("./logger");
 import commands from './commands'
+import {RESET_gpio} from "./reset";
 const {isFreeToSend} = require("./serialConnector");
 const {runCommands} = require("./serialConnector");
-
+RESET_gpio()
 setInterval(async () => {
     await runCommands();
 }, 3000);
