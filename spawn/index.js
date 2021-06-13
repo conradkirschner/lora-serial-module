@@ -43,7 +43,7 @@ ssh.connect({
      if you want to use the raw string as private key
      */
     .then(function() {
-        ssh.execCommand('mkdir '+ user, { cwd: homePath }).then(function(result) {
+        ssh.execCommand('rmdir ' + user + ' & mkdir '+ user, { cwd: homePath }).then(function(result) {
             console.log(result);
             ssh.execCommand('git clone ' + checkoutUrl, { cwd: homePath + '/' + user }).then(function(result) {
                 console.log(result);
