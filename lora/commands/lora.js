@@ -24,9 +24,9 @@ export const getStatsFromLastMessage =  () => {
 
 export const setConfig =  (
     rfFrequency = 433000000,
-    power = 20,
+    power = 5,
     bandwidth = 9,
-    spreadingFactor = 12,
+    spreadingFactor = 6,
     errorCoding = 4,
     crc = 1,
     implicitHeader = 0,
@@ -35,7 +35,7 @@ export const setConfig =  (
     hopPeriod = 0,
     rxPacketTimeout = 3000,
     payloadLength = 8,
-    preambleLength = 4
+    preambleLength = 10
 ) => {
     sendCommand(`AT+CFG=${rfFrequency},${power},${bandwidth},${spreadingFactor},${errorCoding},${crc},${implicitHeader},${rxSingleOn},${frequencyHopOn},${hopPeriod},${rxPacketTimeout},${payloadLength},${preambleLength}`)
 }
