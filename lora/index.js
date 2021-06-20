@@ -12,12 +12,18 @@ setInterval(async () => {
 }, 800);
 
 (async ()=>{
-    await askValue("Should start?");
     commands.lora.resetModule();
     commands.lora.setAddress(DEVICEID);
     commands.lora.setConfig(); // uses default config
     commands.lora.getMessages();
     info('Start sending Hello');
+
+    while(await askValue("Sende eine weitere Nachricht( 'no' for exit ) ") !== "no") {
+        const clientId = await askValue("");
+        const message = await askValue("Nachricht:");
+        commands.messaging.sendChatMessage(clientId,message);
+    }
+
 
     // setInterval(() => {
     //     console.log('can send', isFreeToSend())
