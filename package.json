@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "DEVICE_ID=10 LIFETIME=300  nodemon --exec npm run babel-node -- lora/index.js\n\n",
+    "start": "nodemon --exec npm run babel-node -- lora/index.js\n\n",
     "babel-node": "babel-node --presets=@babel/preset-env",
     "spawn": "nodemon --exec npm run babel-node -- spawn/index.js\n\n",
     "test": "echo \"Error: no test specified\" && exit 1"
