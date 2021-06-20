@@ -19,7 +19,7 @@ setInterval(async () => {
     info('Start sending Hello');
 
     while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
-        const clientId = await askValue("");
+        const clientId = await askValue("ClientId:");
         const message = await askValue("Nachricht:");
         commands.messaging.sendChatMessage(clientId,message);
     }
