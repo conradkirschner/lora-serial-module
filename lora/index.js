@@ -18,11 +18,12 @@ setInterval(async () => {
     commands.lora.getMessages();
     info('Start sending Hello');
 
-    while(await askValue("Sende eine weitere Nachricht( 'no' for exit ) ") !== "no") {
+    while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
         const clientId = await askValue("");
         const message = await askValue("Nachricht:");
         commands.messaging.sendChatMessage(clientId,message);
     }
+    process.exit(0)
 
 
     // setInterval(() => {
