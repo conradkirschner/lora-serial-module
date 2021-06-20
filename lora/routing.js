@@ -10,19 +10,7 @@ const defaults = (id) => {
         id,
     }
 };
-routingTable[12] ={
-    isBlacklisted: false,
-    timestamp: new Date(),
-    nodes: [13],
-    id: 12,
-}
-routingTable[13] ={
-    isBlacklisted: false,
-    timestamp: new Date(),
-    nodes: [],
-    parent: 12,
-    id: 13,
-}
+
 export const addToRoutingTable = (source, parameter = { nodes: []}) => {
     if (!routingTable[source]) {
         routingTable[source] = {
