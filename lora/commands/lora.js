@@ -50,6 +50,7 @@ export const sendText = (text) => {
 }
 export const sendPackage = (bytes) => {
     sendCommand(`AT+SEND=${bytes.length}`)
-    sendCommand(bytes);
+    sendCommand(bytes.toString());
     log('send bytes', bytes);
+    log('send bytes', bytes.toString());
 }
