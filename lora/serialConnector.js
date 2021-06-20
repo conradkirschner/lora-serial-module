@@ -22,7 +22,7 @@ export const isFreeToSend = () => {
     return (commandBuffer.length === 0);
 }
 export const sendCommand = (command) => {
-    commandBuffer.push(command);
+    commandBuffer.push(command.toString());
 }
 
 export const runCommands = () => {
