@@ -21,7 +21,9 @@ class RouteEntry {
 
     get valid() {
         if ((this.expiry_time + process.env.LIFETIME) < Date.now()) {
-
+            return true;
         }
+        return false;
     }
+
 }

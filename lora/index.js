@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 import {DEVICEID} from "./_global_constrains";
 
 const {info} = require("./logger");
