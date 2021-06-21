@@ -5,19 +5,23 @@ import {InputParser} from "./InputParser";
 import {setAddress} from "./commands/lora";
 import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
+import {MessageHandler} from "./MessageHandler";
 
 export class AODVClient {
     parser = null;
     inputParser = new InputParser(this);
+    messageHandler = new MessageHandler();
+
     constructor(parser) {
         this.parser = parser;
         this.getData();
     }
 
     router = new RoutingHandler();
+    routerRequestQueue = [];
+
     buffer = [];
     history = [];
-    messageSequenceId = 0;
     currentCommand = {
         command: null,
         answer: null,
@@ -38,14 +42,18 @@ export class AODVClient {
     }
 
     sendMessage(clientId, message) {
+        this.messageHandler.addChatMessage(clientId, message, true);
         const route = this.router.getRoute(clientId);
         if (route === null) {
-            this.pushSendCommand(packages.send.rreq(1, 0, DEVICEID, this.messageSequenceId, clientId, 1));
+            const rreq = packages.send.rreq(1, 0, DEVICEID, this.messageHandler.currentSequenceNumber, clientId, 1);
+            this.pushSendCommand(rreq);
+            const memorized = this.sendMessage;
+            setTimeout(()=> {memorized(clientId, message)},10*1000); // retry send message after 3min
             return;
         }
         setAddress(route[0]);
-        this.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, this.messageSequenceId, message));
-        this.messageSequenceId++;
+        this.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId,this.messageHandler.currentSequenceNumber, message));
+        this.messageHandler.incrementSequenceNumber();
     }
 
     async runCommand() {
@@ -63,7 +71,8 @@ export class AODVClient {
                     reject(false);
                 }
                 resolve(true);
-                that.history.push(command);
+                const copy = JSON.parse(JSON.stringify(command));
+                that.history.push(copy);
             });
         });
 

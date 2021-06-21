@@ -7,6 +7,7 @@ import {fakeResponse, mockedSerial} from "./mockedParser";
 import packages from '../src/client/packages';
 import {B_route_reply_unicast, B_route_request_broadcast} from "./responses";
 
+process.env.DEVICE_ID = 10;
 
 test('Sends a Message to 15', async () => {
 
@@ -20,7 +21,7 @@ test('Sends a Message to 15', async () => {
      * Routing Table is Empty
      * Send a Message to 15
      */
-    client.sendMessage('15', 'Hallo Welt');
+    client.sendMessage('13', 'Hallo Welt');
     /**
      * Send route request broadcast
      */

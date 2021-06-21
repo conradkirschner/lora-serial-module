@@ -1,6 +1,6 @@
 import hash from 'object-hash';
 
-class RouteEntry {
+export class RouteEntry {
     LIFETIME = 180;
     precursors;
     destination_addr;
@@ -14,13 +14,13 @@ class RouteEntry {
     is_route_valid;
 
     constructor(destination_addr, nextNode, hops, dest_sequence_num, lastHopInRoute) {
-    this.precursors = [];
-    this.precursors.push(lastHopInRoute);
-    this.destination_addr = destination_addr;
-    this.dest_sequence_num = dest_sequence_num;
-    this.nextNode = nextNode;
-    this.hops = hops;
-    this.expiry_time = Date.now();
+        this.precursors = [];
+        this.precursors.push(lastHopInRoute);
+        this.destination_addr = destination_addr;
+        this.dest_sequence_num = dest_sequence_num;
+        this.nextNode = nextNode;
+        this.hops = hops;
+        this.expiry_time = Date.now();
     }
 
     get valid() {

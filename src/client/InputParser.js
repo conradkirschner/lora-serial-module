@@ -3,6 +3,7 @@ import {log} from "../logger";
 import {getType} from "./packages/types";
 import {DEVICEID, ROUTE_LIFETIME} from "../_global_constrains";
 import packages from "./packages";
+import {RouteEntry} from "./routing/RouteEntry";
 
 export class InputParser {
     client;
@@ -17,16 +18,16 @@ export class InputParser {
         this.parseData(source, bytes);
     }
     parseData (source, data) {
-        const [typeByte, ...restData] = data;
-
-        const type = getType(typeByte);
-        log('Type', typeByte, type);
+        const type = getType(data[0]);
+        const byteData = Buffer.from(data);
+        const packageData = byteData.slice(1, byteData.length);
+        log('Type', byteData, type);
 
         switch (type) {
             case 'RREQ':
-                const rreq_data = packages.read.rreq(restData);
+                const rreq_data = packages.read.rreq(packageData);
                 if (rreq_data.destinationAddress === DEVICEID) {
-                    setDestination(source);
+                    this.client.pushCommand(setDestination(source));
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
                     this.client.pushSendCommand(packages.send.rrep(
                         rreq_data.hopCount,
@@ -40,13 +41,17 @@ export class InputParser {
                 this.client.pushCommand(setBroadcast());
                 rreq_data.hopCount++;
 
-                this.client.pushSendCommand(packages.send.rrep((rreq_data.uflag), rreq_data.hopCount, rreq_data.originAddress, rreq_data.originSequenceNumber, rreq_data.destinationAddress, rreq_data.destinationSequenceNumber));
+                this.client.pushSendCommand(packages.send.rreq((rreq_data.uflag), rreq_data.hopCount, rreq_data.originAddress, rreq_data.originSequenceNumber, rreq_data.destinationAddress, rreq_data.destinationSequenceNumber));
 
                 setTimeout(()=> {
                     this.client.pushSendCommand(packages.send.send_hop_ack());
                 }, 1000);
                 break;
             case 'RREP':
+                const rrep_data = packages.read.rrep(packageData);
+
+                const route = new RouteEntry();
+                this.client.router.addRoute()
                 this.client.pushCommand(setDestination(source));
                 this.client.pushSendCommand(packages.send.rrep_ack());
                 break;
