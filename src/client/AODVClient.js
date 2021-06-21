@@ -48,7 +48,7 @@ export class AODVClient {
             const rreq = packages.send.rreq(1, 0, DEVICEID, this.messageHandler.currentSequenceNumber, clientId, 1);
             this.pushSendCommand(rreq);
             const memorized = this.sendMessage;
-            setTimeout(()=> {memorized(clientId, message)},10*1000); // retry send message after 3min
+            setTimeout(()=> {memorized(clientId, message)},1*1000); // retry send message after 3min
             return;
         }
         setAddress(route[0]);

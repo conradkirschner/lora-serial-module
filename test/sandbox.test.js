@@ -44,7 +44,7 @@ test('Sends a Message to 15', async () => {
             const history = client.getHistory();
             JSON.stringify(history);
             resolve();
-        }, 2000);
+        }, 60*1000);
     })
 
 
