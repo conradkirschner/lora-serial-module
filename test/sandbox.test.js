@@ -5,7 +5,7 @@ require('dotenv').config()
 import {AODVClient} from "../src/client/AODVClient";
 import {fakeResponse, mockedSerial} from "./mockedParser";
 import packages from '../src/client/packages';
-import {B_route_reply_unicast, B_route_request_broadcast} from "./responses";
+import {B_route_reply_unicast, B_route_request_broadcast, B_send_hop_ack} from "./responses";
 
 process.env.DEVICE_ID = 10;
 
@@ -39,15 +39,20 @@ test('Sends a Message to 15', async () => {
             resolve();
         }, 500);
     })
+    fakeResponse(B_send_hop_ack);
+    await new Promise((resolve, reject) => {
+        setTimeout(async ()=> {
+            await flush(client);
+            resolve();
+        }, 500);
+    })
     await new Promise((resolve, reject) => {
         setTimeout(()=> {
             const history = client.getHistory();
             JSON.stringify(history);
             resolve();
-        }, 60*1000);
-    })
-
-
+        }, 10*1000);
+    });
 });
 
 const flush = async (client)=> {

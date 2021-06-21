@@ -1,14 +1,36 @@
+
 export class RoutingHandler {
+    /**
+     *
+     * @type {RouteEntry[]}
+     */
     routes = [];
 
     getRoute(nodeId) {
+        for (let i = 0; i < this.routes.length; i++) {
+            // direct route
+            const currentRoute = this.routes[i];
+            if (currentRoute.destination_addr === nodeId) {
+                return currentRoute;
+            }
+            // routeable through node
+            for (let x = 0; currentRoute.precursors.length; x++) {
+                const currentNode = cu
+            }
+
+        }
         return null;
+    }
+    addRouteIfNotExist(route) {
+        if (this.findRoute(route) === -1) {
+            this.addRoute(route);
+        }
     }
 
     addRoute(route) {
         this.routes.push(route);
     }
-    removeRoute(route) {
+    findRoute(route) {
         let index = -1
         for (let i = 0; i < this.routes.length; i++) {
             if (this.routes[i].isEqual(route)){
@@ -16,7 +38,11 @@ export class RoutingHandler {
                 break;
             }
         }
-        this.routes.splice(index, 1)
+        return index;
+    }
+    removeRoute(route) {
+
+        this.routes.splice(this.findRoute(route), 1)
     }
     invalidateRoutes(){
         for (let i = 0; i < this.routes.length; i++) {

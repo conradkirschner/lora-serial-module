@@ -1,5 +1,24 @@
 import hash from 'object-hash';
+/**
+ * @source: https://gomakethings.com/how-to-check-if-two-arrays-are-equal-with-vanilla-js/#:~:text=To%20check%20for%20equality%2C%20we,the%20same%20length%20if%20(arr1.
+ * @param arr1
+ * @param arr2
+ * @returns {boolean}
+ */
+const arraysMatch = function (arr1, arr2) {
 
+    // Check if the arrays are the same length
+    if (arr1.length !== arr2.length) return false;
+
+    // Check if all items exist and are in the same order
+    for (var i = 0; i < arr1.length; i++) {
+        if (arr1[i] !== arr2[i]) return false;
+    }
+
+    // Otherwise, return true
+    return true;
+
+};
 export class RouteEntry {
     LIFETIME = 180;
     precursors;
@@ -53,8 +72,8 @@ export class RouteEntry {
     is_route_valid,
     hops,
     nextNode,
-    precursors,
-    expiry_time}) {
+    precursors
+    }) {
         if (this.destination_addr !== destination_addr) {
             return false;
         }
@@ -73,10 +92,7 @@ export class RouteEntry {
         if (this.nextNode !== nextNode) {
             return false;
         }
-        if (this.precursors !== precursors) {
-            return false;
-        }
-        if (this.expiry_time !== expiry_time) {
+        if (!arraysMatch(this.precursors, precursors)) {
             return false;
         }
         return true;
