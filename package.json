@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec npm run babel-node -- lora/index.js\n\n",
+    "start": "nodemon --exec npm run babel-node -- index.js\n\n",
     "babel-node": "babel-node --presets=@babel/preset-env",
-    "spawn": "nodemon --exec npm run babel-node -- spawn/index.js\n\n",
     "test": "jest"
   },
   "author": "Conrad Magnus Kirschner",
