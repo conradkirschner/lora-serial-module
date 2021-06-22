@@ -113,7 +113,7 @@ export class AODVClient {
           Empfange von 0001 - 5 bytes => hello
           [ 'LR,0001,05,hello' ]
          */
-        const [command, ...datablock] = data[0].split(',');
+        const [command, ...datablock] = data.toString()[0].split(',');
 
         if (command === 'LR') {
 
