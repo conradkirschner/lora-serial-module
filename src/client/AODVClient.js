@@ -78,10 +78,10 @@ export class AODVClient {
         if (this.currentWaitCounter > 0) return false;
         if (this.currentCommand.command === undefined) return false;
 
+        this.currentWaitCounter = this.currentWaitCounter + 1;
         const command = JSON.parse(JSON.stringify(this.currentCommand));
         const that = this;
         const port = this.parser;
-        this.currentWaitCounter =  this.currentWaitCounter++;
         return new Promise((resolve, reject) => {
             console.log("push to serial")
             port.write(command.command + `\r\n`, function (err) {
