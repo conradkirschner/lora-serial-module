@@ -12,6 +12,9 @@ export class AODVClient {
     inputParser = new InputParser(this);
     messageHandler = new MessageHandler();
 
+    // used to restore AT,OK from AT, linebreak OK
+    cache_answer_part;
+
     constructor(parser) {
         this.parser = parser;
         this.getData();
@@ -63,7 +66,7 @@ export class AODVClient {
             setTimeout(()=> {memorized(clientId, message, that, tries)},3*1000); // retry send message after 3min
             return;
         }
-        that.pushCommand(setAddress(route));;
+        that.pushCommand(setAddress(route));
         that.messageHandler.addChatMessage(clientId, message, true);
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();
@@ -100,14 +103,14 @@ export class AODVClient {
         const that = this;
         this.parser.on('data', (...data) => {
             try {
-
-                that.workWithData(data, data.toString());
+                that.workWithData(data, data.toString(), JSON.parse(JSON.stringify(that.cache_answer_part)));
+                that.cache_answer_part = data;
             } catch (e) {
                 console.error('Got Unkown Data', data, data.toString());
             }
         })
     }
-    workWithData(data, stringData) {
+    workWithData(data, stringData, cachedData) {
         log('Got Input:',stringData);
         /*
           Empfange von 0001 - 5 bytes => hello
@@ -146,7 +149,9 @@ export class AODVClient {
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return;
         }
-        console.log('ERROR APPEARED', stringData, (' AT,OK\r\n'  === stringData), (data === ' AT,OK\r\n'));
+        if (this.workWithData(data, stringData + cachedData) === false ){
+            console.log('ERROR APPEARED', stringData, (' AT,OK\r\n'  === stringData), (data === ' AT,OK\r\n'));
+        }
         return false;
     }
 
