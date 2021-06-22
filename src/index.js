@@ -16,7 +16,7 @@ let client = null;
     const parser = new SerialPort('/dev/ttyS0', {
         baudRate: 115200
     });
-    parser.pipe(new SerialPort.parsers.Ready({ delimiter: 'READY' }))
+    parser.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
     parser.on('error', function (err) {
         log('Error: ', err.message)
     });
@@ -26,7 +26,7 @@ let client = null;
     client.start();
     setInterval(async ()=> {
        await client.runCommand();
-    },4000)
+    },5000)
 
     while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
         const clientId = await askValue("ClientId:");
