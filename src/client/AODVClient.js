@@ -113,6 +113,7 @@ export class AODVClient {
                 console.error('Got Unkown Data', data, data.toString());
             }
             if (tryMerge) {
+                this.currentWaitCounter= this.currentWaitCounter++;
                 console.log('merge ', lastStream, data)
                 tryMerge = (that.workWithData(lastStream+data, (lastStream+data).toString()) === false);
             }
