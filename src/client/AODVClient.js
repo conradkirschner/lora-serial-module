@@ -57,6 +57,7 @@ export class AODVClient {
         const route = that.router.getRoutingNode(clientId);
         if (route === null) {
             const rreq = packages.send.rreq(1, 0, DEVICEID, that.messageHandler.currentSequenceNumber, clientId, 1);
+            that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
             setTimeout(()=> {memorized(clientId, message, that, tries)},3*1000); // retry send message after 3min
