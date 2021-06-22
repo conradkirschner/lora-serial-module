@@ -90,7 +90,7 @@ export class AODVClient {
                 }
                 resolve(true);
                 console.log("written to serial")
-                this.currentWaitCounter++;
+                that.currentWaitCounter++;
 
                 const copy = JSON.parse(JSON.stringify(command));
                 that.history.push(copy);
