@@ -120,23 +120,23 @@ export class AODVClient {
             this.inputParser.recievedData(datablock);
             return;
         }
-        if (data[0] === 'MODULE:HIMO-01M(V0.4)') {
+        if (stringData === 'MODULE:HIMO-01M(V0.4)') {
             return;
         }
-        if (data[0] === 'Vendor:Himalaya') {
+        if (stringData === 'Vendor:Himalaya') {
             return;
         }
-        if (data[0] === 'AT,ERR:ERR:ERR:CPU_BUSY' || data[0] === 'CPU_BUSY') {
+        if (stringData === 'AT,ERR:ERR:ERR:CPU_BUSY' || data === 'CPU_BUSY') {
             // restore last command
             this.buffer = [...[this.currentCommand],...this.buffer];
             this.currentWaitCounter--;
             return;
         }
-        if (data[0] === 'AT,OK') {
+        if (stringData === 'AT,OK') {
             this.currentWaitCounter--;
             return;
         }
-        if (data[0] === 'AT,SENDED') {
+        if (stringData === 'AT,SENDED') {
             this.currentWaitCounter--;
             return;
         }
