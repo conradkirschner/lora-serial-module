@@ -103,9 +103,10 @@ export class AODVClient {
         const that = this;
         this.parser.on('data', (...data) => {
             try {
-                that.workWithData(data, data.toString(), JSON.parse(JSON.stringify(that.cache_answer_part)));
+                that.workWithData(data, data.toString(),that.cache_answer_part);
                 that.cache_answer_part = data;
             } catch (e) {
+                console.error(e);
                 console.error('Got Unkown Data', data, data.toString());
             }
         })
