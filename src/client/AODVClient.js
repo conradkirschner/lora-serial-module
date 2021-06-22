@@ -96,13 +96,13 @@ export class AODVClient {
         this.parser.on('data', (...data) => {
             try {
 
-                that.workWithData(data);
+                that.workWithData(...data);
             } catch (e) {
                 console.error('Got Unkown Data', data, data.toString());
             }
         })
     }
-    workWithData(data) {
+    workWithData(...data) {
         log('Got Input:',data);
         /*
           Empfange von 0001 - 5 bytes => hello
