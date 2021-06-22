@@ -26,7 +26,7 @@ let client = null;
     client.start();
     setInterval(async ()=> {
        await client.runCommand();
-    },1000)
+    },4000)
 
     while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
         const clientId = await askValue("ClientId:");
