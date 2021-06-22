@@ -69,6 +69,7 @@ export class AODVClient {
     }
 
     async runCommand() {
+        console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)));
         if (this.currentWaitCounter !== 0) return false;
         if (this.currentCommand.command === undefined) return false;
 
@@ -78,7 +79,7 @@ export class AODVClient {
         const port = this.parser;
 
         return new Promise((resolve, reject) => {
-            console.log('RUN: ', command.command + `\r\n`);
+
             port.write(command.command + `\r\n`, function (err) {
                 if (err) {
                     reject(false);
