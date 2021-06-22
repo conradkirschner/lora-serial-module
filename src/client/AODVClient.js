@@ -101,7 +101,7 @@ export class AODVClient {
 
     getData(){
         const that = this;
-        this.parser.on('data', (...data) => {
+        this.parser.on('data', (data) => {
             try {
                 that.workWithData(data, data.toString());
             } catch (e) {
