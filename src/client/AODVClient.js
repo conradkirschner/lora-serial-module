@@ -116,8 +116,11 @@ export class AODVClient {
                 this.currentWaitCounter= this.currentWaitCounter++;
                 console.log('merge ', lastStream, data)
                 tryMerge = (that.workWithData(lastStream+data, (lastStream+data).toString()) === false);
+                lastStream = '';
+            } else {
+                lastStream = data;
             }
-            lastStream = data;
+
         })
     }
     workWithData(data, stringData) {
