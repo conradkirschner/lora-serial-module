@@ -149,11 +149,7 @@ export class AODVClient {
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return;
         }
-        if (cachedData) {
-            if (this.workWithData(stringData, stringData) === false ){
-                console.log('ERROR APPEARED', stringData, (' AT,OK\r\n'  === stringData), (data === ' AT,OK\r\n'));
-            }
-        }
+        console.log('ERROR APPEARED', stringData, data);
         return false;
     }
 
