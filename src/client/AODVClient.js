@@ -128,33 +128,33 @@ export class AODVClient {
         if (command === 'LR') {
             this.history[this.history.length - 1].answer = datablock;
             this.inputParser.recievedData(datablock);
-            return;
+            return true;
         }
         if (stringData.indexOf('MODULE:HIMO-01M(V0.4)') !== -1) {
-            return;
+            return  true;
         }
         if (stringData.indexOf('Vendor:Himalaya') !== -1) {
-            return;
+            return  true;
         }
         if (stringData.indexOf('CPU_BUSY') !== -1) {
             // restore last command
             this.buffer = [...[this.currentCommand],...this.buffer];
             this.currentWaitCounter--;
-            return;
+            return  true;
         }
         if (stringData.indexOf('AT,OK') !== -1) {
             this.currentWaitCounter--;
-            return;
+            return  true;
         }
         if (stringData.indexOf('AT,SENDED') !== -1) {
             this.currentWaitCounter--;
-            return;
+            return  true;
         }
         if (!isNaN(parseInt(datablock[0]))) {
             this.currentCommand.answer = parseInt(datablock[0]);
             console.log(this.currentCommand.answer);
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
-            return;
+            return true;
         }
         console.log('ERROR APPEARED', stringData, data);
         return false;
