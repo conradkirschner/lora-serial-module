@@ -6,7 +6,7 @@ require('dotenv').config()
 const {info} = require("./logger");
 import {RESET_gpio} from "./reset";
 import {askValue} from "./consoleInput";
-import SerialPort from "serialport";
+import SerialPort, {Ready} from "serialport";
 import {AODVClient} from "./client/AODVClient";
 RESET_gpio()
 
@@ -16,7 +16,7 @@ let client = null;
     const parser = new SerialPort('/dev/ttyS0', {
         baudRate: 115200
     });
-    parser.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
+    parser.pipe(new Ready({ delimiter: 'READY' }))
     parser.on('error', function (err) {
         log('Error: ', err.message)
     });
