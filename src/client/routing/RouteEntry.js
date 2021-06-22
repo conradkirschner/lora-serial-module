@@ -26,18 +26,18 @@ export class RouteEntry {
     dest_sequence_num;
 
     hops;
-    nextNode;
 
     expiry_time;
     is_dest_seq_valid;
     is_route_valid;
 
-    constructor(destination_addr, nextNode, hops, dest_sequence_num, lastHopInRoute) {
+    constructor(destination_addr, hops, dest_sequence_num, lastHopInRoute) {
         this.precursors = [];
-        this.precursors.push(lastHopInRoute);
+        if (lastHopInRoute) {
+            this.precursors.push(lastHopInRoute);
+        }
         this.destination_addr = destination_addr;
         this.dest_sequence_num = dest_sequence_num;
-        this.nextNode = nextNode;
         this.hops = hops;
         this.expiry_time = Date.now();
     }
@@ -46,9 +46,14 @@ export class RouteEntry {
         return (this.expiry_time + this.LIFETIME) < Date.now();
     }
 
+    reset_lifetime() {
+        this.expiry_time = Date.now();
+    }
+
     get time_to_life() {
         return (this.expiry_time + this.LIFETIME) - Date.now();
     }
+
     updatePrecursor(address) {
         if(!this.precursors.contains(address))
         {

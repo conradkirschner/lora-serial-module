@@ -40,7 +40,13 @@ export class AODVClient {
         this.currentCommand.command = (this.buffer.splice(0,1))[0];
     }
 
-    sendMessage(clientId, message, thatCopy) {
+    sendMessage(clientId, message, thatCopy, tries) {
+        if (!tries) {
+            tries = 0;
+        }
+        if (tries === 4) return;
+        tries++;
+
         let that;
         if (thatCopy) {
             that = thatCopy;
@@ -48,17 +54,17 @@ export class AODVClient {
             that = this;
 
         }
-        that.messageHandler.addChatMessage(clientId, message, true);
-        const route = that.router.getRoute(clientId);
+        const route = that.router.getRoutingNode(clientId);
         if (route === null) {
             const rreq = packages.send.rreq(1, 0, DEVICEID, that.messageHandler.currentSequenceNumber, clientId, 1);
-            this.pushSendCommand(rreq);
-            const memorized = this.sendMessage;
-            setTimeout(()=> {memorized(clientId, message, that.messageHandler)},1*1000); // retry send message after 3min
+            that.pushSendCommand(rreq);
+            const memorized = that.sendMessage;
+            setTimeout(()=> {memorized(clientId, message, that, tries)},3*1000); // retry send message after 3min
             return;
         }
-        setAddress(route[0]);
-        this.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
+        that.pushCommand(setAddress(route));;
+        that.messageHandler.addChatMessage(clientId, message, true);
+        that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();
     }
 
