@@ -18,23 +18,9 @@ export const setBroadcast =  () => {
 export const getStatsFromLastMessage =  () => {
     return `AT+RSSI?`;
 }
-
-export const setConfig =  (
-    rfFrequency = 433000000,
-    power = 5,
-    bandwidth = 9,
-    spreadingFactor = 6,
-    errorCoding = 4,
-    crc = 1,
-    implicitHeader = 0,
-    rxSingleOn = 0,
-    frequencyHopOn = 0,
-    hopPeriod = 0,
-    rxPacketTimeout = 3000,
-    payloadLength = 8,
-    preambleLength = 10
-) => {
-    return `AT+CFG=${rfFrequency},${power},${bandwidth},${spreadingFactor},${errorCoding},${crc},${implicitHeader},${rxSingleOn},${frequencyHopOn},${hopPeriod},${rxPacketTimeout},${payloadLength},${preambleLength}`
+// current: AT+CFG=433000000,20,9,10,4,1,0,0,0,0,3000,8,10
+export const setConfig =  () => {
+    return `AT+CFG=433000000,20,9,10,4,1,0,0,0,0,3000,8,10`
 }
 
 export const getMessages =  () => {
