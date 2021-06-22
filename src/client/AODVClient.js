@@ -75,7 +75,7 @@ export class AODVClient {
     async runCommand() {
         this.nextCommand();
         console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
-        if (this.currentWaitCounter !== 0) return false;
+        if (this.currentWaitCounter > 0) return false;
         if (this.currentCommand.command === undefined) return false;
 
         const command = JSON.parse(JSON.stringify(this.currentCommand));
