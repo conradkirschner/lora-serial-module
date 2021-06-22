@@ -101,22 +101,21 @@ export class AODVClient {
         this.parser.on('data', (...data) => {
             try {
 
-                that.workWithData(...data);
+                that.workWithData(data, data.toString());
             } catch (e) {
                 console.error('Got Unkown Data', data, data.toString());
             }
         })
     }
-    workWithData(...data) {
-        log('Got Input:',data);
+    workWithData(data, stringData) {
+        log('Got Input:',stringData);
         /*
           Empfange von 0001 - 5 bytes => hello
           [ 'LR,0001,05,hello' ]
          */
-        const [command, ...datablock] = data.toString()[0].split(',');
+        const [command, ...datablock] = stringData.split(',');
 
         if (command === 'LR') {
-
             this.history[this.history.length - 1].answer = datablock;
             this.inputParser.recievedData(datablock);
             return;
