@@ -94,7 +94,11 @@ export class AODVClient {
     getData(){
         const that = this;
         this.parser.on('data', (...data) => {
-            that.workWithData(data);
+            try {
+                that.workWithData(data);
+            } catch (e) {
+                console.error('Got Unkown Data', data, data.toString());
+            }
         })
     }
     workWithData(data) {
@@ -103,6 +107,7 @@ export class AODVClient {
           Empfange von 0001 - 5 bytes => hello
           [ 'LR,0001,05,hello' ]
          */
+
         const [command, ...datablock] = data[0].split(',');
         if (command === 'LR') {
 
