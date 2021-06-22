@@ -28,8 +28,6 @@ let client = null;
        await client.runCommand();
     },70)
 
-    info('Start sending Hello');
-
     while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
         const clientId = await askValue("ClientId:");
         const message = await askValue("Nachricht:");

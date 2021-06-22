@@ -78,6 +78,7 @@ export class AODVClient {
         const port = this.parser;
 
         return new Promise((resolve, reject) => {
+            console.debug(command.command + `\r\n`);
             port.write(command.command + `\r\n`, function (err) {
                 if (err) {
                     reject(false);
