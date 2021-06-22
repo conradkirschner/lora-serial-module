@@ -76,9 +76,9 @@ export class AODVClient {
         this.nextCommand();
         if (this.currentWaitCounter > 0) return false;
         if (this.currentCommand.command === undefined) return false;
-        console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
+        console.log('RUN:1 ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
         this.currentWaitCounter = this.currentWaitCounter + 1;
-        console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
+        console.log('RUN:2 ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
 
         const command = JSON.parse(JSON.stringify(this.currentCommand));
         const that = this;
