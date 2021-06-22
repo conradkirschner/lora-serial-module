@@ -103,15 +103,14 @@ export class AODVClient {
         const that = this;
         this.parser.on('data', (...data) => {
             try {
-                that.workWithData(data, data.toString(),that.cache_answer_part);
-                that.cache_answer_part = data;
+                that.workWithData(data, data.toString());
             } catch (e) {
                 console.error(e);
                 console.error('Got Unkown Data', data, data.toString());
             }
         })
     }
-    workWithData(data, stringData, cachedData) {
+    workWithData(data, stringData) {
         log('Got Input:',stringData);
         /*
           Empfange von 0001 - 5 bytes => hello
@@ -150,13 +149,11 @@ export class AODVClient {
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return;
         }
-        if (this.cachedData) {
-            if (this.workWithData(stringData + this.cachedData, stringData + this.cachedData) === false ){
+        if (cachedData) {
+            if (this.workWithData(stringData, stringData) === false ){
                 console.log('ERROR APPEARED', stringData, (' AT,OK\r\n'  === stringData), (data === ' AT,OK\r\n'));
             }
         }
-        this.cachedData = stringData;
-
         return false;
     }
 
