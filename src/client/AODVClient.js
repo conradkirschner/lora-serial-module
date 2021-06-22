@@ -101,13 +101,20 @@ export class AODVClient {
 
     getData(){
         const that = this;
+        let lastStream = '';
+        let tryMerge = false;
+
         this.parser.on('data', (data) => {
             try {
-                that.workWithData(data, data.toString());
+                tryMerge = (that.workWithData(data, data.toString()) === false);
             } catch (e) {
                 console.error(e);
                 console.error('Got Unkown Data', data, data.toString());
             }
+            if (tryMerge) {
+                tryMerge = (that.workWithData(lastStream+data, (lastStream+data).toString()) === false);
+            }
+            lastStream = data;
         })
     }
     workWithData(data, stringData) {
