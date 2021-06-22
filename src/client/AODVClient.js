@@ -124,6 +124,9 @@ export class AODVClient {
         })
     }
     workWithData(data, stringData) {
+        if (data.length === 0) return;
+        if (stringData.length === 0) return;
+
         log('Got Input:',stringData);
         /*
           Empfange von 0001 - 5 bytes => hello
