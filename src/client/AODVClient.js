@@ -146,7 +146,7 @@ export class AODVClient {
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return;
         }
-        console.log('ERROR APPEARED', data);
+        console.log('ERROR APPEARED', stringData);
         return false;
     }
 
