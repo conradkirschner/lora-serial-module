@@ -71,7 +71,7 @@ export class AODVClient {
 
     async runCommand() {
         this.nextCommand();
-        console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)));
+        console.log('RUN: ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
         if (this.currentWaitCounter !== 0) return false;
         if (this.currentCommand.command === undefined) return false;
 
@@ -81,12 +81,14 @@ export class AODVClient {
         const port = this.parser;
 
         return new Promise((resolve, reject) => {
-
+            console.log("written to serial")
             port.write(command.command + `\r\n`, function (err) {
                 if (err) {
                     reject(false);
                 }
                 resolve(true);
+                console.log("written to serial")
+
                 const copy = JSON.parse(JSON.stringify(command));
                 that.history.push(copy);
             });
