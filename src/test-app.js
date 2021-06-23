@@ -1,46 +1,25 @@
 import SerialPort from "serialport";
 import {log} from "./logger";
-
-const port = new SerialPort('/dev/ttyS0', {
-    baudRate: 115200
+ const port = new SerialPort('/dev/ttyS0', {
+    baudRate: 115200,
+    parity: 'none',
+    flowControl: 0,
+    stopBits: 1,
+    dataBits: 8,
 });
-port.on('error', function (err) {
-    log('Error: ', err.message)
-});
-
-let streambuffer = null;
-
-port.on('readable', function () {
-    const result =  port.read();
-    if (streambuffer === null) {
-        streambuffer =  result;
-    } else {
-        streambuffer = streambuffer + result;
-    }
-    const match = /\r|\n/.exec(result);
-    if (match) {
-        /**
-         * @BUGFIX -> Here we check the first 2 chars must be AT or LR,
-         */
-        if (
-            streambuffer.length > 3 ||
-            (streambuffer.toString()[0] === 'A'  && streambuffer.toString()[1]) === 'T' ||
-            (streambuffer.toString()[0] === 'L'  && streambuffer.toString()[1] === 'R')
-        ){
-
-        }
-        if (streambuffer.length > 1) {
-            flush(streambuffer);
-        }
-        streambuffer = null;
-    }
-})
-
+const dataLog = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
 const flush = (data) => {
     console.log('FULL-MESSAGE:' ,data.toString() , data.length);
 }
 
-port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
+dataLog.on('data', function (data) {
+    flush(data);
+})
+dataLog.on('error', function (err) {
+    log('Error: ', err.message)
+});
+
+port.pipe(dataLog)
 
 port.write('AT+RX\r\n', (e) => {
     console.log('AT+RX pushed to serial', e);
