@@ -14,10 +14,16 @@ let streambuffer = null;
 // Read data that is available but keep the stream in "paused mode"
 port.on('readable', function () {
     const result =  port.read();
-    streambuffer = streambuffer + result;
+    if (streambuffer === null) {
+        streambuffer =  result;
+    } else {
+        streambuffer = streambuffer + result;
+    }
     var match = /\r|\n/.exec(result);
     if (match) {
+
         flush(streambuffer);
+        streambuffer = null;
         // console.log('linebreak found in ', result, result.toString());
     }
     // console.log('Data - stopped:', result, result.toString())
