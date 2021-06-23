@@ -94,9 +94,9 @@ export class AODVClient {
                 });
                 return;
             }
-            console.log("push to serial" + Buffer.concat(command.command, Buffer.from('\r\n')), command.command, JSON.stringify(command.command));
+            console.log("push to serial" + Buffer.concat(command.command.data, Buffer.from('\r\n')), command.command, JSON.stringify(command.command));
 
-            port.write(Buffer.concat(command.command, Buffer.from('\r\n')), function (err) {
+            port.write(Buffer.concat(command.command.data, Buffer.from('\r\n')), function (err) {
                 if (err) {
                     reject(false);
                 }
