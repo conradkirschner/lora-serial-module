@@ -122,8 +122,14 @@ export class AODVClient {
         const [command, ...datablock] = stringData.split(',');
 
         if (command === 'LR') {
-            this.history[this.history.length - 1].answer = datablock;
-            this.inputParser.recievedData(datablock);
+            try {
+                this.inputParser.recievedData(datablock);
+                this.history[this.history.length - 1].answer = datablock;
+
+            } catch (e) {
+                console.log(e);
+            }
+
             return true;
         }
         if (stringData.indexOf('MODULE:HIMO-01M(V0.4)') !== -1) {
