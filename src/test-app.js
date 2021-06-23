@@ -12,7 +12,7 @@ parser.on('error', function (err) {
 });
 parser.on('data', (e)=> {
     console.log('-----------------------------')
-    console.log(toString(e));
+    console.log('Got Data: ', toString(e));
     console.log('-----------------------------')
     console.log(e.toString());
 })
