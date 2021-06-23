@@ -12,7 +12,6 @@ export const SEND_TEXT_REQUEST_ACK = 7;
  * @param byteArray
  */
 export const getType = (byteArray ) => {
-    console.log(byteArray);
     const currentBufferInt = Buffer.from(byteArray).readUInt8(0);
     /** @type Buffer**/
     if (currentBufferInt === Buffer.from([RREQ]).readUInt8(0)) {

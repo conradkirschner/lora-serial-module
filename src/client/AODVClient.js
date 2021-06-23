@@ -7,7 +7,6 @@ import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
 import {MessageHandler} from "./MessageHandler";
 
-console.log(DEVICEID);
 export class AODVClient {
     parser = null;
     inputParser = new InputParser(this);
@@ -68,6 +67,7 @@ export class AODVClient {
             setTimeout(()=> {memorized(clientId, message, that, tries)},3*1000); // retry send message after 3min
             return;
         }
+        console.log('Send Text Message');
         that.pushCommand(setAddress(route));
         that.messageHandler.addChatMessage(clientId, message, true);
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
@@ -96,7 +96,6 @@ export class AODVClient {
                 });
                 return;
             }
-            console.log("push to serial", JSON.stringify(command.command));
 
             port.write(Buffer.from(command.command.data).toString('ascii') + '\r\n', function (err) {
                 if (err) {
@@ -152,7 +151,6 @@ export class AODVClient {
         }
         if (!isNaN(parseInt(datablock[0]))) {
             this.currentCommand.answer = parseInt(datablock[0]);
-            console.log(this.currentCommand.answer);
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return true;
         }
