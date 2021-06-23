@@ -59,7 +59,7 @@ export class AODVClient {
         }
         const route = that.router.getRoutingNode(clientId);
         if (route === null) {
-            const rreq = packages.send.rreq(1, 0, DEVICEID, that.messageHandler.currentSequenceNumber, clientId, 1);
+            const rreq = packages.send.rreq(1, 0, DEVICEID,1, that.messageHandler.currentSequenceNumber, clientId, 1);
             console.log('REQUEST OBJECT', rreq);
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);

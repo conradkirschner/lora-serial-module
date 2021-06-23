@@ -61,7 +61,7 @@ export class InputParser {
                 this.client.pushCommand(setBroadcast());
                 rreq_data.hopCount++;
 
-                this.client.pushSendCommand(packages.send.rreq((rreq_data.uflag), rreq_data.hopCount, rreq_data.originAddress, rreq_data.originSequenceNumber, rreq_data.destinationAddress, rreq_data.destinationSequenceNumber));
+                this.client.pushSendCommand(packages.send.rreq((rreq_data.uflag), rreq_data.hopCount, rreq_data.originAddress, rreq_data.rreq_id, rreq_data.originSequenceNumber, rreq_data.destinationAddress, rreq_data.destinationSequenceNumber));
 
                 setTimeout(()=> {
                     this.client.pushCommand(setDestination(source));

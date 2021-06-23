@@ -1,7 +1,7 @@
 import {RREQ} from "./types";
 
-export const create = (uflag, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber) => {
-    return Buffer.from([RREQ, (uflag)?uflag:1, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber]);
+export const create = (uflag, hopCount, originAddress, rreq_id, originSequenceNumber, destinationAddress, destinationSequenceNumber) => {
+    return Buffer.from([RREQ, (uflag)?uflag:1, hopCount, originAddress, rreq_id, originSequenceNumber, destinationAddress, destinationSequenceNumber]);
 }
 export const read = (byteArray) => {
     return {

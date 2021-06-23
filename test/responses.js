@@ -10,6 +10,7 @@ export const B_route_request_broadcast = createFakeResponse(
         1,
         10,
         1,
+        1,
         13,
         0,
     )
@@ -20,6 +21,7 @@ export const C_route_request_broadcast = createFakeResponse(
         1,
         1,
         4,
+        2,
         1,
         13,
         0,
