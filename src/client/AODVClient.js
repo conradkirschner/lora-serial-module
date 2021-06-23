@@ -89,9 +89,6 @@ export class AODVClient {
                     reject(false);
                 }
                 resolve(true);
-                console.log("written to serial")
-
-
                 const copy = JSON.parse(JSON.stringify(command));
                 that.history.push(copy);
             });
