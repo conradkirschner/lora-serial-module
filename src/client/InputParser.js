@@ -31,11 +31,12 @@ export class InputParser {
                 const rreq_data = packages.read.rreq(packageData);
                 if (rreq_data.destinationAddress == DEVICEID) {
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
-                    this.client.pushCommand(setDestination(source));
                     const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, source)
-                    this.client.router.addRouteIfNotExist(newRoute);
                     console.log("Added routes");
-                    console.log(this.client.router.routes);
+
+                    this.client.pushCommand(setDestination(source));
+                    this.client.router.addRouteIfNotExist(newRoute);
+                    console.log('GOT ROUTES:', this.client.router.routes);
                     this.client.pushSendCommand(packages.send.rrep(
                         rreq_data.hopCount,
                         rreq_data.originAddress,
