@@ -3,7 +3,7 @@ import {log} from "./logger";
 const toString = (bytes) => {
     let result = '';
     for (let i = 0; i < bytes.length; i++) {
-        console.log('convert ', bytes[i] , ' to ', bytes[i].toString() , '.');
+        console.log('convert ', Buffer.from(bytes[i]) , ' to ', Buffer.from(bytes[i]).toString('ascii') , '.');
         result = result + bytes[i].toString()
     }
 }
