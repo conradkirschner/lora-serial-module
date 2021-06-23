@@ -72,10 +72,13 @@ export class InputParser {
                 const rrep_data = packages.read.rrep(packageData);
                 console.log('GOT NEW RREP DATA', rrep_data)
                 const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, source)
-                const index =  this.client.router.findRoute(newRoute);
+                const index = this.client.router.findRoute(newRoute);
                 if (index === -1 ) {
+                    console.log('NOT FOUND ROUTE adding it');
                     this.client.router.addRouteIfNotExist(newRoute)
                 } else {
+                    console.log('FOUND ROUTE ', index, ' - update it');
+
                     this.client.router.updateRoute(newRoute)
                 }
                 this.client.pushCommand(setDestination(source));
