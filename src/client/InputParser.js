@@ -129,6 +129,12 @@ export class InputParser {
 
                 break;
             case 'SEND_TEXT_REQUEST_ACK':
+                setTimeout(()=> {
+                    this.client.pushCommand(setDestination(source));
+                    this.client.pushSendCommand(
+                        packages.send.send_text_request_ack()
+                    );
+                }, 1000);
                 break;
             case 'RERR':
                 break;
