@@ -47,7 +47,7 @@ export class InputParser {
                 }
                 // check if node can route this request
                 const possibleRoute = this.client.router.getRoute(rreq_data.destinationAddress);
-                console.log(possibleRoute, JSON.stringify(this.client.router.routes));
+                console.log('possibleRoute', possibleRoute, JSON.stringify(this.client.router.routes));
                 if (possibleRoute) {
                     if (possibleRoute.dest_sequence_num >= rreq_data.originSequenceNumber) {
                         this.client.pushCommand(setDestination(source));
