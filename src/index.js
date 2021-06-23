@@ -14,7 +14,11 @@ let client = null;
 
 (async ()=>{
     const port = new SerialPort('/dev/ttyS0', {
-        baudRate: 115200
+        baudRate: 115200,
+        parity: 'none',
+        flowControl: 0,
+        stopBits: 1,
+        dataBits: 8,
     });
     /**
      * Client
