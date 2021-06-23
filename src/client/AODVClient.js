@@ -98,7 +98,7 @@ export class AODVClient {
             console.log("push to serial", command.command);
             console.log("push to serial", command.command.data);
 
-            port.write(command.command.toString('ascii') + '\r\n', function (err) {
+            port.write(Buffer.from(command.command.data).toString('ascii') + '\r\n', function (err) {
                 if (err) {
                     reject(false);
                 }
