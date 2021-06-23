@@ -19,17 +19,13 @@ port.on('readable', function () {
     } else {
         streambuffer = streambuffer + result;
     }
-    var match = /\r|\n/.exec(result);
+    const match = /\r|\n/.exec(result);
     if (match) {
-        if (streambuffer.length === 0) {
-
+        if (streambuffer.length >= 1) {
+            flush(streambuffer);
         }
-        console.log(streambuffer.length)
-        flush(streambuffer);
         streambuffer = null;
-        // console.log('linebreak found in ', result, result.toString());
     }
-    // console.log('Data - stopped:', result, result.toString())
 })
 
 const flush = (data) => {
