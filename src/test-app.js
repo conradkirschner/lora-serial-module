@@ -12,7 +12,7 @@ port.on('error', function (err) {
 
 // Read data that is available but keep the stream in "paused mode"
 port.on('readable', function () {
-    // const result =  port.read();
+    const result =  port.read();
     // console.log('Data - stopped:', result, result.toString())
 })
 
