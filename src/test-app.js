@@ -13,6 +13,10 @@ port.on('error', function (err) {
 // Read data that is available but keep the stream in "paused mode"
 port.on('readable', function () {
     const result =  port.read();
+    var match = /\r|\n/.exec(result);
+    if (match) {
+        console.log('linebreak found in ', result);
+    }
     // console.log('Data - stopped:', result, result.toString())
 })
 
