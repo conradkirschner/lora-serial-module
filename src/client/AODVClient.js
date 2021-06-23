@@ -24,6 +24,7 @@ export class AODVClient {
 
     buffer = [];
     history = [];
+    answers = [];
     currentCommand = {
         command: null,
         answer: null,
@@ -124,7 +125,7 @@ export class AODVClient {
         if (command === 'LR') {
             try {
                 this.inputParser.recievedData(datablock);
-                this.history[this.history.length].answer = datablock;
+                this.answers.push(datablock);
 
             } catch (e) {
                 console.log(e);
