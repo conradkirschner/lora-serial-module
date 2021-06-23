@@ -13,20 +13,21 @@ RESET_gpio()
 let client = null;
 
 (async ()=>{
+    const port = new SerialPort('/dev/ttyS0', {
+        baudRate: 115200
+    });
     /**
      * Client
      * @type {AODVClient}
      */
-    client = new AODVClient(parser);
+    client = new AODVClient(port);
     client.start();
 
     /**
      * Parser
      */
 
-    const port = new SerialPort('/dev/ttyS0', {
-        baudRate: 115200
-    });
+
     port.on('error', function (err) {
         log('Error: ', err.message)
     });
