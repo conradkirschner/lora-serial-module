@@ -89,6 +89,7 @@ export class InputParser {
 
                     this.client.router.updateRoute(newRoute)
                 }
+                console.log('current log',   this.client.router);
                 this.client.pushCommand(setDestination(source));
                 this.client.pushSendCommand(packages.send.rrep_ack());
                 break;
