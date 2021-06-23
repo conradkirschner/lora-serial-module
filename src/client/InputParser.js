@@ -34,7 +34,8 @@ export class InputParser {
                     this.client.pushCommand(setDestination(source));
                     const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, source)
                     this.client.router.addRouteIfNotExist(newRoute);
-
+                    console.log("Added routes");
+                    console.log(this.client.router.routes);
                     this.client.pushSendCommand(packages.send.rrep(
                         rreq_data.hopCount,
                         rreq_data.originAddress,
