@@ -19,7 +19,7 @@ port.on('readable', function () {
     }
     const match = /\r|\n/.exec(result);
     if (match) {
-        if (streambuffer.length >= 1) {
+        if (streambuffer.length > 1) {
             flush(streambuffer);
         }
         streambuffer = null;
