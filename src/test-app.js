@@ -15,7 +15,7 @@ port.on('readable', function () {
     const result =  port.read();
     var match = /\r|\n/.exec(result);
     if (match) {
-        console.log('linebreak found in ', result);
+        console.log('linebreak found in ', result, result.toString());
     }
     // console.log('Data - stopped:', result, result.toString())
 })
