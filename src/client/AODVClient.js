@@ -83,7 +83,7 @@ export class AODVClient {
         const that = this;
         const port = this.parser;
         return new Promise((resolve, reject) => {
-            console.log("push to serial" + command.command);
+            console.log("push to serial" + command.command, command.command, JSON.stringify(command.command));
             port.write(command.command + `\r\n`, function (err) {
                 if (err) {
                     reject(false);
