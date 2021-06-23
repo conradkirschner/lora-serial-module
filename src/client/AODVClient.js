@@ -7,6 +7,7 @@ import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
 import {MessageHandler} from "./MessageHandler";
 
+console.log(DEVICEID);
 export class AODVClient {
     parser = null;
     inputParser = new InputParser(this);
@@ -59,6 +60,7 @@ export class AODVClient {
         const route = that.router.getRoutingNode(clientId);
         if (route === null) {
             const rreq = packages.send.rreq(1, 0, DEVICEID, that.messageHandler.currentSequenceNumber, clientId, 1);
+            console.log('REQUEST OBJECT', rreq);
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
