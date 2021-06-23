@@ -48,9 +48,7 @@ export class RoutingHandler {
     }
 
     addRoute(route) {
-        if (route.valid) { // @todo unnessesary maybe
-            this.routes.push(route);
-        }
+        this.routes.push(route);
     }
     findRoute(route) {
         let index = -1
