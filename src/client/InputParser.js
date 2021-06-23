@@ -32,7 +32,7 @@ export class InputParser {
                 if (rreq_data.destinationAddress == DEVICEID) {
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
                     this.client.pushCommand(setDestination(source));
-                    const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, source)
+                    const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, source)
                     this.client.router.addRouteIfNotExist(newRoute);
 
                     this.client.pushSendCommand(packages.send.rrep(
