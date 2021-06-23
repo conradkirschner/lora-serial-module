@@ -6,7 +6,7 @@ const toString = (bytes) => {
 const parser = new SerialPort('/dev/ttyS0', {
     baudRate: 115200
 });
-parser.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n` }))
+parser.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
 parser.on('error', function (err) {
     log('Error: ', err.message)
 });
