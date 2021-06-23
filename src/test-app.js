@@ -21,9 +21,10 @@ port.on('readable', function () {
     }
     var match = /\r|\n/.exec(result);
     if (match) {
-        if (streambuffer.lenbits === 0) {
+        if (streambuffer.length === 0) {
 
         }
+        console.log(streambuffer.length)
         flush(streambuffer);
         streambuffer = null;
         // console.log('linebreak found in ', result, result.toString());
@@ -32,7 +33,7 @@ port.on('readable', function () {
 })
 
 const flush = (data) => {
-    console.log('FULL-MESSAGE:' ,data.toString() , data.lenbits);
+    console.log('FULL-MESSAGE:' ,data.toString() , data.length);
 }
 // Switches the port into "flowing mode"
 port.on('data', function (data) {
