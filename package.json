@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec npm run babel-node -- ./src/index.js",
+    "start": "nodemon --exec npm run babel-node -- ./src/index.js --inspect",
     "start:no-babel": "node ./src/index.js",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
     "babel-node": "babel-node --presets=@babel/preset-env",
