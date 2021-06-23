@@ -15,6 +15,9 @@ parser.on('error', function (err) {
     log('Error: ', err.message)
 });
 parser.on('data', (e)=> {
+    console.log('-----------------------------')
+    toString(e);
+    console.log('-----------------------------')
     console.log(e.toString());
 })
 parser.write('AT+RX\r\n', (e) => {
