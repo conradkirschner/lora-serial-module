@@ -59,7 +59,7 @@ export class InputParser {
                 }
 
                 this.client.pushCommand(setBroadcast());
-                rreq_data.hopCount++;
+                rreq_data.hopCount = rreq_data.hopCount++;
 
                 this.client.pushSendCommand(
                     packages.send.rreq(
