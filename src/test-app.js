@@ -22,7 +22,7 @@ port.on('data', function (data) {
 })
 
 port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
-
+console.log('AT+RX push to serial', e);
 port.write('AT+RX\r\n', (e) => {
-    console.log('done', e);
+    console.log('AT+RX pushed to serial', e);
 });
