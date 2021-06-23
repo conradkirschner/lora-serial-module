@@ -70,6 +70,7 @@ export class InputParser {
                 break;
             case 'RREP':
                 const rrep_data = packages.read.rrep(packageData);
+                console.log('GOT NEW RREP DATA', rrep_data)
                 const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, source)
                 const index =  this.client.router.findRoute(newRoute);
                 if (index === -1 ) {
