@@ -124,7 +124,7 @@ export class AODVClient {
         if (command === 'LR') {
             try {
                 this.inputParser.recievedData(datablock);
-                this.history[this.history.length - 1].answer = datablock;
+                this.history[this.history.length].answer = datablock;
 
             } catch (e) {
                 console.log(e);
