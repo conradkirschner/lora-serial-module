@@ -20,6 +20,8 @@ let client = null;
         stopBits: 1,
         dataBits: 8,
     });
+    port.close();
+    port.open();
     const parser = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
     port.pipe(parser)
 
