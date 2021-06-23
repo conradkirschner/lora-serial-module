@@ -20,6 +20,9 @@ let client = null;
         stopBits: 1,
         dataBits: 8,
     });
+    const parser = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
+    port.pipe(parser)
+
     /**
      * Client
      * @type {AODVClient}
@@ -36,33 +39,10 @@ let client = null;
         log('Error: ', err.message)
     });
 
-    let streambuffer = null;
-
-    port.on('readable', function () {
-        const result =  port.read();
-        if (streambuffer === null) {
-            streambuffer =  result;
-        } else {
-            streambuffer = streambuffer + result;
+    parser.on('data', function (data) {
+            flush(data);
         }
-        const match = /\r|\n/.exec(result);
-        if (match) {
-            /**
-             * @BUGFIX -> Here we check the first 2 chars must be AT or LR,
-             */
-            if (
-                streambuffer.length > 3 ||
-                (streambuffer.toString()[0] === 'A'  && streambuffer.toString()[1]) === 'T' ||
-                (streambuffer.toString()[0] === 'L'  && streambuffer.toString()[1] === 'R')
-            ){
-
-            }
-            if (streambuffer.length > 1) {
-                flush(streambuffer);
-            }
-            streambuffer = null;
-        }
-    })
+    )
 
     const flush = (data) => {
         client.workWithData(data, data.toString())
