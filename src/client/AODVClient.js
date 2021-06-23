@@ -80,7 +80,6 @@ export class AODVClient {
         if (this.currentCommand.command === undefined) return false;
         console.log('RUN:1 ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
         this.currentWaitCounter = this.currentWaitCounter + 1;
-        console.log('RUN:2 ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
 
         const command = JSON.parse(JSON.stringify(this.currentCommand));
         const that = this;
@@ -98,8 +97,6 @@ export class AODVClient {
                 return;
             }
             console.log("push to serial", JSON.stringify(command.command));
-            console.log("push to serial", command.command);
-            console.log("push to serial", command.command.data);
 
             port.write(Buffer.from(command.command.data).toString('ascii') + '\r\n', function (err) {
                 if (err) {
@@ -159,7 +156,6 @@ export class AODVClient {
             // sendText(`Got answer from you -> ${lastMessageStats.data[0]}<- ${lastMessageStats.db}`);
             return true;
         }
-        console.log('ERROR APPEARED', stringData, data);
         return false;
     }
 
