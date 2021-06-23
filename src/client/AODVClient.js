@@ -17,7 +17,6 @@ export class AODVClient {
 
     constructor(parser) {
         this.parser = parser;
-        this.getData();
     }
 
     router = new RoutingHandler();
@@ -100,30 +99,7 @@ export class AODVClient {
 
     }
 
-    getData(){
-        const that = this;
-        let lastStream = '';
-        let tryMerge = false;
 
-        this.parser.on('data', (data) => {
-            if (data.length === 0) return;
-            try {
-                tryMerge = (that.workWithData(data, data.toString()) === false);
-            } catch (e) {
-                console.error(e);
-                console.error('Got Unkown Data', data, data.toString());
-            }
-            if (tryMerge) {
-                this.currentWaitCounter= this.currentWaitCounter++;
-                console.log('merge ', lastStream, data)
-                tryMerge = (that.workWithData(lastStream+data, (lastStream+data).toString()) === false);
-                lastStream = '';
-            } else {
-                lastStream = data;
-            }
-
-        })
-    }
     workWithData(data, stringData) {
         log('Got Input:',stringData);
         /*
