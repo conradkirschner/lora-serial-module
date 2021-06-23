@@ -19,6 +19,16 @@ port.on('readable', function () {
     }
     const match = /\r|\n/.exec(result);
     if (match) {
+        /**
+         * @BUGFIX -> Here we check the first 2 chars must be AT or LR,
+         */
+        if (
+            streambuffer.length > 3 ||
+            (streambuffer.toString()[0] === 'A'  && streambuffer.toString()[1]) === 'T' ||
+            (streambuffer.toString()[0] === 'L'  && streambuffer.toString()[1] === 'R')
+        ){
+
+        }
         if (streambuffer.length > 1) {
             flush(streambuffer);
         }
