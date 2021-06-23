@@ -18,6 +18,10 @@ export class MessageHandler{
             this.chatMessages[clientId] = [];
         }
         this.chatMessages[clientId].push(this.addText(ownSender, message));
+        //this also stops someone scrolling back and viewing sensitive data that may have been logged
+        process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
+        console.clear();
+        console.log(JSON.stringify(this.chatMessages));
     }
 
     addText(isOwn, message) {

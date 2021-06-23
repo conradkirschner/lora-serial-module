@@ -61,13 +61,12 @@ export class AODVClient {
         if (route === null) {
             const rreq = packages.send.rreq(
                 1,
-                0, // we use Hop count 0 to declare that every message should be routed through this node
+                0,
                 1,
                 DEVICEID,
                 that.messageHandler.currentSequenceNumber,
                 clientId,
                 );
-            console.log('REQUEST OBJECT', rreq);
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
@@ -85,7 +84,6 @@ export class AODVClient {
         this.nextCommand();
         if (this.currentWaitCounter > 0) return false;
         if (this.currentCommand.command === undefined) return false;
-        console.log('RUN:1 ', JSON.parse(JSON.stringify(this.currentCommand)), this.currentWaitCounter, this.currentCommand.command);
         this.currentWaitCounter = this.currentWaitCounter + 1;
 
         const command = JSON.parse(JSON.stringify(this.currentCommand));
