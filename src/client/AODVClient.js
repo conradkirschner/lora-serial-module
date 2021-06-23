@@ -94,16 +94,18 @@ export class AODVClient {
                 });
                 return;
             }
-            console.log("push to serial" + Buffer.concat(command.command.data, Buffer.from('\r\n')), command.command, JSON.stringify(command.command));
-
-            port.write(Buffer.concat(command.command.data, Buffer.from('\r\n')), function (err) {
-                if (err) {
-                    reject(false);
-                }
-                resolve(true);
-                const copy = JSON.parse(JSON.stringify(command));
-                that.history.push(copy);
-            });
+            console.log("push to serial", JSON.stringify(command.command));
+            console.log("push to serial", command.command);
+            console.log("push to serial", command.command.data);
+            //
+            // port.write(Buffer.concat(command.command.data, Buffer.from('\r\n')), function (err) {
+            //     if (err) {
+            //         reject(false);
+            //     }
+            //     resolve(true);
+            //     const copy = JSON.parse(JSON.stringify(command));
+            //     that.history.push(copy);
+            // });
         });
 
     }
