@@ -3,20 +3,25 @@ import {log} from "./logger";
 const toString = (bytes) => {
     return bytes.toString('ascii');
 }
-const parser = new SerialPort('/dev/ttyS0', {
+const port = new SerialPort('/dev/ttyS0', {
     baudRate: 115200
 });
-parser.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
-parser.on('error', function (err) {
+port.on('error', function (err) {
     log('Error: ', err.message)
 });
-parser.on('data', (e)=> {
-    console.log('-----------------------------')
-    console.log('Got Data: ', toString(e));
-    console.log('-----------------------------')
-    console.log(e.toString());
+
+// Read data that is available but keep the stream in "paused mode"
+port.on('readable', function () {
+    console.log('Data:', port.read())
 })
-parser.write('AT+RX\r\n', (e) => {
+
+// Switches the port into "flowing mode"
+port.on('data', function (data) {
+    console.log('Data:', data)
+})
+
+port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
+
+port.write('AT+RX\r\n', (e) => {
     console.log('done', e);
 });
-
