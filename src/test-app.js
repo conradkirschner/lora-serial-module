@@ -10,19 +10,25 @@ port.on('error', function (err) {
     log('Error: ', err.message)
 });
 
+let streambuffer = null;
 // Read data that is available but keep the stream in "paused mode"
 port.on('readable', function () {
     const result =  port.read();
+    streambuffer = streambuffer + result;
     var match = /\r|\n/.exec(result);
     if (match) {
-        console.log('linebreak found in ', result, result.toString());
+        flush(streambuffer);
+        // console.log('linebreak found in ', result, result.toString());
     }
     // console.log('Data - stopped:', result, result.toString())
 })
 
+const flush = (data) => {
+    console.log('FULL-MESSAGE:' ,data.toString());
+}
 // Switches the port into "flowing mode"
 port.on('data', function (data) {
-    console.log('Data - flow mode:', data, data.toString())
+    // console.log('Data - flow mode:', data, data.toString())
 })
 
 port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
