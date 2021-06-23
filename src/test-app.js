@@ -1,6 +1,12 @@
 import SerialPort from "serialport";
 import {log} from "./logger";
-
+const toString = (bytes) => {
+    let result = '';
+    for (let i = 0; i < bytes.length; i++) {
+        console.log('convert ', bytes[i] , ' to ', bytes[i].toString() , '.');
+        result = result + bytes[i].toString()
+    }
+}
 const parser = new SerialPort('/dev/ttyS0', {
     baudRate: 115200
 });
@@ -14,3 +20,4 @@ parser.on('data', (e)=> {
 parser.write('AT+RX\r\n', (e) => {
     console.log('done', e);
 });
+
