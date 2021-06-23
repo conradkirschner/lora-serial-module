@@ -58,6 +58,7 @@ export class AODVClient {
 
         }
         const route = that.router.getRoutingNode(clientId);
+        console.log('ROUTING TABLE: ', JSON.stringify(that.router.routes));
         if (route === null) {
             const rreq = packages.send.rreq(
                 1,
