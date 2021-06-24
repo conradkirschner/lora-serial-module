@@ -1,4 +1,4 @@
-sudo echo "[Unit]
+echo "[Unit]
 Description=hello_env.js - making your environment variables rad
 Documentation=https://example.com
 After=network.target
