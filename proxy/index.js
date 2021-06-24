@@ -1,5 +1,4 @@
 import SerialPort from "serialport";
-import {log} from "../src/logger";
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({ port: 8002 });
@@ -41,7 +40,7 @@ const startSerial = () => {
     port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
 
     port.on('error', function (err) {
-        log('Error: ', err.message)
+        console.error('Error: ', err.message)
     });
 }
 /**
