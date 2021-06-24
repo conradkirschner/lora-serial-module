@@ -20,7 +20,7 @@ let client = null;
     ws.on('open', function open() {
         console.log('connected to serial');
     });
-    ws.write = (...data) => {
+    ws.write = (data) => {
         ws.send(data);
     }
     ws.on('message', function incoming(data) {
