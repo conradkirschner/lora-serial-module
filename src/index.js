@@ -29,6 +29,8 @@ let client = null;
         }
 
         if (data === '#start#') {
+            const blacklist = 'JSON.parse(data.split()[2])';
+            console.log('blacklist', data.split('#')[1] ,blacklist);
             isConnected = true;
         }
     });

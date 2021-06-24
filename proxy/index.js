@@ -9,6 +9,7 @@ const connections = [];
 const blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 let isStarted = false;
 let port;
+console.log('BLACKLIST LOADED: ', blacklist);
 
 const isBlacklisted = (data) => {
     const [command, sender, ...rest] = data.split(',');
