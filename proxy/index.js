@@ -17,10 +17,10 @@ const isBlacklisted = (data) => {
 
     console.log('sender ', sender);
     console.log('blacklist ', blacklist)
-    console.log('info ', blacklist.indexOf(parseInt(sender)))
+    console.log('info ', blacklist.indexOf((parseInt(sender)).toString()))
 
     if (command !== 'LR') return false;
-    if (blacklist.indexOf(parseInt(sender)) !== -1) {
+    if (blacklist.indexOf((parseInt(sender)).toString())) !== -1) {
 
         return true;
     }
