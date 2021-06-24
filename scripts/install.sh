@@ -7,7 +7,7 @@ After=network.target
 Environment=NODE_PORT=3001
 Type=simple
 User=ubuntu
-ExecStart=/usr/bin/node /home/ubuntu/hello_env.js
+ExecStart=/usr/bin/npm npm run babel-node -- /home/pi/conrad/lora-serial-module/proxy/index.js
 Restart=on-failure
 
 [Install]
