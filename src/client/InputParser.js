@@ -73,7 +73,7 @@ export class InputParser {
 
                 this.client.pushSendCommand(
                     packages.send.rreq(
-                        (rreq_data.uflag),
+                        rreq_data.uflag,
                         rreq_data.hopCount,
                         rreq_data.rreq_id,
                         rreq_data.originAddress,
@@ -85,7 +85,7 @@ export class InputParser {
                 setTimeout(()=> {
                     this.client.pushCommand(setDestination(source));
                     this.client.pushSendCommand(packages.send.send_hop_ack());
-                }, 4000);
+                }, 20);
                 break;
             case 'RREP':
                 this.client.pushCommand(setDestination(source));
@@ -127,12 +127,10 @@ export class InputParser {
                             send_text_request_data.message
                         )
                     );
-                    setTimeout(()=> {
-                        this.client.pushCommand(setDestination(source));
-                        this.client.pushSendCommand(
-                            packages.send.send_hop_ack()
-                        );
-                    }, 2000);
+                    this.client.pushCommand(setDestination(source));
+                    this.client.pushSendCommand(
+                        packages.send.send_hop_ack()
+                    );
 
                 }
 
@@ -146,7 +144,7 @@ export class InputParser {
                     this.client.pushSendCommand(
                         packages.send.send_text_request_ack()
                     );
-                }, 1000);
+                }, 20);
                 break;
             case 'RERR':
                 break;

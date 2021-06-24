@@ -1,6 +1,14 @@
 import {RREQ} from "./types";
 
-export const create = (uflag, hopCount, rreq_id, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber) => {
+export const create = (
+    uflag,
+    hopCount,
+    rreq_id,
+    originAddress,
+    originSequenceNumber,
+    destinationAddress,
+    destinationSequenceNumber
+) => {
     console.log(uflag, hopCount,  rreq_id,  originAddress,originSequenceNumber, destinationAddress, destinationSequenceNumber)
     return Buffer.from([
         RREQ,

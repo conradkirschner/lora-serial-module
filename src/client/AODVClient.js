@@ -66,14 +66,13 @@ export class AODVClient {
                 0,
                 DEVICEID,
                 1,
-                that.messageHandler.currentSequenceNumber,
                 clientId,
-                0
-                );
+0
+            );
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
-            setTimeout(()=> {memorized(clientId, message, that, tries)},3*1000); // retry send message after 3min
+            setTimeout(()=> {memorized(clientId, message, that, tries)},30*1000); // retry send message after 3min
             return;
         }
         console.log('Send Text Message');
