@@ -77,8 +77,8 @@ export class AODVClient {
         }
         console.log('Send Text Message');
         that.pushCommand(setAddress(route));
-        that.messageHandler.addChatMessage(clientId, message, true);
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
+        console.log('GET TEXT', packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();
     }
 
