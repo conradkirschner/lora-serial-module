@@ -8,7 +8,7 @@
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "build:bridge": "node ./node_modules/.bin/babel  proxy -d dist",
-    "install": "node ./node_modules/.bin/babel  proxy -d dist",
+    "install": "sudo ./scripts/install.sh",
     "start:bridge:remote": "ssh s0566895@gridgateway.f4.htw-berlin.de echo \"1Himbeere\" && ssh pi@10.10.10.40  \"cd conrad/lora-serial-module/ && npm run start:bridge\"",
     "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
