@@ -63,8 +63,8 @@ export class AODVClient {
             const rreq = packages.send.rreq(
                 1,
                 0,
-                1,
                 DEVICEID,
+                1,
                 that.messageHandler.currentSequenceNumber,
                 clientId,
                 0
