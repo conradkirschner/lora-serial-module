@@ -12,9 +12,13 @@ let port;
 console.log('BLACKLIST LOADED: ', blacklist);
 
 const isBlacklisted = (data) => {
-    const [command, sender, ...rest] = data.split(',');
+    const strData = data.toString();
+    const [command, sender, ...rest] = strData.split(',');
     if (command !== 'LR') return false;
     if (blacklist.indexOf(parseInt(sender)) !== -1) {
+        console.log('sender ', sender);
+        console.log('blacklist ', blacklist)
+        console.log('info ', blacklist.indexOf(parseInt(sender)))
         return true;
     }
     return false;

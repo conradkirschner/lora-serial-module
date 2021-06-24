@@ -15,6 +15,7 @@ let client = null;
 (async ()=>{
     const WebSocket = require('ws');
 
+    console.info('Connect to -> ', 'ws://localhost:'+ process.env.port)
     const ws = new WebSocket('ws://localhost:'+ process.env.port);
     let isConnected = false;
     ws.on('open', function open() {
@@ -27,11 +28,12 @@ let client = null;
         ws.send(data);
     }
     ws.on('message', function incoming(data) {
+        console.log('data input:', data, isConnected)
         if (isConnected) {
             flush(data);
         }
 
-        if (data === '#start#') {
+        if (data.indexOf('#start#') !== -1) {
             const blacklist = 'JSON.parse(data.split()[2])';
             console.log('blacklist', data.split('#')[1] ,blacklist);
             isConnected = true;

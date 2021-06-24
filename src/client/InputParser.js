@@ -18,7 +18,7 @@ export class InputParser {
         this.parseData(source, bytes);
     }
     parseData (source, data) {
-        const possibleRoute = new RouteEntry(parseInt(source), 0, 0, null);
+        const possibleRoute = new RouteEntry(parseInt(source), 0, 0, parseInt(source));
         this.client.router.addRouteIfNotExist(possibleRoute)
 
         const type = getType(data[0]);
