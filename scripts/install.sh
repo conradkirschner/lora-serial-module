@@ -4,10 +4,10 @@ Documentation=https://example.com
 After=network.target
 
 [Service]
-Environment=NODE_PORT=3001
+Environment=NODE_PORT=8001
 Type=simple
-User=ubuntu
-ExecStart=/usr/bin/npm npm run babel-node -- /home/pi/conrad/lora-serial-module/proxy/index.js
+User=pi
+ExecStart=/usr/bin/node /home/pi/conrad/lora-serial-module/dist/index.js
 Restart=on-failure
 
 [Install]
