@@ -14,7 +14,7 @@ ExecStart=/usr/bin/node /home/pi/conrad/lora-serial-module/dist/index.js
 Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target" >> /lib/systemd/system/websocket-bridge.service
+WantedBy=multi-user.target" > /lib/systemd/system/websocket-bridge.service
 
 systemctl daemon-reload
 sudo systemctl start websocket-bridge
