@@ -9,8 +9,6 @@ let port;
 
 const isBlacklisted = (data) => {
     const [command, sender, ...rest] = data.split(',');
-    console.log('COMMAND: ', command)
-    console.log('SENDER: ', sender)
     if (command !== 'LR') return false;
     if(blacklist.indexOf(parseInt(sender)) !== -1 ){
         return true;
