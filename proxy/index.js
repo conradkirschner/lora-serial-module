@@ -24,7 +24,7 @@ const flush = (data) => {
         try {
             connections[i].send(data);
         } catch (e){
-            console.error(e);
+            console.error('WS ERROR: ',e);
         }
     }
 }
