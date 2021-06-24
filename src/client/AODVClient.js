@@ -67,6 +67,7 @@ export class AODVClient {
                 DEVICEID,
                 that.messageHandler.currentSequenceNumber,
                 clientId,
+                0
                 );
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
