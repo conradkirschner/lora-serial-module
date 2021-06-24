@@ -25,22 +25,6 @@ let client = null;
     const parser = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
     port.pipe(parser)
 
-    /**
-     * Client
-     * @type {AODVClient}
-     */
-    client = new AODVClient(port);
-    client.start();
-
-    /**
-     * Parser
-     */
-
-
-    port.on('error', function (err) {
-        log('Error: ', err.message)
-    });
-
     parser.on('data', function (data) {
             flush(data);
         }
@@ -51,6 +35,17 @@ let client = null;
     }
 
     port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
+
+    port.on('error', function (err) {
+        log('Error: ', err.message)
+    });
+
+    /**
+     * Client
+     * @type {AODVClient}
+     */
+    client = new AODVClient(port);
+    client.start();
 
 
     /**

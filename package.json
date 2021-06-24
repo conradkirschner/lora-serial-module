@@ -29,6 +29,7 @@
     "object-hash": "^2.2.0",
     "onoff": "^6.0.3",
     "regenerator-runtime": "^0.13.7",
-    "serialport": "9.0.8"
+    "serialport": "9.0.8",
+    "ws": "^7.5.0"
   }
 }
