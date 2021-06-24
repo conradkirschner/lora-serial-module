@@ -63,7 +63,7 @@ let client = null;
     /**
      * CMD Interface
      */
-    while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "yes") {
+    while(await askValue("Sende eine weitere Nachricht( 'yes' ) ") === "y") {
         const clientId = await askValue("ClientId:");
         const message = await askValue("Nachricht:");
         client.sendMessage(clientId, message);

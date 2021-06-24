@@ -34,7 +34,7 @@ export class InputParser {
                 }
                 if (rreq_data.destinationAddress == DEVICEID) {
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
-                    const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, parseInt(source))
+                    const newRoute = new RouteEntry(parseInt(source), rreq_data.hopCount, rreq_data.destinationSequenceNumber,rreq_data.destinationAddress )
                     console.log("Added routes");
 
                     this.client.pushCommand(setDestination(source));
@@ -50,6 +50,8 @@ export class InputParser {
                     break;
                 }
                 // check if node can route this request
+                const id = process.env.DEVICE_ID;
+
                 const possibleRoute = this.client.router.getRoute(rreq_data.destinationAddress);
                 console.log('possibleRoute', possibleRoute, JSON.stringify(this.client.router.routes));
                 if (possibleRoute) {
@@ -86,6 +88,9 @@ export class InputParser {
                 }, 4000);
                 break;
             case 'RREP':
+                this.client.pushCommand(setDestination(source));
+                this.client.pushSendCommand(packages.send.rrep_ack());
+
                 const rrep_data = packages.read.rrep(packageData);
                 const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, parseInt(source))
                 const index = this.client.router.findRoute(newRoute);
@@ -97,8 +102,7 @@ export class InputParser {
                     this.client.router.updateRoute(newRoute)
                 }
                 console.log('current log',   this.client.router);
-                this.client.pushCommand(setDestination(source));
-                this.client.pushSendCommand(packages.send.rrep_ack());
+
                 break;
             case 'RERR':
                 break;

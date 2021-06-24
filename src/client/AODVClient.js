@@ -2,7 +2,7 @@ import commands from "./commands";
 import {DEVICEID} from "../_global_constrains";
 import {log, info} from "../logger";
 import {InputParser} from "./InputParser";
-import {setAddress} from "./commands/lora";
+import {setAddress, setDestination} from "./commands/lora";
 import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
 import {MessageHandler} from "./MessageHandler";
@@ -63,6 +63,7 @@ export class AODVClient {
             const rreq = packages.send.rreq(
                 1,
                 0,
+                0,
                 DEVICEID,
                 1,
                 that.messageHandler.currentSequenceNumber,
@@ -76,7 +77,7 @@ export class AODVClient {
             return;
         }
         console.log('Send Text Message');
-        that.pushCommand(setAddress(route));
+        that.pushCommand(setDestination(route));
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         console.log('GET TEXT', packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();
