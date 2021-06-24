@@ -42,6 +42,8 @@ export class RoutingHandler {
     addRouteIfNotExist(route) {
         if (this.findRoute(route) === -1) {
             this.addRoute(route);
+            console.log('Route will be added', route);
+
             return;
         }
         console.log('Route already exist', route);
