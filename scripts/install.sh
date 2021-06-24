@@ -1,3 +1,6 @@
+#This needs to be executed as root!
+
+
 echo "[Unit]
 Description=hello_env.js - making your environment variables rad
 Documentation=https://example.com
@@ -13,3 +16,5 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target" >> /lib/systemd/system/websocket-bridge.service
 
+systemctl daemon-reload
+sudo systemctl start websocket-bridge
