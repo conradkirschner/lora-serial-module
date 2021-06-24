@@ -20,7 +20,7 @@ const isBlacklisted = (data) => {
     console.log('info ', blacklist.indexOf((parseInt(sender)).toString()))
 
     if (command !== 'LR') return false;
-    if (blacklist.indexOf((parseInt(sender)).toString())) !== -1) {
+    if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
 
         return true;
     }
