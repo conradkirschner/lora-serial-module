@@ -56,7 +56,7 @@ wss.on('connection', function connection(ws) {
         console.log('received: %s', message);
         port.write(message, (e)=> {
             console.log('written to serial', message);
-            flush(e);
+            // flush(e);
         })
     });
 });
