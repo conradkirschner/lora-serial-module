@@ -93,7 +93,7 @@ export class AODVClient {
         const port = this.parser;
         return new Promise((resolve, reject) => {
             if (typeof command.command === "string") {
-                console.log(command.command);
+                console.log('send command', command.command);
                 port.write(command.command + '\r\n', function (err) {
                     if (err) {
                         reject(false);
@@ -105,7 +105,7 @@ export class AODVClient {
 
                 return;
             }
-            console.log(Buffer.from(command.command.data).toString('ascii') + '\r\n');
+            console.log('Send Buffer', Buffer.from(command.command.data), Buffer.from(command.command.data).toString('ascii') + '\r\n');
             port.write(Buffer.from(command.command.data).toString('ascii') + '\r\n', function (err) {
                 if (err) {
                     reject(false);
