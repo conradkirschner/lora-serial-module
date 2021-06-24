@@ -18,7 +18,8 @@ const isBlacklisted = (data) => {
 
     console.log('sender ', sender);
     console.log('blacklist ', blacklist)
-    console.log('info ', blacklist.indexOf((parseInt(sender)).toString()))
+    console.log('info indexof: ', blacklist.indexOf((parseInt(sender)).toString()))
+    console.log('info if :  ',  (blacklist.indexOf((parseInt(sender)).toString()) !== -1))
 
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
 
