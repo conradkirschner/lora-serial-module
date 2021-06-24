@@ -9,6 +9,8 @@ let port;
 
 const isBlacklisted = (data) => {
     const [command, sender, ...rest] = data.split(',');
+    console.log('COMMAND: ', command)
+    console.log('SENDER: ', sender)
     if (command !== 'LR') return false;
     if(blacklist.indexOf(parseInt(sender)) !== -1 ){
         return true;
@@ -17,7 +19,7 @@ const isBlacklisted = (data) => {
 }
 const flush = (data) => {
     if (isBlacklisted(data)) {
-        console.log('blacklisted', data, data.toString());
+        console.log('blacklisted');
         return;
     }
     for (let i = 0; i < connections.length; i++) {
@@ -71,6 +73,7 @@ wss.on('connection', function connection(ws) {
             if (e) {
                 console.log('There was a error on writing to serial ')
                 console.error(e);
+                console.error(e.toString());
             }
             // flush(e);
         })
