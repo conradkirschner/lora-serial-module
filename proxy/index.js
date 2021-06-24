@@ -65,11 +65,14 @@ wss.on('connection', function connection(ws) {
     });
     ws.on('close', function close() {
         console.log('websocket disconnected');
-        port.close(()=>{
-            console.log('port closed');
-            port = null;
-            isStarted = false;
-        });
+        if (port) {
+            port.close(()=>{
+                console.log('port closed');
+                port = null;
+                isStarted = false;
+            });
+        }
+
 
     });
 });

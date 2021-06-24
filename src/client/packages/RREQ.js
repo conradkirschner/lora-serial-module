@@ -18,9 +18,9 @@ export const read = (byteArray) => {
         uflag: byteArray[0],
         hopCount: byteArray[1],
         rreq_id: byteArray[2],
-        originAddress: byteArray[3],
+        originAddress: parseInt(byteArray[3]),
         originSequenceNumber: byteArray[4],
-        destinationAddress: byteArray[5],
+        destinationAddress: parseInt(byteArray[5]),
         destinationSequenceNumber: byteArray[6],
     }
 }

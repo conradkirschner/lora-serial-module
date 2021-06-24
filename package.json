@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec npm run babel-node -- ./src/index.js ",
+    "start": "npm run babel-node -- ./src/index.js ",
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",

@@ -18,7 +18,7 @@ export class InputParser {
         this.parseData(source, bytes);
     }
     parseData (source, data) {
-        const possibleRoute = new RouteEntry(source, 0, 0, null);
+        const possibleRoute = new RouteEntry(parseInt(source), 0, 0, null);
         this.client.router.addRouteIfNotExist(possibleRoute)
 
         const type = getType(data[0]);
@@ -34,7 +34,7 @@ export class InputParser {
                 }
                 if (rreq_data.destinationAddress == DEVICEID) {
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
-                    const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, source)
+                    const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, parseInt(source))
                     console.log("Added routes");
 
                     this.client.pushCommand(setDestination(source));
@@ -87,7 +87,7 @@ export class InputParser {
                 break;
             case 'RREP':
                 const rrep_data = packages.read.rrep(packageData);
-                const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, source)
+                const newRoute = new RouteEntry(rrep_data.destinationAddress, rrep_data.hopCount, rrep_data.destinationSequenceNumber, parseInt(source))
                 const index = this.client.router.findRoute(newRoute);
                 if (index === -1 ) {
                     this.client.router.addRouteIfNotExist(newRoute)
