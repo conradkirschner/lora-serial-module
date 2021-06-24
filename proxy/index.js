@@ -27,6 +27,7 @@ const flush = (data) => {
     for (let i = 0; i < connections.length; i++) {
         try {
             connections[i].send(data);
+            console.log('transmitting to client', data);
         } catch (e) {
             console.error('WS ERROR: ', e);
         }
