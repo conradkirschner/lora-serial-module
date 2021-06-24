@@ -13,8 +13,7 @@
     "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
     "babel-node": "npx babel-node",
-    "test": "jest",
-    "service:install": "npm run build:bridge && npm run install"
+    "test": "jest"
   },
   "author": "Conrad Magnus Kirschner",
   "license": "ISC",
