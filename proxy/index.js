@@ -14,12 +14,12 @@ console.log('BLACKLIST LOADED: ', blacklist);
 const isBlacklisted = (data) => {
     const strData = data.toString();
     const [command, sender, ...rest] = strData.split(',');
+    if (command !== 'LR') return false;
 
     console.log('sender ', sender);
     console.log('blacklist ', blacklist)
     console.log('info ', blacklist.indexOf((parseInt(sender)).toString()))
 
-    if (command !== 'LR') return false;
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
 
         return true;
