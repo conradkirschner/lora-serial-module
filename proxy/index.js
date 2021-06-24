@@ -2,7 +2,7 @@ import SerialPort from "serialport";
 import {log} from "../src/logger";
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8001 });
+const wss = new WebSocket.Server({ port: 8002 });
 const connections = [];
 let isStarted = false;
 let port;
