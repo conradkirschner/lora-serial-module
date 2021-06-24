@@ -29,6 +29,9 @@ export class InputParser {
         switch (type) {
             case 'RREQ':
                 const rreq_data = packages.read.rreq(packageData);
+                if ( rreq_data.originAddress === DEVICEID) {
+                    break;
+                }
                 if (rreq_data.destinationAddress == DEVICEID) {
                     log('Got Route:', source, { nodes: [rreq_data.originAddress]})
                     const newRoute = new RouteEntry(rreq_data.destinationAddress, rreq_data.hopCount, rreq_data.destinationSequenceNumber, source)
