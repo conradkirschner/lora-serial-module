@@ -6,8 +6,8 @@
   "scripts": {
     "start": "nodemon --exec npm run babel-node -- ./src/index.js ",
     "start:debug": "babel-node --inspect ./src/index.js ",
-    "start:bridge": "node ./proxy/index.js ",
-    "start:bridge:test": "node ./proxy/client-test.js ",
+    "start:bridge": "npm run babel-node -- ./proxy/index.js ",
+    "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
     "babel-node": "babel-node --presets=@babel/preset-env",
     "test": "jest"
