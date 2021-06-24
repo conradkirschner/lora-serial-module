@@ -15,7 +15,7 @@ let client = null;
 (async ()=>{
     const WebSocket = require('ws');
 
-    const ws = new WebSocket('ws://localhost:8081');
+    const ws = new WebSocket('ws://localhost:8082');
     let isConnected = false;
     ws.on('open', function open() {
         console.log('connected to serial');
