@@ -1,7 +1,7 @@
 import SerialPort from "serialport";
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({ port: 8002 });
+const wss = new WebSocket.Server({ port: 8001 });
 const connections = [];
 const blacklist = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]
 let isStarted = false;
