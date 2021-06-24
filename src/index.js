@@ -15,10 +15,13 @@ let client = null;
 (async ()=>{
     const WebSocket = require('ws');
 
-    const ws = new WebSocket('ws://localhost:8083');
+    const ws = new WebSocket('ws://localhost:'+ process.env.port);
     let isConnected = false;
     ws.on('open', function open() {
         console.log('connected to serial');
+    });
+    ws.on('error', function open(e) {
+        console.log('ws socket', e);
     });
     ws.write = (data) => {
         ws.send(data);

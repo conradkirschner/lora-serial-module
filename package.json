@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run babel-node -- ./src/index.js ",
+    "start": "set port=8001 && npm run babel-node -- ./src/index.js ",
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "build:bridge": "node ./node_modules/.bin/babel  proxy -d dist",
