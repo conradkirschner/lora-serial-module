@@ -13,38 +13,36 @@ RESET_gpio()
 let client = null;
 
 (async ()=>{
-    const port = new SerialPort('/dev/ttyS0', {
-        baudRate: 115200,
-        parity: 'none',
-        flowControl: 0,
-        stopBits: 1,
-        dataBits: 8,
-    });
-    port.close();
-    port.open();
-    const parser = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
-    port.pipe(parser)
+    const WebSocket = require('ws');
 
-    parser.on('data', function (data) {
+    const ws = new WebSocket('ws://localhost:8080');
+    let isConnected = false;
+    ws.on('open', function open() {
+        console.log('connected to serial');
+    });
+    ws.write = (...data) => {
+        ws.send(data);
+    }
+    ws.on('message', function incoming(data) {
+        if (isConnected) {
             flush(data);
         }
-    )
+
+        if (data === '#start#') {
+            isConnected = true;
+        }
+    });
 
     const flush = (data) => {
         client.workWithData(data, data.toString())
     }
 
-    port.pipe(new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' }))
-
-    port.on('error', function (err) {
-        log('Error: ', err.message)
-    });
 
     /**
      * Client
      * @type {AODVClient}
      */
-    client = new AODVClient(port);
+    client = new AODVClient(ws);
     client.start();
 
 
