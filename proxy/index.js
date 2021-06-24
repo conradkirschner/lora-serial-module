@@ -56,7 +56,7 @@ wss.on('connection', function connection(ws) {
         console.log('received: %s', message);
         port.write(message, (e)=> {
             console.log('written to serial', message);
-            if (e !== null) {
+            if (e) {
                 console.log('There was a error on writing to serial ')
                 console.error(e);
             }
