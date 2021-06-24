@@ -5,19 +5,19 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec npm run babel-node -- ./src/index.js ",
-    "start:debug": "babel-node --inspect ./src/index.js ",
+    "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
-    "babel-node": "babel-node --presets=@babel/preset-env",
+    "babel-node": "npx babel-node",
     "test": "jest"
   },
   "author": "Conrad Magnus Kirschner",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.14.3",
-    "@babel/node": "^7.14.2",
-    "@babel/preset-env": "^7.14.4",
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
     "babel-loader": "^8.2.2"
   },
   "dependencies": {
