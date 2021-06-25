@@ -13,11 +13,23 @@ export class MessageHandler{
         return this.sequenceNumber;
     }
 
-    addChatMessage(clientId, message, ownSender) {
-        if (!this.chatMessages[clientId]) {
-            this.chatMessages[clientId] = [];
+    /**
+     *
+     * @param clientId origin
+     * @param message
+     * @param ownSender destination
+     */
+    addChatMessage(ownSender, message, clientId) {
+        let isOwnSending = false;
+        if (ownSender === process.env.DEVICE_ID) {
+            isOwnSending = true;
         }
-        this.chatMessages[clientId].push(this.addText(ownSender, message));
+
+        if (!this.chatMessages[ownSender]) {
+            this.chatMessages[ownSender] = [];
+        }
+        this.chatMessages[ownSender].push(this.addText(isOwnSending, message));
+
         //this also stops someone scrolling back and viewing sensitive data that may have been logged
         process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
         console.clear();
@@ -25,6 +37,6 @@ export class MessageHandler{
     }
 
     addText(isOwn, message) {
-        return {own: !!isOwn, message};
+        return {own: isOwn, message};
     }
 }

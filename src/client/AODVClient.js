@@ -1,7 +1,7 @@
 import commands from "./commands";
 import {DEVICEID} from "../_global_constrains";
 import {log, info} from "../logger";
-import {InputParser} from "./InputParser";
+import {InputParser, sequenceNumber} from "./InputParser";
 import {setAddress, setDestination} from "./commands/lora";
 import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
@@ -57,24 +57,34 @@ export class AODVClient {
             that = this;
 
         }
-        const route = that.router.getRoutingNode(clientId);
+        const route = that.router.getDirectNodes(clientId);
         console.log('ROUTING TABLE: ', JSON.stringify(that.router.routes));
+        /**
+         * create route if not exist until exists every 30 sec 3 times
+         */
+
         if (route === null) {
             const rreq = packages.send.rreq(
                 1,
                 0,
                 0,
                 DEVICEID,
-                1,
+                sequenceNumber,
                 clientId,
 0
             );
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
-            setTimeout(()=> {memorized(clientId, message, that, tries)},30*1000); // retry send message after 3min
+            setTimeout(()=> {
+            memorized(clientId, message, that, tries)
+            },30*1000); // retry send message after 3min
             return;
         }
+        /**
+         * Route found send text message
+         */
+
         console.log('Send Text Message');
         that.pushCommand(setDestination(route));
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));

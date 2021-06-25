@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set port=8003 && set DEVICE_ID=11 && npm run babel-node -- ./src/index.js ",
-    "start:B": "set port=8002 && npm run babel-node -- ./src/index.js ",
-    "start:C": "set port=8003 && npm run babel-node -- ./src/index.js ",
+    "start": "set port=8001 && set DEVICE_ID=11 && npm run babel-node -- ./src/index.js ",
+    "start:B": "set port=8002 && set DEVICE_ID=10 && npm run babel-node -- ./src/index.js ",
+    "start:C": "set port=8003 && set DEVICE_ID=15 && npm run babel-node -- ./src/index.js ",
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "build:bridge": "node ./node_modules/.bin/babel  proxy -d dist",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "core-js": "^3.15.0",
+    "xstate": "^4.20.0",
     "dotenv": "^10.0.0",
     "install": "^0.13.0",
     "jest": "^27.0.4",

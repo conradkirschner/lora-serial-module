@@ -58,7 +58,7 @@ let client = null;
      */
     setInterval(async ()=> {
        await client.runCommand();
-    },2000)
+    },1000)
 
     /**
      * CMD Interface

@@ -1,8 +1,9 @@
+import {LIFETIME} from "./RouteEntry";
 
 export class RoutingHandler {
     /**
      *
-     * @type {RouteEntry[]}
+     * @type {}
      */
     routes = [];
     updateRoute(route) {
@@ -10,13 +11,12 @@ export class RoutingHandler {
         const updateRoute = this.routes[index];
     }
 
-    getRoutingNode(nodeId) {
+    getDirectNodes(nodeId) {
         for (let i = 0; i < this.routes.length; i++) {
             // direct route
-            const currentRoute = this.routes[i];
-            // routeable through node pick first one
-            if (currentRoute.destination_addr == nodeId) {
-                return currentRoute.precursors[0];
+            const currentReachableNode = this.routes[i].source;
+            if (currentReachableNode == nodeId) {
+                return currentReachableNode;
             }
         }
         return null;
@@ -28,23 +28,40 @@ export class RoutingHandler {
      * @returns {RouteEntry|null}
      */
     getRoute(nodeId) {
+        if (!nodeId) return null;
         for (let i = 0; i < this.routes.length; i++) {
-            // direct route
+            if (this.routes[i].source == nodeId) { // direct route
+                return this.routes[i];
+            }
             const currentRoute = this.routes[i];
-            // routeable through node pick first one
-            if (currentRoute.destination_addr == nodeId) {
-                return currentRoute;
+            if (currentRoute.nextNode == nodeId) {
+                console.log('Use node ', currentRoute);
+                return this.routes[i];
             }
         }
         return null;
     }
 
-    addRouteIfNotExist(route) {
-        if (this.findRoute(route) === -1) {
-            this.addRoute(route);
+    /**
+     *
+     * @param route RouteEntry
+     * @param source
+     */
+    addRouteIfNotExist(route, source) {
+        const index = this.findRoute(source);
+        if (index === -1) {
+            this.addRoute({route, source});
             console.log('Route will be added', route);
-
             return;
+        } else {
+            // @todo update
+            // this.routes[index].valid = route.valid;
+            // this.routes[index].nextNode = parseInt(source);
+            // this.routes[index].hopCount = route.hopCount;
+            // this.routes[index].expiringTime = route.expiringTime;
+            // this.routes[index].sequenceNumber = route.sequenceNumber;
+            // this.routes[index].sequenceNumber = route.sequenceNumber;
+
         }
         console.log('Route already exist', route);
     }
@@ -52,10 +69,10 @@ export class RoutingHandler {
     addRoute(route) {
         this.routes.push(route);
     }
-    findRoute(route) {
+    findRoute(source) {
         let index = -1
         for (let i = 0; i < this.routes.length; i++) {
-            if (this.routes[i].isEqual(route)){
+            if (this.routes[i].source === source){
                 index = i;
                 break;
             }
