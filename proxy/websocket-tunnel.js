@@ -5,6 +5,7 @@ const configMap = {
     10: '10.10.10.40',
     11: '10.10.10.141',
     15: '10.10.10.45',
+    18: '10.10.10.45',
 }
 const proxyMap = {};
 for (let index in configMap) {
