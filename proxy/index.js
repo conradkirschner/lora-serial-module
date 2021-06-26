@@ -87,7 +87,7 @@ const getNodeId = () => {
 }
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({port: 8011,  path:'/'+ getNodeId().mappedId});
+const wss = new WebSocket.Server({port: 8001,  path:'/'+ getNodeId().mappedId});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
