@@ -3,7 +3,10 @@
 ## WS Bridge
 ### Usage
 Creates a bridge to serial port on port 8001, serial port forwarding is then possible.  
-See Blacklist values in /install.sh
+The first answer is #start#BLACKLIST#DEVICE_ID#IS_LAN.  
+
+
+For Blacklisting Nodes have a look in the values in /install.sh or use the [@@@BLACKLIST@@@ Event](#Events).  
 
 There are hardcoded folder paths to like /home/piu/conrad/lora-serial-module/dist
 ### Installation
@@ -23,7 +26,15 @@ This Event overwrites the loaded blacklist.
 #### @@@UPGRADE@@@
 Enable Protocol Upgraded (input forwarding to ws)
 
-
 ```@@@UPGRADE@@@```
+
+## Websocket Tunnel 
+
+To avoid having multiple ssh tunnel open we map the websockets to the path name.  
+```ws://localhost:8000/ID```  
+e.g. ```ws://localhost:8000/ID```  
+
+Specify Config map in ./proxy/websocket-tunnel.js. 
+
 ## Chat App
 ### 

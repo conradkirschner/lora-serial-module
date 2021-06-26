@@ -49,7 +49,7 @@ const createSerialConsole = (renderInto, port) => {
     const serialConsole = document.createElement('div');
     serialConsole.id = id;
     serialConsole.innerHTML = `
-            <div data-id="readonly-label" className="readonly-label hidden">readonly</div>
+            <div data-id="readonly-label" class="readonly-label hidden">readonly</div>
             <div> Device Id: <span data-id="device-id">...</span></div>
             <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
             <div> Blacklist: <span data-id="blacklist">...</span></div>
@@ -62,7 +62,7 @@ const createSerialConsole = (renderInto, port) => {
 
     renderInto.appendChild(serialConsole);
     setTimeout(()=> {
-    const connection = new WebSocket('ws://localhost:8000/10', ['soap', 'xmpp']);
+    const connection = new WebSocket('ws://localhost:8001/11', ['soap', 'xmpp']);
     const log = [];
     let deviceId = undefined;
     let isReadOnly = undefined;
