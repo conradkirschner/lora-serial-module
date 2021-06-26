@@ -54,6 +54,7 @@ const isBlacklisted = (data) => {
     // ignore types
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1 || blacklist.indexOf(parseInt(sender)) !== -1) {
         console.log('blacklisted' , (parseInt(sender)).toString());
+        console.log('blacklisted' , blacklist);
         return true;
     }
     return false;
