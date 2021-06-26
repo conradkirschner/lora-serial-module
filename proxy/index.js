@@ -90,7 +90,7 @@ const WebSocket = require('ws');
 
 const SERVER_PORT = 8001;
 const path = '/'+ getNodeId().mappedId
-const wss = new WebSocket.Server({port: SERVER_PORT,  path});
+const wss = new WebSocket.Server({port: SERVER_PORT});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
@@ -179,10 +179,11 @@ const removeConnection = (id) => {
         return el != null;
     });
 }
-wss.on('connection', function connection(ws) {
+wss.on('connection', function connection(ws, req) {
     ws.uuid = makeid(5);
-
     connections.push(ws);
+
+    console.log(req.url);
     console.log('node information');
     const nodeInformation = getNodeId();
     console.log('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
