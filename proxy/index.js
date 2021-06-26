@@ -95,7 +95,7 @@ let blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2,
 let isStarted = false;
 let port;
 console.log('BLACKLIST LOADED: ', blacklist);
-console.log('running on port ', 8001);
+console.log('running on: ',{port: 8011,  path:'/'+ getNodeId().mappedId});
 
 const isBlacklisted = (data) => {
     const strData = data.toString();
