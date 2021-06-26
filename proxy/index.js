@@ -95,11 +95,11 @@ wss.on('connection', function connection(ws) {
     ws.send('#start#' + JSON.stringify(blacklist));
     startSerial();
     ws.on('message', function incoming(message) {
-        if (isStarted) {
+        if (isStarted === ws.uuid) {
             ws.send('Websocket port is already in use');
             return;
         }
-        isStarted = true;
+        isStarted = ws.uuid;
         port.write(message, (e) => {
             if (e) {
                 console.log('There was a error on writing to serial ')
