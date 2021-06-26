@@ -28,6 +28,7 @@ let client = null;
         ws.send(data);
     }
     ws.on('message', function incoming(data) {
+        console.log(data);
         if (isConnected) {
             flush(data);
         }
