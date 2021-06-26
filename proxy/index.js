@@ -119,6 +119,11 @@ wss.on('connection', function connection(ws) {
     ws.on('close', function close() {
         console.log('websocket disconnected');
         if (port) {
+            removeConnection(ws.uuid);
+            if (isStarted !== ws.uuid) {
+                return;
+            }
+
             port.close(() => {
                 console.log('port closed');
 
@@ -130,7 +135,6 @@ wss.on('connection', function connection(ws) {
                 setTimeout(()=> {
                     port = null;
                     isStarted = false;
-                    removeConnection(ws.uuid);
                 }, 1500);
             });
         }
