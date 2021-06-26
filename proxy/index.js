@@ -34,6 +34,9 @@ const flush = (data) => {
     for (let i = 0; i < connections.length; i++) {
         if (connections[i] === null || connections[i] === undefined) continue;
         try {
+            /**
+             * connection in read only mode?
+             */
             connections[i].send(data);
         } catch (e) {
             console.error('WS ERROR: ', e);
@@ -95,7 +98,7 @@ wss.on('connection', function connection(ws) {
     ws.send('#start#' + JSON.stringify(blacklist));
     startSerial();
     ws.on('message', function incoming(message) {
-        if (isStarted === ws.uuid) {
+        if (isStarted !== ws.uuid) {
             ws.send('Websocket port is already in use');
             return;
         }
