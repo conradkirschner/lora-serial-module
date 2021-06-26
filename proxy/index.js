@@ -95,6 +95,7 @@ const removeConnection = (id) => {
     connections = connections.filter(function (el) {
         return el != null;
     });
+    console.log('active session', connections);
 }
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
