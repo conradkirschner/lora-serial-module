@@ -57,7 +57,7 @@ export class AODVClient {
             that = this;
 
         }
-        const route = that.router.getDirectNodes(clientId);
+        const route = that.router.getRoute(clientId);
         console.log('ROUTING TABLE: ', JSON.stringify(that.router.routes));
         /**
          * create route if not exist until exists every 30 sec 3 times
@@ -76,9 +76,9 @@ export class AODVClient {
             that.pushCommand(commands.lora.setBroadcast());
             that.pushSendCommand(rreq);
             const memorized = that.sendMessage;
-            setTimeout(()=> {
-            memorized(clientId, message, that, tries)
-            },30*1000); // retry send message after 3min
+            // setTimeout(()=> {
+            // memorized(clientId, message, that, tries)
+            // },30*1000); // retry send message after 3min
             return;
         }
         /**
@@ -86,7 +86,7 @@ export class AODVClient {
          */
 
         console.log('Send Text Message');
-        that.pushCommand(setDestination(route));
+        that.pushCommand(setDestination(route.source));
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         console.log('GET TEXT', packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();

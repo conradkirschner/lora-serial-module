@@ -1,6 +1,6 @@
 import {RREP} from "./types";
 
-export const create = (hopCount, originAddress, destinationAddress, destinationSequenceNumber, lifetime) => {
+export const create = (hopCount=0, originAddress, destinationAddress, destinationSequenceNumber, lifetime) => {
     return Buffer.from([RREP, hopCount, originAddress, destinationAddress, destinationSequenceNumber, lifetime]);
 }
 export const read = (byteArray) => {

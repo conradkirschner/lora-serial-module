@@ -81,7 +81,7 @@ export class InputParser {
                  * reverse route to origin
                  */
                 const reverserRouteOrigin = new RouteEntry(
-                    parseInt(rreq_data.originAddress),
+                    parseInt(rreq_data.destinationAddress),
                     rreq_data.hopCount,
                     rreq_data.rreq_id,
                     rreq_data.originSequenceNumber,
@@ -111,7 +111,7 @@ export class InputParser {
                     // );
                     console.log("Added routes");
 
-                    this.client.pushCommand(setDestination(source));
+                    this.client.pushCommand(setBroadcast());
                     // this.client.router.addRouteIfNotExist(newRoute);
                     console.log('GOT ROUTES:', this.client.router.routes);
 
@@ -212,6 +212,7 @@ export class InputParser {
                  * Check if this node can route this request
                  */
                 const destinationRoute = this.client.router.getRoute(rrep_data.destinationAddress);
+                const originRoute = this.client.router.getRoute(rrep_data.originAddress);
                 let sequenceMaxRREP = rrep_data.destinationSequenceNumber;
                 const valid = ( rrep_data.uflag === 1)?0:( rrep_data.destinationSequenceNumber - sequenceNumber) & 0xff;
 
@@ -254,16 +255,18 @@ export class InputParser {
                     }
 
                 /**
+                 * forward message if route but not sender or receiver
                  * @type {{destinationAddress: *, originAddress: *, hopCount: *, lifetime: *, destinationSequenceNumber: *}}
                  */
-                if (destinationRoute !== null) {
+                if (destinationRoute !== null && rrep_data.destinationAddress != process.env.DEVICE_ID && rrep_data.originAddress !=  process.env.DEVICE_ID) {
                     console.log('current log', JSON.stringify(this.client.router));
-                    this.client.pushCommand(setDestination(destinationRoute.source));
+                    this.client.pushCommand(setDestination(originRoute.source));
                     this.client.pushSendCommand(
                         packages.send.rrep(
+                            rrep_data.hopCount,
                             rrep_data.originAddress,
                             rrep_data.destinationAddress,
-                            rrep_data.hopCount,
+                            sequenceNumber,
                             rrep_data.lifetime,
                         )
                     );

@@ -33,7 +33,7 @@ export class RoutingHandler {
             if (this.routes[i].source == nodeId) { // direct route
                 return this.routes[i];
             }
-            const currentRoute = this.routes[i];
+            const currentRoute = this.routes[i].route;
             if (currentRoute.nextNode == nodeId) {
                 console.log('Use node ', currentRoute);
                 return this.routes[i];
@@ -50,7 +50,7 @@ export class RoutingHandler {
     addRouteIfNotExist(route, source) {
         const index = this.findRoute(source);
         if (index === -1) {
-            this.addRoute({route, source});
+            this.addRoute({route, source: parseInt(source)});
             console.log('Route will be added', route);
             return;
         } else {
