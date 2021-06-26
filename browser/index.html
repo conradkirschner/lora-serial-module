@@ -15,15 +15,103 @@
         .hidden {
             display:none;
         }
+        .full-log-toggle{
+            color: inherit
+        }
+        .serial-console-log-container{
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+            overflow: scroll;
+            overflow-x: hidden;
+        }
         .serial-console-container{
-
+            border: 1px solid lightgray;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            width: 700px;
+            padding: 5px;
+            margin: 15px;
+            height: 300px;
+            grid-template-rows: 3rem 3rem 1fr 1fr;
+            display: inline-grid;
+        }
+        .serial-console-close-button {
+            margin: 5px 10px 5px 10px;
+            padding: 5px;
+            background: red;
+            border: 1px solid lightcoral;
+        }
+        .serial-console-header{
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            border-bottom: 1px solid lightgray;
+            margin-bottom: 5px;
+        }
+        .serial-console-footer {
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            border-top: 1px solid lightgray;
+            margin-top: 5px;
+            padding-top: 5px;
         }
     </style>
 </head>
 <body>
+    <header>
+        <div>
+             <input id="spawnConsoleButton-input" type="number" min="1" max="20"><button id="spawnConsoleButton">Create new instance to</button>
+        </div>
+    </header>
     <main>
 
     </main>
+    <script>
+
+        window.getQuerySelector = (id, name) => {
+            return `#${id} [data-id="${name}"]`
+        }
+        /**
+         * Header Handler
+         **/
+        const $spawnButton = document.getElementById('spawnConsoleButton');
+        const $spawnButtonInput = document.getElementById('spawnConsoleButton-input');
+        $spawnButton.addEventListener('click', () => {
+            const main = document.getElementsByTagName('main')[0];
+            const serialConsoleId = createSerialConsole(main,$spawnButtonInput.value);
+            serialConsoleIds[serialConsoleId.id] = serialConsoleId
+            attachEvents(serialConsoleId.id)
+        })
+        /**
+         * Serial Console Handler
+         */
+        window.serialConsoleIds = {};
+        document.addEventListener("DOMContentLoaded", function(event) {
+            const main = document.getElementsByTagName('main')[0];
+            const serialConsoleId = createSerialConsole(main,11);
+            serialConsoleIds[serialConsoleId.id] = serialConsoleId
+            attachEvents(serialConsoleId.id)
+            const serialConsoleId1 = createSerialConsole(main,15);
+            serialConsoleIds[serialConsoleId1.id] = serialConsoleId1
+        });
+        const attachEvents = (id) => {
+            const $log = document.querySelector(getQuerySelector(id,'log'));
+            const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
+            const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
+            const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
+            const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
+            const $container = document.querySelector('#'+ id);
+            if (window.serialConsoleIds[id].actions === undefined){
+                setTimeout(()=> {
+                    attachEvents(id);
+                }, 300);
+                return;
+            }            debugger;
+
+            console.log(window.serialConsoleIds[id].actions.getDeviceId());
+        }
+    </script>
 <script>
 
     /**
@@ -41,10 +129,7 @@
         return result;
     }
 
-    const getQuerySelector = (id, name) => {
-        return `#${id} [data-id="${name}"]`
-    }
-const createSerialConsole = (renderInto, port) => {
+const createSerialConsole = (renderInto, connectToDeviceId) => {
     /**
      * first create container
      **/
@@ -53,44 +138,73 @@ const createSerialConsole = (renderInto, port) => {
     serialConsole.id = id;
     serialConsole.classList.add('serial-console-container')
     serialConsole.innerHTML = `
-            <div data-id="readonly-label" class="readonly-label hidden">readonly</div>
-            <div> Device Id: <span data-id="device-id">...</span></div>
-            <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
-            <div> Blacklist: <span data-id="blacklist">...</span></div>
-            <div data-id="log">...</div>
-            <div>
-                <label>Input:</label>
-                <input data-id="serial-input"/>
+            <div data-id="header" class="serial-console-header">
+                <span>Serial Console -  <span data-id="device-id">...</span></span>
+                 <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="readonly-toggle-full-log"> (active full log)</a></span>
+                 <span data-id="close-button" class="serial-console-close-button">[CLOSE]</span>
             </div>
+            <div data-id="status-bar">
+                <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
+                <div> Blacklist: <span data-id="blacklist">...</span></div>
+            </div>
+            <div class="serial-console-log-container">
+                Log:
+                <div data-id="log"></div>
+            </div>
+            <div data-id="footer" class="serial-console-footer">
+            <div data-id="send-text-serial">
+                <div>Serial Text Input</div> <input data-id="send-text-serial-input" type="text">
+                <button data-id="send-text-serial-button">senden</button>
+            </div>
+             <div data-id="show-packages-container">
+                <button data-id="show-packages-button">Show packages</button>
+            </div>
+        </div>
     `;
 
     renderInto.appendChild(serialConsole);
     setTimeout(()=> {
-    const connection = new WebSocket('ws://localhost:8001/11', ['soap', 'xmpp']);
+    const connection = new WebSocket('ws://localhost:8001/'+connectToDeviceId, ['soap', 'xmpp']);
     const log = [];
     let deviceId = undefined;
     let isReadOnly = undefined;
     let blacklist = undefined;
     let lan = undefined;
-    debugger;
+    let isFullLog = false;
     const $log = document.querySelector(getQuerySelector(id,'log'));
     const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
     const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
     const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
     const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
+    const $fullLogToggleContainer = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
     const $container = document.querySelector('#'+ id);
     console.log($log);
+    const toggleFullLog = () => {
+        if (!isFullLog) {
+            connection.send('@@@UPGRADE@@@');
+            $fullLogToggleContainer.innerText = '(active full log)';
+            isFullLog = true;
+        } else {
+            connection.send('@@@DOWNGRADE@@@');
+            $fullLogToggleContainer.innerText = '(deactive full log)';
+
+            isFullLog = false;
+        }
+
+    }
     const setReadOnly = () => {
         /**
          * Upgrade Protocol
          * @type {boolean}
          */
-        connection.send('@@@UPGRADE@@@');
-
+        toggleFullLog();
         isReadOnly = true;
         $container.classList.add('disabled');
         $container.classList.remove('enabled');
         $readonlyLabel.classList.remove('hidden');
+    }
+    const getReadOnlyStatus = () => {
+        return isReadOnly;
     }
     const setReadOnlySendedRequest = (sended) => {
         const newLogEntry = document.createElement('div');
@@ -99,7 +213,6 @@ const createSerialConsole = (renderInto, port) => {
             showText = sended;
         } else  {
             for (let i = 0; i < sended.length; i++) {
-                debugger;
                 try {
                     showText += parseInt(sended.charCodeAt(i).toString(2), 2) + '-';
                 } catch (e) {
@@ -117,6 +230,9 @@ const createSerialConsole = (renderInto, port) => {
         blacklist = newBlacklist;
         $blacklist.innerText = blacklist.join(' , ');
     }
+    const getBlacklist = () => {
+        return blacklist;
+    }
     const setLan = (value) => {
         lan = value;
         if (value === 'true') {
@@ -125,9 +241,15 @@ const createSerialConsole = (renderInto, port) => {
         }
         $lanContainer.innerText = '❌';
     }
+    const getLan = () => {
+        return lan;
+    }
     const setDeviceId = (newDeviceId) => {
         deviceId = newDeviceId;
         $deviceId.innerText = deviceId;
+    }
+    const getDeviceId = () => {
+        return deviceId;
     }
 
     const createLogEntryTemplate = (log) => {
@@ -135,13 +257,13 @@ const createSerialConsole = (renderInto, port) => {
         newLogEntry.innerText = log;
         return newLogEntry;
     }
-    const refreshLog = (data) => {
+    const appendLog = (data) => {
         const logentry = createLogEntryTemplate(data);
         $log.appendChild(logentry)
     }
     const pushToLog = (data) => {
         log.push(data);
-        refreshLog(data);
+        appendLog(data);
 
     }
     // When the connection is open, send some data to the server
@@ -172,17 +294,22 @@ const createSerialConsole = (renderInto, port) => {
         }
         pushToLog(e.data);
     };
+    for (let i in window.serialConsoleIds){
+        const currentConsole =  window.serialConsoleIds[i];
+        if (currentConsole.id === id) {
+            currentConsole.actions = {};
+            currentConsole.actions.getReadOnlyStatus = getReadOnlyStatus;
+            currentConsole.actions.getDeviceId = getDeviceId;
+            currentConsole.actions.getBlacklist = getBlacklist;
+            currentConsole.actions.getLan = getLan;
+            currentConsole.actions.send = connection.send;
+        }
+    }
     }, 500);
-    return id;
+
+    return {id, connectToDeviceId};
 }
 
-    document.addEventListener("DOMContentLoaded", function(event) {
-        const main = document.getElementsByTagName('main')[0];
-        const serialConsoleId = createSerialConsole(main);
-        const serialConsoleId1 = createSerialConsole(main);
-        debugger
-
-    });
 
 </script>
 </body>

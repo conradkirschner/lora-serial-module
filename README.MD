@@ -31,6 +31,11 @@ Enable Protocol Upgraded (input forwarding to ws)
 
 ```@@@UPGRADE@@@```
 
+#### @@@DOWNGRADE@@@
+disables Protocol Upgraded (input forwarding to ws)
+
+```@@@DOWNGRADE@@@```
+
 ## Websocket Tunnel 
 
 To avoid having multiple ssh tunnel open we map the websockets to the path name.  

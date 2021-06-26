@@ -138,6 +138,10 @@ wss.on('connection', function connection(ws, req) {
             ws.upgradedProtocol = true;
             return;
         }
+        if (message.startsWith('@@@DOWNGRADE@@@')){
+            ws.upgradedProtocol = false;
+            return;
+        }
         /**
          * allow everyone for setup the blacklist
          */
