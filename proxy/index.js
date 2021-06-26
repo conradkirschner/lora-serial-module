@@ -141,18 +141,18 @@ wss.on('connection', function connection(ws, req) {
             ws.upgradedProtocol = true;
             return;
         }
-
+        /**
+         * allow everyone for setup the blacklist
+         */
+        if (message.startsWith('@@@BLACKLIST@@@')){
+            blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
+        }
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
             ws.send('[used][readonly][rejected]'+ message);
             return;
         }
 
-        /**
-         * check for change blacklist request
-         */
-        if (message.startsWith('@@@BLACKLIST@@@')){
-            blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
-        }
+
         /**
          * Forward read only requests if ws is upgraded
          */
