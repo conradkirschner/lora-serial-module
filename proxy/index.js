@@ -190,6 +190,7 @@ wss.on('connection', function connection(ws) {
          */
         if (message.startsWith('@@@UPGRADE@@@')){
             ws.upgradedProtocol = true;
+            return;
         }
 
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free

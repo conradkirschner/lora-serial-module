@@ -56,13 +56,27 @@
             $container.classList.remove('enabled');
             $readonlyLabel.classList.remove('hidden');
         }
+        const setReadOnlySendedRequest = (sended) => {
+            const newLogEntry = document.createElement('div');
+            let showText = undefined;
+            if (sended[0] === 'A'  && sended[1] === 'T' ) {
+                showText = sended;
+            } else  {
+                for (let i = 0; i < sended.length; i++) {
+                    showText += sended.charCodeAt(i).toString(2)
+                }
+            }
+            newLogEntry.innerText = showText;
+            $log.appendChild(newLogEntry)
+            return ;
+        }
+
         const setBlacklist = (newBlacklist) => {
             blacklist = newBlacklist;
             $blacklist.innerText = blacklist.join(' , ');
         }
         const setLan = (value) => {
             lan = value;
-            debugger;
             if (value === 'true') {
                 $lanContainer.innerHTML = '✓'
                 return;
@@ -100,8 +114,13 @@
 
         // Log messages from the server
         connection.onmessage = function (e) {
+            debugger;
             if(e.data.startsWith('[used][readonly][rejected]')) {
                 setReadOnly();
+                return;
+            }
+            if(e.data.startsWith('[used][readonly][input]')) {
+                setReadOnlySendedRequest(e.data.split('[used][readonly][input]')[1]);
                 return;
             }
             if(e.data.startsWith('#start#')) {
