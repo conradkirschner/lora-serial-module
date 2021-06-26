@@ -185,16 +185,18 @@ wss.on('connection', function connection(ws) {
     ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     startSerial();
     ws.on('message', function incoming(message) {
-        if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
-            ws.send('[used][readonly][rejected]'+ message);
-            return;
-        }
         /**
          * upgrade protocol
          */
         if (message.startsWith('@@@UPGRADE@@@')){
             ws.upgradedProtocol = true;
         }
+
+        if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
+            ws.send('[used][readonly][rejected]'+ message);
+            return;
+        }
+
         /**
          * check for change blacklist request
          */
