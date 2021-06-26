@@ -32,7 +32,7 @@ const flush = (data) => {
         return;
     }
     for (let i = 0; i < connections.length; i++) {
-        if (connections[i] === null) continue;
+        if (connections[i] === null || connections[i] === undefined) continue;
         try {
             connections[i].send(data);
         } catch (e) {
