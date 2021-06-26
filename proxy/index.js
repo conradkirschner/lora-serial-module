@@ -98,7 +98,7 @@ wss.on('connection', function connection(ws) {
     ws.send('#start#' + JSON.stringify(blacklist));
     startSerial();
     ws.on('message', function incoming(message) {
-        if (isStarted !== ws.uuid || isStarted !== false) { // only one session or if free
+        if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
             ws.send('[used][readonly]');
             return;
         }
