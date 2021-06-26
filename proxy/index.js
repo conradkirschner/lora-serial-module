@@ -25,7 +25,9 @@ const getNodeId = () => {
 
     let mappedId = undefined;
     for(let node in nodes) {
-        if (parseInt(nodes[node]) === id) {
+        console.log('node',nodes[node]);
+        console.log('id', id);
+        if (parseInt(nodes[node]) == id) {
             return node;
         }
     }
