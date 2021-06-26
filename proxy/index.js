@@ -1,4 +1,5 @@
 import SerialPort from "serialport";
+var httpProxy = require('http-proxy');
 
 const { networkInterfaces } = require('os');
 
@@ -252,3 +253,10 @@ wss.on('connection', function connection(ws) {
         }
     });
 });
+/**
+ * forward all other request internally
+ **/
+httpProxy.createServer({
+    target: 'ws://localhost:8001/10',
+    ws: true
+}).listen({port: 8001, path: '/11'});
