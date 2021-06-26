@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set port=8001 && set DEVICE_ID=10 && npm run babel-node -- ./src/index.js ",
     "start:B": "set port=8001 && set DEVICE_ID=11 && npm run babel-node -- ./src/index.js ",
-    "start:C": "set port=8003 && set DEVICE_ID=15 && npm run babel-node -- ./src/index.js ",
+    "start:C": "set port=8001 && set DEVICE_ID=15 && npm run babel-node -- ./src/index.js ",
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "build:bridge": "node ./node_modules/.bin/babel  proxy -d dist",

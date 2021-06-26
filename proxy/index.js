@@ -6,7 +6,7 @@ const wss = new WebSocket.Server({port: 8001});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
-const blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+let blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 let isStarted = false;
 let port;
 console.log('BLACKLIST LOADED: ', blacklist);
@@ -102,6 +102,15 @@ wss.on('connection', function connection(ws) {
             ws.send('[used][readonly][rejected]'+ message);
             return;
         }
+        /**
+         * check for change blacklist request
+         */
+        if (message.startsWith('@@@BLACKLIST@@@')){
+            blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
+        }
+        /**
+         * set session and forward to serial
+         */
         isStarted = ws.uuid;
         port.write(message, (e) => {
             if (e) {
