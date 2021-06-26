@@ -254,10 +254,3 @@ wss.on('connection', function connection(ws, req) {
         }
     });
 });
-/**
- * forward all other request internally
- **/
-httpProxy.createServer({
-    target: 'ws://localhost:8001/10',
-    ws: true
-}).listen({port: 8001, path: '/11'});
