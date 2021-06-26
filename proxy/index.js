@@ -51,6 +51,7 @@ const isBlacklisted = (data) => {
     if (command !== 'LR') return false;
 
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
+        console.log('blacklisted' , (parseInt(sender)).toString());
         return true;
     }
     return false;

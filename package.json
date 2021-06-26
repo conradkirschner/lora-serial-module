@@ -16,7 +16,8 @@
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
     "babel-node": "npx babel-node",
     "test": "jest",
-    "tunnel:pis": "node ./proxy/websocket-tunnel.js"
+    "tunnel:pis": "node ./proxy/websocket-tunnel.js",
+    "browser:start": "parcel ./browser/index.html"
   },
   "author": "Conrad Magnus Kirschner",
   "license": "ISC",
@@ -27,6 +28,9 @@
     "@babel/preset-env": "^7.14.7"
   },
   "dependencies": {
+    "babelify": "^10.0.0",
+    "base64-js": "^1.5.1",
+    "buffer": "^5.7.1",
     "core-js": "^3.15.0",
     "dotenv": "^10.0.0",
     "http-proxy": "^1.18.1",
