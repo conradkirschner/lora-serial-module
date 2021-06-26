@@ -39,7 +39,7 @@ const wss = new WebSocket.Server({port: SERVER_PORT});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
-let blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+let blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): ["1", "2", "3", "4", "5", "6", "7", "8", "9", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
 let isStarted = false;
 let port;
 console.log('BLACKLIST LOADED: ', blacklist);
