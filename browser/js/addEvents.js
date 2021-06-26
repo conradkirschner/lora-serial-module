@@ -23,6 +23,9 @@ export const attachEvents = (id) => {
     currentSerialConsole.elements.$fullLogToggleButton.addEventListener('click', ()=> {
         currentSerialConsole.actions.toggleFullLog();
     });
+    currentSerialConsole.elements.$windowCloseButton.addEventListener('click', ()=> {
+        currentSerialConsole.actions.closeWindow();
+    });
     currentSerialConsole.elements.$sendCommandButton.addEventListener('click', ()=> {
         currentSerialConsole.actions.sendCommand(currentSerialConsole.elements.$sendCommandButtonInput.value);
         currentSerialConsole.elements.$sendCommandButtonInput.value = '';
@@ -60,8 +63,36 @@ export const attachEvents = (id) => {
 
     currentSerialConsole.elements.$menu[0].querySelector('button').addEventListener('click',()=> {
         const inputs = currentSerialConsole.elements.$menu[0].querySelectorAll('input');
-        const rreq_package = packages.send.rreq(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, inputs[4].value, inputs[5].value, inputs[6].value);
-        currentSerialConsole.actions.sendCommand(rreq_package + '\r\n');
+        const messagePackage = packages.send.rreq(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, inputs[4].value, inputs[5].value, inputs[6].value);
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[1].querySelector('button').addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[1].querySelectorAll('input');
+        const messagePackage = packages.send.rrep(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, inputs[4].value);
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[2].querySelector('button').addEventListener('click',()=> {
+        const messagePackage = packages.send.rrep_ack();
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[3].querySelector('button').addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[3].querySelectorAll('input');
+        const messagePackage = packages.send.rerr(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, inputs[4].value, inputs[5].value);
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[4].querySelector('button').addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[4].querySelectorAll('input');
+        const messagePackage = packages.send.send_hop_ack(inputs[0].value);
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[5].querySelector('button').addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[5].querySelectorAll('input');
+        const messagePackage = packages.send.send_text_request(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[6].querySelector('button').addEventListener('click',()=> {
+        const messagePackage = packages.send.send_text_request_ack();
+        currentSerialConsole.actions.sendMessage(messagePackage);
     })
 
     console.log(window.serialConsoleIds[id].actions.getDeviceId());

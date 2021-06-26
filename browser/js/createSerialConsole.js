@@ -12,7 +12,21 @@ function makeid(length) {
     }
     return result;
 }
+const formatBinaryInput = ( sended, showText = '' )=> {
+    for (let i = 0; i < sended.length; i++) {
+        try {
+            if (sended instanceof Uint8Array) {
+                showText += parseInt(sended[i].toString(2), 2) + '-';
+            } else {
+                showText += parseInt(sended[i].charCodeAt(i).toString(2), 2) + '-';
 
+            }
+        } catch (e) {
+            showText += sended[i];
+        }
+    }
+   return showText.substring(0, showText.length -1 ) ;
+}
 export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents) => {
     /**
      * first create container
@@ -26,7 +40,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             <div style="width:100%"> <div data-id="header" class="serial-console-header">
                 <span>Serial Console -  <span data-id="device-id">...</span></span>
                  <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="full-log-toggle"> (active full log)</a></span>
-                 <span data-id="close-button" class="serial-console-close-button">❌</span>
+                 <span data-id="window-close-button" class="serial-console-close-button">❌</span>
             </div></div>
             <div class="serial-console-wrapper">
             <div data-id="serial-console-container" class="serial-console-container serial-console-container--active">
@@ -65,13 +79,13 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div data-id="expanded-modal-body">
                     <div class="expaneded-modal-new-input-container " data-id="expaneded-modal-new-route-request">
                         <div>Route Request</div>
-                        <div><span>uflag</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Hop Count</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Request Id</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Origin Sequence Number</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Destination Sequence Number</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
+                        <div><span>uflag</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Hop Count</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Request Id</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Origin Sequence Number</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Destination Sequence Number</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
 
@@ -81,34 +95,34 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-route-reply">
                         <div>Route Reply</div>
-                        <div><span>Hop Count</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Origin Sequence Number</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Lifetime</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
+                        <div><span>Hop Count</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Origin Sequence Number</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Lifetime</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-route-error">
                         <div>Route Error</div>
-                        <div><span>Destination Count</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>Unreachable Destination Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Unreachable Destination Sequence Number</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>additionalAddresses</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>additionalSequenceNumber</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Lifetime</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
+                        <div><span>Destination Count</span><span><input type="text" value="1"></span> </div>
+                        <div><span>Unreachable Destination Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Unreachable Destination Sequence Number</span><span><input type="text" value="1"></span> </div>
+                        <div><span>additionalAddresses</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>additionalSequenceNumber</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Lifetime</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-send-hop-acknowledge">
                         <div>Send Hop Acknowledge</div>
-                        <div><span>messageSequenceNumber</span><span><input type="text" placeholder="1"></span> </div>
+                        <div><span>messageSequenceNumber</span><span><input type="text" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-send-text-request">
                         <div>Send Text Request</div>
-                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" placeholder="1"></span> </div>
-                        <div><span>messageSequenceNumber</span><span><input type="text" placeholder="1"></span> </div>
-                        <div><span>message</span><span><input type="text" maxlength="30" placeholder="payload"></span> </div>
+                        <div><span>Origin Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Destination Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>messageSequenceNumber</span><span><input type="text" value="1"></span> </div>
+                        <div><span>message</span><span><input type="text" maxlength="30" value="payload"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-send-text-request-acknowledge">
@@ -132,8 +146,11 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         let isReadOnly = undefined;
         let blacklist = undefined;
         let lan = undefined;
+        let zIndex = 0;
         let shouldFollow = false;
         let isFullLog = false;
+        const $windowCloseButton = document.querySelector(getQuerySelector(id,'window-close-button'));
+        const $header = document.querySelector(getQuerySelector(id,'header'));
         const $log = document.querySelector(getQuerySelector(id,'log'));
         const $logContainer = document.querySelector(getQuerySelector(id,'log-container'));
         const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
@@ -191,6 +208,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         ];
 
         const elements = {
+            $windowCloseButton,
+            $header,
             $log,
             $logContainer,
             $deviceId,
@@ -212,6 +231,40 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $newTextRequestAck,
             $container,
         }
+        /**
+         * close window
+         */
+        const closeWindow = () => {
+            $container.remove();
+            connection.close();
+        }
+        /**
+         * create draggable window
+         */
+        // move to top on move
+        const moveToTop = () => {
+            debugger
+            zIndex = window.zIndexHandler + 1;
+            window.zIndexHandler = zIndex;
+            $container.style.zIndex = zIndex;
+        }
+        let windowFollowMouse = false;
+        $header.addEventListener('mousedown', () => {
+            windowFollowMouse = true;
+            moveToTop();
+        }, true);
+        $header.addEventListener('mouseup', () => {
+            windowFollowMouse = false;
+        }, true);
+        window.addEventListener('mousemove', (event) => {
+            if (windowFollowMouse) {
+                var deltaX = event.movementX;
+                var deltaY = event.movementY;
+                var rect = $container.getBoundingClientRect();
+                $container.style.left = rect.x + deltaX + 'px';
+                $container.style.top  = rect.y + deltaY + 'px';
+            }
+        }, true);
         const showNewRouteRequest = () => {
             for (let i = 0; i < $menu.length ; i++ ){
                 if(!$menu[i].classList.contains('hidden')){
@@ -310,14 +363,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             if (sended[0] === 'A'  && sended[1] === 'T' ) {
                 showText = sended;
             } else  {
-                for (let i = 0; i < sended.length; i++) {
-                    try {
-                        showText += parseInt(sended.charCodeAt(i).toString(2), 2) + '-';
-                    } catch (e) {
-                        showText += sended[i];
-                    }
-                }
-                showText = showText.substring(0, showText.length - 1) + ']';
+               showText = formatBinaryInput(sended, '');
             }
             newLogEntry.innerText = showText;
             $log.appendChild(newLogEntry)
@@ -424,12 +470,21 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             appendLog(command, 'output'); // optimistic update
             connection.send(command + '\r\n');
         }
+        const sendMessage = (message) => {
+            appendLog(`AT+SEND=${message.length}`, 'output'); // optimistic update
+            appendLog(formatBinaryInput(message, 'sended binary:  ', 'output')); // optimistic update
+            connection.send(`AT+SEND=${message.length}\r\n`);
+            setTimeout(() => {connection.send(message + '\r\n');},250);
+
+        }
 
         for (let i in window.serialConsoleIds){
             const currentConsole =  window.serialConsoleIds[i];
             if (currentConsole.id === id) {
                 currentConsole.elements = elements;
                 currentConsole.actions = {};
+                currentConsole.actions.closeWindow = closeWindow;
+
                 currentConsole.actions.showNewRouteRequest = showNewRouteRequest;
                 currentConsole.actions.showNewRouteReply = showNewRouteReply;
                 currentConsole.actions.showNewRouteReplyAck = showNewRouteReplyAck;
@@ -443,6 +498,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 currentConsole.actions.getBlacklist = getBlacklist;
                 currentConsole.actions.getLan = getLan;
                 currentConsole.actions.sendCommand = sendCommand;
+                currentConsole.actions.sendMessage = sendMessage;
                 currentConsole.actions.toggleFullLog = toggleFullLog;
                 currentConsole.actions.toggleFollowLog = toggleFollowLog;
             }

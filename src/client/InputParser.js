@@ -283,7 +283,7 @@ export class InputParser {
                     this.client.messageHandler.addChatMessage(send_text_request_data.originAddress, send_text_request_data.message, send_text_request_data.destinationAddress);
                     this.client.pushCommand(setDestination(source));
                     this.client.pushSendCommand(
-                        packages.send.send_text_request_ack(send_text_request_data.originAddress,  send_text_request_data.destinationAddress, getSequenceNumber(), send_text_request_data.messageNumber)
+                        packages.send.send_text_request_ack(send_text_request_data.originAddress,  send_text_request_data.destinationAddress, send_text_request_data.messageNumber)
                     );
                     incrementSequenceNumber();
                     break;
@@ -319,7 +319,7 @@ export class InputParser {
                 const sendTextAck = packages.read.send_text_request_ack(byteData);
                 const acknowledgeRoute = this.client.router.getRoute(source);
                     this.client.pushCommand(setDestination(acknowledgeRoute));
-                    this.client.pushSendCommand(packages.send.send_text_request_ack());
+                    this.client.pushSendCommand(packages.send.send_text_request_ack(sendTextAck.originAddress, sendTextAck.originAddress, sendTextAck.messageNumber));
                 break;
             case 'RERR':
                 break;

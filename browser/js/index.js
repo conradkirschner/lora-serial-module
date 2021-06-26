@@ -32,6 +32,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
     const main = document.getElementsByTagName('main')[0];
     const serialConsoleId = createSerialConsole(main,11, attachEvents);
     serialConsoleIds[serialConsoleId.id] = serialConsoleId
-
 });
 
