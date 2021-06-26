@@ -3,7 +3,7 @@ import SerialPort from "serialport";
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({port: 8001});
-const connections = [];
+let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
 const blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16, 17, 18, 19, 20]
@@ -87,10 +87,14 @@ function makeid(length) {
 const removeConnection = (id) => {
     for (let i = 0; i < connections.length; i++){
         const currentConnection = connections[i];
+        if (!currentConnection) continue;
         if (currentConnection.uuid === id) {
             delete connections[i];
         }
     }
+    connections = connections.filter(function (el) {
+        return el != null;
+    });
 }
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
