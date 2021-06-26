@@ -180,7 +180,9 @@ const removeConnection = (id) => {
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
     connections.push(ws);
+    console.log('node information');
     const nodeInformation = getNodeId();
+    console.log('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     startSerial();
     ws.on('message', function incoming(message) {
