@@ -99,6 +99,7 @@ wss.on('connection', function connection(ws) {
             ws.send('Websocket port is already in use');
             return;
         }
+        isStarted = true;
         port.write(message, (e) => {
             if (e) {
                 console.log('There was a error on writing to serial ')
