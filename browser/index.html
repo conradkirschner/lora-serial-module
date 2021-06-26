@@ -94,7 +94,6 @@
             const main = document.getElementsByTagName('main')[0];
             const serialConsoleId = createSerialConsole(main,$spawnButtonInput.value);
             serialConsoleIds[serialConsoleId.id] = serialConsoleId
-            attachEvents(serialConsoleId.id)
         })
         /**
          * Serial Console Handler
@@ -104,9 +103,7 @@
             const main = document.getElementsByTagName('main')[0];
             const serialConsoleId = createSerialConsole(main,11);
             serialConsoleIds[serialConsoleId.id] = serialConsoleId
-            attachEvents(serialConsoleId.id)
-            const serialConsoleId1 = createSerialConsole(main,15);
-            serialConsoleIds[serialConsoleId1.id] = serialConsoleId1
+
         });
         const attachEvents = (id) => {
             const $log = document.querySelector(getQuerySelector(id,'log'));
@@ -126,6 +123,11 @@
             const currentSerialConsole = window.serialConsoleIds[id];
             currentSerialConsole.elements.$fullLogToggleButton.addEventListener('click', ()=> {
                 currentSerialConsole.actions.toggleFullLog();
+            })
+            currentSerialConsole.elements.$sendCommandButton.addEventListener('click', ()=> {
+                debugger
+                currentSerialConsole.actions.sendCommand(currentSerialConsole.elements.$sendCommandButtonInput.value);
+                currentSerialConsole.elements.$sendCommandButtonInput.value = '';
             })
             console.log(window.serialConsoleIds[id].actions.getDeviceId());
         }
@@ -171,7 +173,7 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
             </div>
             <div data-id="footer" class="serial-console-footer">
             <div data-id="send-text-serial">
-                <div>Serial Text Input</div> <input data-id="send-text-serial-input" type="text">
+                <div>Serial Text Input</div> <input data-id="send-text-serial-button-input" type="text">
                 <button data-id="send-text-serial-button">senden</button>
             </div>
              <div data-id="show-packages-container">
@@ -195,6 +197,9 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
     const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
     const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
     const $fullLogToggleButton = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
+    const $sendCommandButton = document.querySelector(getQuerySelector(id,'send-text-serial-button'));
+    debugger;
+    const $sendCommandButtonInput = document.querySelector(getQuerySelector(id,'send-text-serial-button-input'));
     const $container = document.querySelector('#'+ id);
     const elements = {
         $log,
@@ -203,6 +208,8 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
         $blacklist,
         $lanContainer,
         $fullLogToggleButton,
+        $sendCommandButton,
+        $sendCommandButtonInput,
         $container,
     }
     console.log($log);
@@ -273,6 +280,7 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
                 }
                 connection.send('@@@BLACKLIST@@@'+newBlacklist.join(','))
                 debugger;
+                setBlacklist(newBlacklist);
             })
             $blacklist.appendChild(blackListBoxes)
         }
@@ -299,18 +307,20 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
         return deviceId;
     }
 
-    const createLogEntryTemplate = (log) => {
+    const createLogEntryTemplate = (log, type) => {
         const newLogEntry = document.createElement('div');
         newLogEntry.innerText = log;
+        newLogEntry.classList.add(type);
+
         return newLogEntry;
     }
-    const appendLog = (data) => {
-        const logentry = createLogEntryTemplate(data);
+    const appendLog = (data, type) => {
+        const logentry = createLogEntryTemplate(data, type);
         $log.appendChild(logentry)
     }
     const pushToLog = (data) => {
         log.push(data);
-        appendLog(data);
+        appendLog(data, 'input');
 
     }
     // When the connection is open, send some data to the server
@@ -341,6 +351,10 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
         }
         pushToLog(e.data);
     };
+    const sendCommand = (command) => {
+        appendLog(command, 'output'); // optimistic update
+        connection.send(command + '\r\n');
+    }
     for (let i in window.serialConsoleIds){
         const currentConsole =  window.serialConsoleIds[i];
         if (currentConsole.id === id) {
@@ -350,11 +364,12 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
             currentConsole.actions.getDeviceId = getDeviceId;
             currentConsole.actions.getBlacklist = getBlacklist;
             currentConsole.actions.getLan = getLan;
-            currentConsole.actions.send = connection.send;
+            currentConsole.actions.sendCommand = sendCommand;
             currentConsole.actions.toggleFullLog = toggleFullLog;
         }
     }
     }, 1500);
+    setTimeout(()=> {    attachEvents(id);},2000);
 
     return {id, connectToDeviceId};
 }
