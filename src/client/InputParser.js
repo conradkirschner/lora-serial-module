@@ -321,9 +321,6 @@ export class InputParser {
                     this.client.pushCommand(setDestination(acknowledgeRoute));
                     this.client.pushSendCommand(packages.send.send_text_request_ack(sendTextAck.originAddress, sendTextAck.originAddress, sendTextAck.messageNumber));
                 break;
-            case 'RERR':
-                break;
-            case 'RREP_ACK':
         }
     }
 }

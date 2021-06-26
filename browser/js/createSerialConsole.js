@@ -1,3 +1,11 @@
+import {getType} from "./../../src/client/packages/types";
+import packages from "../../src/client/packages";
+import {DEVICEID, ROUTE_LIFETIME} from "../../src/_global_constrains";
+import {LIFETIME, RouteEntry} from "../../src/client/routing/RouteEntry";
+import {log} from "../../src/logger";
+import {setBroadcast, setDestination} from "../../src/client/commands/lora";
+import {incrementSequenceNumber} from "../../src/client/InputParser";
+
 /**
  * @var renderInto HTMLElement
  * @param renderInto
@@ -15,11 +23,11 @@ function makeid(length) {
 const formatBinaryInput = ( sended, showText = '' )=> {
     for (let i = 0; i < sended.length; i++) {
         try {
+            debugger;
             if (sended instanceof Uint8Array) {
                 showText += parseInt(sended[i].toString(2), 2) + '-';
             } else {
-                showText += parseInt(sended[i].charCodeAt(i).toString(2), 2) + '-';
-
+                showText += parseInt(sended[i].charCodeAt(0)) + '-';
             }
         } catch (e) {
             showText += sended[i];
@@ -133,7 +141,12 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             </div>
             </div>
             <div class="sorted-logs-wrapper">
-                <div data-id="expaneded-modal-new-input-container"></div>
+                <div data-id="expaneded-modal-new-input-container">
+                <div>Route Requests</div>
+                <div>Route Replys</div>
+                <div>Route Reply Acks</div>
+                <div>Route Errors</div>
+</div>
             </div>
 </div>
     `;
@@ -363,7 +376,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             if (sended[0] === 'A'  && sended[1] === 'T' ) {
                 showText = sended;
             } else  {
-               showText = formatBinaryInput(sended, '');
+               showText = formatBinaryInput(sended, 'sended: ');
             }
             newLogEntry.innerText = showText;
             $log.appendChild(newLogEntry)
@@ -425,13 +438,60 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
             return newLogEntry;
         }
-        const appendLog = (data, type) => {
-            const logentry = createLogEntryTemplate(data, type);
-            $log.appendChild(logentry);
+        const followLogAction = () => {
             if (shouldFollow) {
                 $logContainer.scrollTo($logContainer.scrollWidth, $logContainer.scrollHeight);
             }
+        }
+        const appendLog = (data, type) => {
+            let logentry = createLogEntryTemplate(data, type);
+            if (data[0] === 'L' && data[1] === 'R') {
+                /* try to parse binary packages*/
+                const [LRorAT, sender, size, payloadData] = data.split(',')
+                const type = getType(payloadData);
+                if (type == null) {
+                    $log.appendChild(logentry);
+                    followLogAction();
+                    return;
+                }
+                let binaryAsJson = null;
+                switch (type) {
+                    case 'RREQ':
+                        binaryAsJson = packages.read.rreq(payloadData);
+                        break;
+                    case 'RREP':
+                        binaryAsJson = packages.read.rrep(payloadData);
+                        break;
+                    case 'RERR':
+                        binaryAsJson = packages.read.rerr(payloadData);
+                        break;
+                    case 'RREP_ACK':
+                        binaryAsJson = packages.read.rrep_ack(payloadData);
+                        break;
+                    case 'SEND_TEXT_REQUEST':
+                        binaryAsJson = packages.read.send_text_request(payloadData);
+                        break;
+                    case 'SEND_HOP_ACK':
+                        binaryAsJson = packages.read.send_hop_ack(payloadData);
+                        break;
+                    case 'SEND_TEXT_REQUEST_ACK':
+                        binaryAsJson = packages.read.send_text_request_ack(payloadData);
+                      break;
+                }
+                const currentdate = new Date();
+                const datetime = "[" + currentdate.getHours() + ":"
+                    + currentdate.getMinutes() + ":"
+                    + currentdate.getSeconds() +']';
 
+                logentry = createLogEntryTemplate(`${datetime}[${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+                $log.appendChild(logentry);
+                followLogAction();
+                return;
+            } else {
+                $log.appendChild(logentry);
+            }
+
+            followLogAction();
         }
         const pushToLog = (data) => {
             log.push(data);
@@ -472,7 +532,39 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         }
         const sendMessage = (message) => {
             appendLog(`AT+SEND=${message.length}`, 'output'); // optimistic update
-            appendLog(formatBinaryInput(message, 'sended binary:  ', 'output')); // optimistic update
+            const type = getType(message);
+            let binaryAsJson = null;
+            switch (type) {
+                case 'RREQ':
+                    binaryAsJson = packages.read.rreq(message);
+                    break;
+                case 'RREP':
+                    binaryAsJson = packages.read.rrep(message);
+                    break;
+                case 'RERR':
+                    binaryAsJson = packages.read.rerr(message);
+                    break;
+                case 'RREP_ACK':
+                    binaryAsJson = packages.read.rrep_ack(message);
+                    break;
+                case 'SEND_TEXT_REQUEST':
+                    binaryAsJson = packages.read.send_text_request(message);
+                    break;
+                case 'SEND_HOP_ACK':
+                    binaryAsJson = packages.read.send_hop_ack(message);
+                    break;
+                case 'SEND_TEXT_REQUEST_ACK':
+                    binaryAsJson = packages.read.send_text_request_ack(message);
+                    break;
+            }
+            const currentdate = new Date();
+            const datetime = "[" + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds() +']';
+
+            const formattedLogEntry = createLogEntryTemplate(`${datetime}[${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+            $log.appendChild(formattedLogEntry);
+            followLogAction();
             connection.send(`AT+SEND=${message.length}\r\n`);
             setTimeout(() => {connection.send(message + '\r\n');},250);
 

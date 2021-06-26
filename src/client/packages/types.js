@@ -35,5 +35,6 @@ export const getType = (byteArray ) => {
     if (currentBufferInt === Buffer.from([SEND_TEXT_REQUEST_ACK]).readUInt8(0)) {
         return 'SEND_TEXT_REQUEST_ACK';
     }
+    return null;
 }
 
