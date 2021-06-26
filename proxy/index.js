@@ -80,14 +80,14 @@ const getNodeId = () => {
             mappedId = 19;
             break;
         case '150':
-            mappedId = 120;
+            mappedId = 20;
             break;
     }
     return {isLan, mappedId}
 }
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({port: 8001,  path:'/'+ getNodeId().mappedId});
+const wss = new WebSocket.Server({port: 8011,  path:'/'+ getNodeId().mappedId});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
@@ -178,6 +178,7 @@ const removeConnection = (id) => {
 }
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
+
     connections.push(ws);
     console.log('node information');
     const nodeInformation = getNodeId();

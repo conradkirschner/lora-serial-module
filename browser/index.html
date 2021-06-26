@@ -62,7 +62,7 @@ const createSerialConsole = (renderInto, port) => {
 
     renderInto.appendChild(serialConsole);
     setTimeout(()=> {
-    const connection = new WebSocket('ws://localhost:8001', ['soap', 'xmpp']);
+    const connection = new WebSocket('ws://localhost:8011/1', ['soap', 'xmpp']);
     const log = [];
     let deviceId = undefined;
     let isReadOnly = undefined;
