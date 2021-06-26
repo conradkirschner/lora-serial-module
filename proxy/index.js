@@ -50,7 +50,8 @@ const isBlacklisted = (data) => {
     const [command, sender, ...rest] = strData.split(',');
     if (command !== 'LR') return false;
 
-    if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
+    // ignore types
+    if (blacklist.indexOf((parseInt(sender)).toString()) !== -1 || blacklist.indexOf(parseInt(sender)) !== -1) {
         console.log('blacklisted' , (parseInt(sender)).toString());
         return true;
     }
