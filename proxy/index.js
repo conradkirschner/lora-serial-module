@@ -1,5 +1,6 @@
 import SerialPort from "serialport";
-var httpProxy = require('http-proxy');
+
+const nodes = { 1: 31, 2: 32, 3: 33, 4: 34, 5: 35, 6: 36, 7:37, 8:38, 9:39, 10:40, 11: 41, 12: 42, 13: 43, 14: 44, 15: 45, 16: 46, 17:47, 18:48, 19:49, 20:50}
 
 const { networkInterfaces } = require('os');
 
@@ -22,67 +23,10 @@ const getNodeId = () => {
     const isLan = (results['eth0'].length !== 0);
     const id = results['wlan0'][0].split('.')[3];
     let mappedId = undefined;
-    switch(id) {
-        case '131':
-            mappedId = 1;
-            break;
-        case '132':
-            mappedId = 2;
-            break;
-        case '133':
-            mappedId = 3;
-            break;
-        case '134':
-            mappedId = 4;
-            break;
-        case '135':
-            mappedId = 5;
-            break;
-        case '136':
-            mappedId = 6;
-            break;
-        case '137':
-            mappedId = 7;
-            break;
-        case '138':
-            mappedId = 8;
-            break;
-        case '139':
-            mappedId = 9;
-            break;
-        case '140':
-            mappedId = 10;
-            break;
-        case '141':
-            mappedId = 11;
-            break;
-        case '142':
-            mappedId = 12;
-            break;
-        case '143':
-            mappedId = 13;
-            break;
-        case '144':
-            mappedId = 14
-            break;
-        case '145':
-            mappedId = 15
-            break;
-        case '146':
-            mappedId = 16
-            break;
-        case '147':
-            mappedId = 17
-            break;
-        case '148':
-            mappedId = 18
-            break;
-        case '149':
-            mappedId = 19;
-            break;
-        case '150':
-            mappedId = 20;
-            break;
+    for(let node in nodes) {
+        if (nodes[node] === id) {
+            return node;
+        }
     }
     return {isLan, mappedId}
 }
