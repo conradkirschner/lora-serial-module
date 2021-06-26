@@ -46,15 +46,12 @@ console.log('BLACKLIST LOADED: ', blacklist);
 console.log('running on: ',{port: SERVER_PORT,  path});
 
 const isBlacklisted = (data) => {
-    console.log(data);
     const strData = data.toString();
     const [command, sender, ...rest] = strData.split(',');
     if (command !== 'LR') return false;
 
     // ignore types
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1 || blacklist.indexOf(parseInt(sender)) !== -1) {
-        console.log('blacklisted' , (parseInt(sender)).toString());
-        console.log('blacklisted' , blacklist);
         return true;
     }
     return false;
@@ -151,7 +148,6 @@ wss.on('connection', function connection(ws, req) {
          */
         if (message.startsWith('@@@BLACKLIST@@@')){
             blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
-            console.log('update blacklist', blacklist);
         }
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
             ws.send('[used][readonly][rejected]'+ message);
@@ -187,7 +183,6 @@ wss.on('connection', function connection(ws, req) {
                 return;
             }
             setTimeout(()=> {
-                console.log('free to connect');
                 port = null;
                 isStarted = false;
             }, 1500);
