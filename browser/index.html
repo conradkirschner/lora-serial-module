@@ -266,9 +266,12 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
             blackListBoxes.addEventListener('click', (event) => {
                 const blackListId = event.target.innerText;
                 const index = newBlacklist.indexOf(blackListId);
-                const removedItem = newBlacklist.splice(index, 1);
+                if (index === -1) {
+                    newBlacklist.push(blackListId);
+                } else {
+                    const removedItem = newBlacklist.splice(index, 1);
+                }
                 connection.send('@@@BLACKLIST@@@'+newBlacklist.join(','))
-
                 debugger;
             })
             $blacklist.appendChild(blackListBoxes)
