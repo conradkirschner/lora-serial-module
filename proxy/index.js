@@ -99,7 +99,7 @@ wss.on('connection', function connection(ws) {
     startSerial();
     ws.on('message', function incoming(message) {
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
-            ws.send('[used][readonly]');
+            ws.send('[used][readonly][rejected]'+ message);
             return;
         }
         isStarted = ws.uuid;
