@@ -18,119 +18,166 @@
     </style>
 </head>
 <body>
-<div id="serial-connection" class="enabled">
-    <div id="readonly-label" class="readonly-label hidden">readonly</div>
-    <div> Device Id:  <span id="device-id">...</span></div>
-    <div> Ist im Wlan: <span id="is-lan">...</span></div>
-    <div> Blacklist: <span id="blacklist">...</span></div>
-    <div id="log">...</div>
-    <div>
-        <label for="serial-input">Input:</label>
-        <input id="serial-input" />
-    </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function(event) {
-        const connection = new WebSocket('ws://localhost:8001', ['soap', 'xmpp']);
-        const log = [];
-        let deviceId = undefined;
-        let isReadOnly = undefined;
-        let blacklist = undefined;
-        let lan = undefined;
-        const $log = document.querySelector('#log');
-        const $deviceId = document.querySelector('#device-id');
-        const $readonlyLabel = document.querySelector('#readonly-label');
-        const $blacklist = document.querySelector('#blacklist');
-        const $lanContainer = document.querySelector('#is-lan');
-        const $container = document.querySelector('#serial-connection');
-        console.log($log);
-        const setReadOnly = () => {
-            /**
-             * Upgrade Protocol
-             * @type {boolean}
-             */
-            connection.send('@@@UPGRADE@@@');
+    <main>
 
-            isReadOnly = true;
-            $container.classList.add('disabled');
-            $container.classList.remove('enabled');
-            $readonlyLabel.classList.remove('hidden');
+    </main>
+<script>
+
+    /**
+     * @var renderInto HTMLElement
+     * @param renderInto
+     **/
+    function makeid(length) {
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
         }
-        const setReadOnlySendedRequest = (sended) => {
-            const newLogEntry = document.createElement('div');
-            let showText = undefined;
-            if (sended[0] === 'A'  && sended[1] === 'T' ) {
-                showText = sended;
-            } else  {
-                for (let i = 0; i < sended.length; i++) {
-                    showText += sended.charCodeAt(i).toString(2)
+        return result;
+    }
+
+    const getQuerySelector = (id, name) => {
+        return `#${id} [data-id="${name}"]`
+    }
+const createSerialConsole = (renderInto, port) => {
+    /**
+     * first create container
+     **/
+    const id = makeid(5);
+    const serialConsole = document.createElement('div');
+    serialConsole.id = id;
+    serialConsole.innerHTML = `
+            <div data-id="readonly-label" className="readonly-label hidden">readonly</div>
+            <div> Device Id: <span data-id="device-id">...</span></div>
+            <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
+            <div> Blacklist: <span data-id="blacklist">...</span></div>
+            <div data-id="log">...</div>
+            <div>
+                <label>Input:</label>
+                <input data-id="serial-input"/>
+            </div>
+    `;
+
+    renderInto.appendChild(serialConsole);
+    setTimeout(()=> {
+    const connection = new WebSocket('ws://localhost:8001', ['soap', 'xmpp']);
+    const log = [];
+    let deviceId = undefined;
+    let isReadOnly = undefined;
+    let blacklist = undefined;
+    let lan = undefined;
+    debugger;
+    const $log = document.querySelector(getQuerySelector(id,'log'));
+    const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
+    const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
+    const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
+    const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
+    const $container = document.querySelector('#'+ id);
+    console.log($log);
+    const setReadOnly = () => {
+        /**
+         * Upgrade Protocol
+         * @type {boolean}
+         */
+        connection.send('@@@UPGRADE@@@');
+
+        isReadOnly = true;
+        $container.classList.add('disabled');
+        $container.classList.remove('enabled');
+        $readonlyLabel.classList.remove('hidden');
+    }
+    const setReadOnlySendedRequest = (sended) => {
+        const newLogEntry = document.createElement('div');
+        let showText = 'BINARY PACKAGE:  [';
+        if (sended[0] === 'A'  && sended[1] === 'T' ) {
+            showText = sended;
+        } else  {
+            for (let i = 0; i < sended.length; i++) {
+                debugger;
+                try {
+                    showText += parseInt(sended.charCodeAt(i).toString(2), 2) + '-';
+                } catch (e) {
+                    showText += sended[i];
                 }
             }
-            newLogEntry.innerText = showText;
-            $log.appendChild(newLogEntry)
-            return ;
+            showText = showText.substring(0, showText.length - 1) + ']';
         }
+        newLogEntry.innerText = showText;
+        $log.appendChild(newLogEntry)
+        return ;
+    }
 
-        const setBlacklist = (newBlacklist) => {
-            blacklist = newBlacklist;
-            $blacklist.innerText = blacklist.join(' , ');
+    const setBlacklist = (newBlacklist) => {
+        blacklist = newBlacklist;
+        $blacklist.innerText = blacklist.join(' , ');
+    }
+    const setLan = (value) => {
+        lan = value;
+        if (value === 'true') {
+            $lanContainer.innerText = '✓'
+            return;
         }
-        const setLan = (value) => {
-            lan = value;
-            if (value === 'true') {
-                $lanContainer.innerHTML = '✓'
-                return;
-            }
-            $lanContainer.innerHTML = '❌';
-        }
-        const setDeviceId = (newDeviceId) => {
-            deviceId = newDeviceId;
-            $deviceId.innerText = deviceId;
-        }
+        $lanContainer.innerText = '❌';
+    }
+    const setDeviceId = (newDeviceId) => {
+        deviceId = newDeviceId;
+        $deviceId.innerText = deviceId;
+    }
 
-        const createLogEntryTemplate = (log) => {
-            const newLogEntry = document.createElement('div');
-            newLogEntry.innerText = log;
-            return newLogEntry;
-        }
-        const refreshLog = (data) => {
-            const logentry = createLogEntryTemplate(data);
-            $log.appendChild(logentry)
-        }
-        const pushToLog = (data) => {
-            log.push(data);
-            refreshLog(data);
-            debugger;
-        }
-        // When the connection is open, send some data to the server
-        connection.onopen = function () {
-            connection.send('AT+RST\r\n');
-        };
+    const createLogEntryTemplate = (log) => {
+        const newLogEntry = document.createElement('div');
+        newLogEntry.innerText = log;
+        return newLogEntry;
+    }
+    const refreshLog = (data) => {
+        const logentry = createLogEntryTemplate(data);
+        $log.appendChild(logentry)
+    }
+    const pushToLog = (data) => {
+        log.push(data);
+        refreshLog(data);
 
-        // Log errors
-        connection.onerror = function (error) {
-            console.log('WebSocket Error ' + error);
-        };
+    }
+    // When the connection is open, send some data to the server
+    connection.onopen = function () {
+        connection.send('AT+RST\r\n');
+    };
 
-        // Log messages from the server
-        connection.onmessage = function (e) {
-            debugger;
-            if(e.data.startsWith('[used][readonly][rejected]')) {
-                setReadOnly();
-                return;
-            }
-            if(e.data.startsWith('[used][readonly][input]')) {
-                setReadOnlySendedRequest(e.data.split('[used][readonly][input]')[1]);
-                return;
-            }
-            if(e.data.startsWith('#start#')) {
-                setBlacklist(e.data.split('#start#')[1].split('#')[0].split(','));
-                setDeviceId(e.data.split('#start#')[1].split('#')[1]);
-                setLan(e.data.split('#start#')[1].split('#')[2]);
-                return;
-            }
-            pushToLog(e.data);
-        };        //do work
+    // Log errors
+    connection.onerror = function (error) {
+        console.log('WebSocket Error ' + error);
+    };
+
+    // Log messages from the server
+    connection.onmessage = function (e) {
+        if(e.data.startsWith('[used][readonly][rejected]')) {
+            setReadOnly();
+            return;
+        }
+        if(e.data.startsWith('[used][readonly][input]')) {
+            setReadOnlySendedRequest(e.data.split('[used][readonly][input]')[1]);
+            return;
+        }
+        if(e.data.startsWith('#start#')) {
+            setBlacklist(e.data.split('#start#')[1].split('#')[0].split(','));
+            setDeviceId(e.data.split('#start#')[1].split('#')[1]);
+            setLan(e.data.split('#start#')[1].split('#')[2]);
+            return;
+        }
+        pushToLog(e.data);
+    };
+    }, 500);
+    return id;
+}
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+        const main = document.getElementsByTagName('main')[0];
+        const serialConsoleId = createSerialConsole(main);
+        const serialConsoleId1 = createSerialConsole(main);
+        debugger
+
     });
 
 </script>
