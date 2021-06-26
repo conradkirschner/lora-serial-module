@@ -87,7 +87,9 @@ const getNodeId = () => {
 }
 const WebSocket = require('ws');
 
-const wss = new WebSocket.Server({port: 8001,  path:'/'+ getNodeId().mappedId});
+const SERVER_PORT = 8001;
+const path = '/'+ getNodeId().mappedId
+const wss = new WebSocket.Server({port: SERVER_PORT,  path});
 let connections = [];
 // we block all nodes to avoid the traffic when other students use the network
 // except the ones we work on -> 10, 11
@@ -95,7 +97,7 @@ let blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 2,
 let isStarted = false;
 let port;
 console.log('BLACKLIST LOADED: ', blacklist);
-console.log('running on: ',{port: 8011,  path:'/'+ getNodeId().mappedId});
+console.log('running on: ',{port: SERVER_PORT,  path});
 
 const isBlacklisted = (data) => {
     const strData = data.toString();
