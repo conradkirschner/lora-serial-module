@@ -12,11 +12,24 @@
             color:black;
             background: #bfbdbd;
         }
+        .blacklist-item {
+            margin: 5px;
+            padding: 5px;
+        }
+        .red-blacklist-status {
+            box-shadow: rgb(214, 3, 3) 0px 0px 0px 3px;
+        }
+        .green-blacklist-status {
+            box-shadow: rgb(91, 214, 3) 0px 0px 0px 3px;
+        }
         .hidden {
             display:none;
         }
         .full-log-toggle{
             color: inherit
+        }
+        .blacklist-container{
+            display: inline-flex;
         }
         .serial-console-log-container{
             box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
@@ -26,11 +39,11 @@
         .serial-console-container{
             border: 1px solid lightgray;
             box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-            width: 700px;
+            width: 750px;
             padding: 5px;
             margin: 15px;
             height: 300px;
-            grid-template-rows: 3rem 3rem 1fr 1fr;
+            grid-template-rows: 3rem 4rem 1fr 1fr;
             display: inline-grid;
         }
         .serial-console-close-button {
@@ -101,14 +114,19 @@
             const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
             const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
             const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
-            const $container = document.querySelector('#'+ id);
+            const $fullLogToggleContainer = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
+            const $fullLogToggleButton = document.querySelector(getQuerySelector(id, 'readonly-toggle-full-log'));
+
             if (window.serialConsoleIds[id].actions === undefined){
                 setTimeout(()=> {
                     attachEvents(id);
                 }, 300);
                 return;
-            }            debugger;
-
+            }
+            const currentSerialConsole = window.serialConsoleIds[id];
+            currentSerialConsole.elements.$fullLogToggleButton.addEventListener('click', ()=> {
+                currentSerialConsole.actions.toggleFullLog();
+            })
             console.log(window.serialConsoleIds[id].actions.getDeviceId());
         }
     </script>
@@ -140,12 +158,12 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
     serialConsole.innerHTML = `
             <div data-id="header" class="serial-console-header">
                 <span>Serial Console -  <span data-id="device-id">...</span></span>
-                 <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="readonly-toggle-full-log"> (active full log)</a></span>
+                 <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="full-log-toggle"> (active full log)</a></span>
                  <span data-id="close-button" class="serial-console-close-button">[CLOSE]</span>
             </div>
             <div data-id="status-bar">
                 <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
-                <div> Blacklist: <span data-id="blacklist">...</span></div>
+                <div> Blacklist: <span class="blacklist-container" data-id="blacklist">...</span></div>
             </div>
             <div class="serial-console-log-container">
                 Log:
@@ -176,18 +194,26 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
     const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
     const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
     const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
-    const $fullLogToggleContainer = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
+    const $fullLogToggleButton = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
     const $container = document.querySelector('#'+ id);
+    const elements = {
+        $log,
+        $deviceId,
+        $readonlyLabel,
+        $blacklist,
+        $lanContainer,
+        $fullLogToggleButton,
+        $container,
+    }
     console.log($log);
     const toggleFullLog = () => {
         if (!isFullLog) {
             connection.send('@@@UPGRADE@@@');
-            $fullLogToggleContainer.innerText = '(active full log)';
+            $fullLogToggleButton.innerText = '(active full log)';
             isFullLog = true;
         } else {
             connection.send('@@@DOWNGRADE@@@');
-            $fullLogToggleContainer.innerText = '(deactive full log)';
-
+            $fullLogToggleButton.innerText = '(deactive full log)';
             isFullLog = false;
         }
 
@@ -227,8 +253,26 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
     }
 
     const setBlacklist = (newBlacklist) => {
-        blacklist = newBlacklist;
-        $blacklist.innerText = blacklist.join(' , ');
+        $blacklist.innerHTML = '';
+        for (let i = 1; i <= 20; i++) {
+            const blackListBoxes = document.createElement('div');
+            blackListBoxes.classList.add('blacklist-item');
+            blackListBoxes.innerText = (i).toString();
+            if (newBlacklist.indexOf(i.toString()) === -1) {
+                blackListBoxes.classList.add('green-blacklist-status');
+            } else {
+                blackListBoxes.classList.add('red-blacklist-status');
+            }
+            blackListBoxes.addEventListener('click', (event) => {
+                const blackListId = event.target.innerText;
+                const index = newBlacklist.indexOf(blackListId);
+                const removedItem = newBlacklist.splice(index, 1);
+                connection.send('@@@BLACKLIST@@@'+newBlacklist.join(','))
+
+                debugger;
+            })
+            $blacklist.appendChild(blackListBoxes)
+        }
     }
     const getBlacklist = () => {
         return blacklist;
@@ -287,7 +331,7 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
             return;
         }
         if(e.data.startsWith('#start#')) {
-            setBlacklist(e.data.split('#start#')[1].split('#')[0].split(','));
+            setBlacklist(JSON.parse(e.data.split('#start#')[1].split('#')[0].split(',')));
             setDeviceId(e.data.split('#start#')[1].split('#')[1]);
             setLan(e.data.split('#start#')[1].split('#')[2]);
             return;
@@ -297,15 +341,17 @@ const createSerialConsole = (renderInto, connectToDeviceId) => {
     for (let i in window.serialConsoleIds){
         const currentConsole =  window.serialConsoleIds[i];
         if (currentConsole.id === id) {
+            currentConsole.elements = elements;
             currentConsole.actions = {};
             currentConsole.actions.getReadOnlyStatus = getReadOnlyStatus;
             currentConsole.actions.getDeviceId = getDeviceId;
             currentConsole.actions.getBlacklist = getBlacklist;
             currentConsole.actions.getLan = getLan;
             currentConsole.actions.send = connection.send;
+            currentConsole.actions.toggleFullLog = toggleFullLog;
         }
     }
-    }, 500);
+    }, 1500);
 
     return {id, connectToDeviceId};
 }
