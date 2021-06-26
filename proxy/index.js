@@ -130,6 +130,7 @@ wss.on('connection', function connection(ws, req) {
     console.log('req.url',req.url);
     console.log('node information');
     const nodeInformation = getNodeId();
+    console.log(nodeInformation);
     console.log('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     startSerial();
