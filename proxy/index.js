@@ -20,7 +20,7 @@ for (const name of Object.keys(nets)) {
 }
 console.log(results);
 const getNodeId = () => {
-    const isLan = (results['eth0'].length !== 0);
+    const isLan = (results['eth0'] !== undefined);
     const id = results['wlan0'][0].split('.')[3].substr(1,2);
 
     let mappedId = undefined;
