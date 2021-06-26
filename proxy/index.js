@@ -10,16 +10,12 @@ const blacklist = (process.env.BLACKLIST)?process.env.BLACKLIST.split(','): [1, 
 let isStarted = false;
 let port;
 console.log('BLACKLIST LOADED: ', blacklist);
+console.log('running on port ', 8001);
 
 const isBlacklisted = (data) => {
     const strData = data.toString();
     const [command, sender, ...rest] = strData.split(',');
     if (command !== 'LR') return false;
-
-    console.log('sender ', sender);
-    console.log('blacklist ', blacklist)
-    console.log('info indexof: ', blacklist.indexOf((parseInt(sender)).toString()))
-    console.log('info if :  ',  (blacklist.indexOf((parseInt(sender)).toString()) !== -1))
 
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
 
@@ -95,7 +91,6 @@ const removeConnection = (id) => {
     connections = connections.filter(function (el) {
         return el != null;
     });
-    console.log('active session', connections);
 }
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
@@ -117,7 +112,6 @@ wss.on('connection', function connection(ws) {
         })
     });
     ws.on('close', function close() {
-        console.log('websocket disconnected');
         if (port) {
             removeConnection(ws.uuid);
             if (isStarted !== ws.uuid) {
@@ -125,8 +119,7 @@ wss.on('connection', function connection(ws) {
             }
 
             port.close(() => {
-                console.log('port closed');
-
+                console.log('resetting module and reset session');
                 /**
                  * reset port after connection loss
                  */
