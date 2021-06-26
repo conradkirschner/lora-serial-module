@@ -46,6 +46,7 @@ console.log('BLACKLIST LOADED: ', blacklist);
 console.log('running on: ',{port: SERVER_PORT,  path});
 
 const isBlacklisted = (data) => {
+    console.log(data);
     const strData = data.toString();
     const [command, sender, ...rest] = strData.split(',');
     if (command !== 'LR') return false;
