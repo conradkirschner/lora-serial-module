@@ -103,7 +103,6 @@ const isBlacklisted = (data) => {
     if (command !== 'LR') return false;
 
     if (blacklist.indexOf((parseInt(sender)).toString()) !== -1) {
-
         return true;
     }
     return false;
@@ -191,10 +190,25 @@ wss.on('connection', function connection(ws) {
             return;
         }
         /**
+         * upgrade protocol
+         */
+        if (message.startsWith('@@@UPGRADE@@@')){
+            ws.upgradedProtocol = true;
+        }
+        /**
          * check for change blacklist request
          */
         if (message.startsWith('@@@BLACKLIST@@@')){
             blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
+        }
+        /**
+         * Forward read only requests if ws is upgraded
+         */
+        for (let i = 0; i < connections.length; i++ ) {
+            if (connections[i].uuid === ws.uuid) continue;
+            if (connections[i].upgradedProtocol) {
+                connections[i].send('[used][readonly][input]'+message)
+            }
         }
         /**
          * set session and forward to serial

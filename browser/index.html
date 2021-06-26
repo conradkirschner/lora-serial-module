@@ -12,13 +12,17 @@
             color:black;
             background: #bfbdbd;
         }
+        .hidden {
+            display:none;
+        }
     </style>
 </head>
 <body>
 <div id="serial-connection" class="enabled">
-    <div id="device-id">...</div>
-    <div id="is-lan">...</div>
-    <div id="blacklist">...</div>
+    <div id="readonly-label" class="readonly-label hidden">readonly</div>
+    <div> Device Id:  <span id="device-id">...</span></div>
+    <div> Ist im Wlan: <span id="is-lan">...</span></div>
+    <div> Blacklist: <span id="blacklist">...</span></div>
     <div id="log">...</div>
     <div>
         <label for="serial-input">Input:</label>
@@ -35,14 +39,22 @@
         let lan = undefined;
         const $log = document.querySelector('#log');
         const $deviceId = document.querySelector('#device-id');
+        const $readonlyLabel = document.querySelector('#readonly-label');
         const $blacklist = document.querySelector('#blacklist');
         const $lanContainer = document.querySelector('#is-lan');
         const $container = document.querySelector('#serial-connection');
         console.log($log);
         const setReadOnly = () => {
+            /**
+             * Upgrade Protocol
+             * @type {boolean}
+             */
+            connection.send('@@@UPGRADE@@@');
+
             isReadOnly = true;
             $container.classList.add('disabled');
             $container.classList.remove('enabled');
+            $readonlyLabel.classList.remove('hidden');
         }
         const setBlacklist = (newBlacklist) => {
             blacklist = newBlacklist;
@@ -50,6 +62,7 @@
         }
         const setLan = (value) => {
             lan = value;
+            debugger;
             if (value === 'true') {
                 $lanContainer.innerHTML = '✓'
                 return;
@@ -62,7 +75,7 @@
         }
 
         const createLogEntryTemplate = (log) => {
-            const newLogEntry = document.createElement('span');
+            const newLogEntry = document.createElement('div');
             newLogEntry.innerText = log;
             return newLogEntry;
         }
@@ -77,7 +90,7 @@
         }
         // When the connection is open, send some data to the server
         connection.onopen = function () {
-            connection.send('AT+RST');
+            connection.send('AT+RST\r\n');
         };
 
         // Log errors
@@ -92,10 +105,9 @@
                 return;
             }
             if(e.data.startsWith('#start#')) {
-                setReadOnly();
-                setDeviceId(e.data.split('#start#')[1].split('#')[1]);
                 setBlacklist(e.data.split('#start#')[1].split('#')[0].split(','));
-                setLan(e.data.split('#start#')[1].split('#')[1]);
+                setDeviceId(e.data.split('#start#')[1].split('#')[1]);
+                setLan(e.data.split('#start#')[1].split('#')[2]);
                 return;
             }
             pushToLog(e.data);

@@ -20,6 +20,10 @@ There are hardcoded folder paths to like /home/piu/conrad/lora-serial-module/dis
 #### @@@BLACKLIST@@@
 This Event overwrites the loaded blacklist.  
 
-```@@@BLACKLIST@@@1,2,3,4,5```
+#### @@@UPGRADE@@@
+Enable Protocol Upgraded (input forwarding to ws)
+
+
+```@@@UPGRADE@@@```
 ## Chat App
 ### 

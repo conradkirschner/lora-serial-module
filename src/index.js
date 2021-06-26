@@ -33,8 +33,8 @@ let client = null;
             flush(data);
         }
 
-        if (data.indexOf('#start#') !== -1) {
-            log('blacklist', data.split('#')[1] , blacklist);
+        if (data.startsWith('#start#')) {
+            log('blacklist', data.split('#start#')[1]);
             isConnected = true;
         }
     });
