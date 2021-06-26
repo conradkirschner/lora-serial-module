@@ -1,10 +1,22 @@
 import SerialPort from "serialport";
-// require os module
-const os = require("os");
 
-// invoke userInfo() method
-const userInfo = os.userInfo();
+const { networkInterfaces } = require('os');
 
+const nets = networkInterfaces();
+const results = Object.create(null); // Or just '{}', an empty object
+
+for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+        // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+        if (net.family === 'IPv4' && !net.internal) {
+            if (!results[name]) {
+                results[name] = [];
+            }
+            results[name].push(net.address);
+        }
+    }
+}
+console.log(results);
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({port: 8001});
@@ -100,7 +112,7 @@ const removeConnection = (id) => {
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
     connections.push(ws);
-    ws.send('#start#' + JSON.stringify(blacklist) + '#' + userInfo);
+    ws.send('#start#' + JSON.stringify(blacklist) + '#' + userInfo.username);
     startSerial();
     ws.on('message', function incoming(message) {
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
