@@ -1,4 +1,9 @@
 import SerialPort from "serialport";
+// require os module
+const os = require("os");
+
+// invoke userInfo() method
+const userInfo = os.userInfo();
 
 const WebSocket = require('ws');
 
@@ -95,7 +100,7 @@ const removeConnection = (id) => {
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
     connections.push(ws);
-    ws.send('#start#' + JSON.stringify(blacklist));
+    ws.send('#start#' + JSON.stringify(blacklist) + '#' + userInfo);
     startSerial();
     ws.on('message', function incoming(message) {
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
@@ -126,6 +131,11 @@ wss.on('connection', function connection(ws) {
             if (isStarted !== ws.uuid) {
                 return;
             }
+            setTimeout(()=> {
+                console.log('free to connect');
+                port = null;
+                isStarted = false;
+            }, 1500);
 
             port.close(() => {
                 console.log('resetting module and reset session');
@@ -134,10 +144,7 @@ wss.on('connection', function connection(ws) {
                  */
                 const spawn = require("child_process").spawn;
                 const pythonProcess = spawn('python',["/home/pi/conrad/lora-serial-module/proxy/reset.py"]);
-                setTimeout(()=> {
-                    port = null;
-                    isStarted = false;
-                }, 1500);
+
             });
         }
     });

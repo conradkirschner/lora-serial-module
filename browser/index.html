@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lora Serial Interface</title>
+    <style>
+        .disabled{
+            background: black;
+            color:white;
+        }
+        .enabled {
+            color:black;
+            background: #bfbdbd;
+        }
+    </style>
+</head>
+<body>
+<div id="serial-connection" class="enabled">
+    <div id="device-id">...</div>
+    <div id="blacklist">...</div>
+    <div id="log">...</div>
+    <div>
+        <label for="serial-input">Input:</label>
+        <input id="serial-input" />
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        const connection = new WebSocket('ws://localhost:8001', ['soap', 'xmpp']);
+        const log = [];
+        let deviceId = undefined;
+        let isReadOnly = undefined;
+        let blacklist = undefined;
+        const $log = document.querySelector('#log');
+        const $deviceId = document.querySelector('#device-id');
+        const $blacklist = document.querySelector('#blacklist');
+        const $container = document.querySelector('#serial-connection');
+        console.log($log);
+        const setReadOnly = () => {
+            isReadOnly = true;
+            $container.classList.add('disabled');
+            $container.classList.remove('enabled');
+        }
+        const setBlacklist = (newBlacklist) => {
+            blacklist = newBlacklist;
+            $blacklist.innerText = blacklist.join(' , ');
+        }
+        const setDeviceId = (newDeviceId) => {
+            deviceId = newDeviceId;
+            $deviceId.innerText = deviceId;
+        }
+
+        const createLogEntryTemplate = (log) => {
+            const newLogEntry = document.createElement('span');
+            newLogEntry.innerText = log;
+            return newLogEntry;
+        }
+        const refreshLog = (data) => {
+            const logentry = createLogEntryTemplate(data);
+            $log.appendChild(logentry)
+        }
+        const pushToLog = (data) => {
+            log.push(data);
+            refreshLog(data);
+            debugger;
+        }
+        // When the connection is open, send some data to the server
+        connection.onopen = function () {
+            connection.send('AT+RST');
+        };
+
+        // Log errors
+        connection.onerror = function (error) {
+            console.log('WebSocket Error ' + error);
+        };
+
+        // Log messages from the server
+        connection.onmessage = function (e) {
+            if(e.data.startsWith('[used][readonly][rejected]')) {
+                setReadOnly();
+                return;
+            }
+            if(e.data.startsWith('#start#')) {
+                setReadOnly();
+                setDeviceId(e.data.split('#start#')[1].split('#')[1]);
+                setBlacklist(e.data.split('#start#')[1].split('#')[0].split(','));
+                return;
+            }
+            pushToLog(e.data);
+        };        //do work
+    });
+
+</script>
+</body>
+</html>
