@@ -17,6 +17,74 @@ for (const name of Object.keys(nets)) {
     }
 }
 console.log(results);
+const getNodeId = () => {
+    const isLan = (results['eth0'].length === 0);
+    const id = results['wlan0'].split('.')[3];
+    let mappedId = undefined;
+    switch(id) {
+        case '131':
+            mappedId = 1;
+            break;
+        case '132':
+            mappedId = 2;
+            break;
+        case '133':
+            mappedId = 3;
+            break;
+        case '134':
+            mappedId = 4;
+            break;
+        case '135':
+            mappedId = 5;
+            break;
+        case '136':
+            mappedId = 6;
+            break;
+        case '137':
+            mappedId = 7;
+            break;
+        case '138':
+            mappedId = 8;
+            break;
+        case '139':
+            mappedId = 9;
+            break;
+        case '140':
+            mappedId = 10;
+            break;
+        case '141':
+            mappedId = 11;
+            break;
+        case '142':
+            mappedId = 12;
+            break;
+        case '143':
+            mappedId = 13;
+            break;
+        case '144':
+            mappedId = 14
+            break;
+        case '145':
+            mappedId = 15
+            break;
+        case '146':
+            mappedId = 16
+            break;
+        case '147':
+            mappedId = 17
+            break;
+        case '148':
+            mappedId = 18
+            break;
+        case '149':
+            mappedId = 19;
+            break;
+        case '150':
+            mappedId = 120;
+            break;
+    }
+    return {isLan, mappedId}
+}
 const WebSocket = require('ws');
 
 const wss = new WebSocket.Server({port: 8001});
@@ -112,7 +180,8 @@ const removeConnection = (id) => {
 wss.on('connection', function connection(ws) {
     ws.uuid = makeid(5);
     connections.push(ws);
-    ws.send('#start#' + JSON.stringify(blacklist) + '#' + userInfo.username);
+    const nodeInformation = getNodeId();
+    ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     startSerial();
     ws.on('message', function incoming(message) {
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free

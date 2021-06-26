@@ -34,8 +34,7 @@ let client = null;
         }
 
         if (data.indexOf('#start#') !== -1) {
-            const blacklist = 'JSON.parse(data.split()[2])';
-            log('blacklist', data.split('#')[1] ,blacklist);
+            log('blacklist', data.split('#')[1] , blacklist);
             isConnected = true;
         }
     });
