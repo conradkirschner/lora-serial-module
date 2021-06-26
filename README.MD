@@ -22,7 +22,10 @@ There are hardcoded folder paths to like /home/piu/conrad/lora-serial-module/dis
 ### Events
 #### @@@BLACKLIST@@@
 This Event overwrites the loaded blacklist.  
+
 ```@@@BLACKLIST@@@1,2,3,4```
+
+
 #### @@@UPGRADE@@@
 Enable Protocol Upgraded (input forwarding to ws)
 
