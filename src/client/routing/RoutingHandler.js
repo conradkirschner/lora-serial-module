@@ -1,4 +1,5 @@
 import {LIFETIME} from "./RouteEntry";
+import {log} from '../../logger';
 
 export class RoutingHandler {
     /**
@@ -35,7 +36,6 @@ export class RoutingHandler {
             }
             const currentRoute = this.routes[i].route;
             if (currentRoute.nextNode == nodeId) {
-                console.log('Use node ', currentRoute);
                 return this.routes[i];
             }
         }
@@ -51,7 +51,7 @@ export class RoutingHandler {
         const index = this.findRoute(source);
         if (index === -1) {
             this.addRoute({route, source: parseInt(source)});
-            console.log('Route will be added', route);
+            log('[router]', route);
             return;
         } else {
             // @todo update
@@ -63,7 +63,7 @@ export class RoutingHandler {
             // this.routes[index].sequenceNumber = route.sequenceNumber;
 
         }
-        console.log('Route already exist', route);
+        log('[router]', route);
     }
 
     addRoute(route) {

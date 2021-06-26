@@ -1,12 +1,12 @@
 
 import {SEND_TEXT_REQUEST_ACK} from "./types";
 
-export const create = (uflag, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber) => {
-    return Buffer.from([SEND_TEXT_REQUEST_ACK, uflag, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber]);
+export const create = ( originAddress, destinationAddress, destinationSequenceNumber, messageNumber) => {
+    return Buffer.from([SEND_TEXT_REQUEST_ACK, originAddress, destinationAddress, destinationSequenceNumber, messageNumber]);
 }
 export const read = (byteArray) => {
-    const [uflag, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber] = byteArray;
+    const [ originAddress, destinationAddress, destinationSequenceNumber, messageNumber] = byteArray;
     return {
-        uflag, hopCount, originAddress, originSequenceNumber, destinationAddress, destinationSequenceNumber
+        originAddress, destinationAddress, destinationSequenceNumber, messageNumber
     }
 }

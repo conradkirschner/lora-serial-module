@@ -9,7 +9,9 @@ import {log} from "./logger";
 });
 const dataLog = new SerialPort.parsers.Readline({ delimiter: `\r\n`, encoding:'ascii' });
 const flush = (data) => {
-    console.log('FULL-MESSAGE:' ,data.toString() , data.length);
+    /**
+     * do something
+     */
 }
 
 dataLog.on('data', function (data) {
@@ -22,5 +24,7 @@ dataLog.on('error', function (err) {
 port.pipe(dataLog)
 
 port.write('AT+RX\r\n', (e) => {
-    console.log('AT+RX pushed to serial', e);
+    /**
+     * we do not transmit errors
+     */
 });

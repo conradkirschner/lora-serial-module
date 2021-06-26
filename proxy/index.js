@@ -29,13 +29,12 @@ const isBlacklisted = (data) => {
 }
 const flush = (data) => {
     if (isBlacklisted(data)) {
-        console.log('blacklisted');
         return;
     }
     for (let i = 0; i < connections.length; i++) {
+        if (connections[i] === null) continue;
         try {
             connections[i].send(data);
-            console.log('transmitting to client', data);
         } catch (e) {
             console.error('WS ERROR: ', e);
         }
@@ -72,19 +71,38 @@ const startSerial = () => {
 /**
  WEBSOCKET
  **/
-
+function makeid(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
+const removeConnection = (id) => {
+    for (let i = 0; i < connections.length; i++){
+        const currentConnection = connections[i];
+        if (currentConnection.uuid === id) {
+            delete connections[i];
+        }
+    }
+}
 wss.on('connection', function connection(ws) {
+    ws.uuid = makeid(5);
     connections.push(ws);
     ws.send('#start#' + JSON.stringify(blacklist));
     startSerial();
     ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
+        if (isStarted) {
+            ws.send('Websocket port is already in use');
+            return;
+        }
         port.write(message, (e) => {
-            console.log('written to serial', message);
             if (e) {
                 console.log('There was a error on writing to serial ')
                 console.error(e);
-                console.error(e.toString());
             }
             // flush(e); @todo should we transmit errors or restart proxy
         })
@@ -94,8 +112,17 @@ wss.on('connection', function connection(ws) {
         if (port) {
             port.close(() => {
                 console.log('port closed');
-                port = null;
-                isStarted = false;
+
+                /**
+                 * reset port after connection loss
+                 */
+                const spawn = require("child_process").spawn;
+                const pythonProcess = spawn('python',["/home/pi/conrad/lora-serial-module/proxy/reset.py"]);
+                setTimeout(()=> {
+                    port = null;
+                    isStarted = false;
+                    removeConnection(ws.uuid);
+                }, 1500);
             });
         }
     });

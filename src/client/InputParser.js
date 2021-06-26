@@ -9,7 +9,13 @@ import {LIFETIME, RouteEntry} from "./routing/RouteEntry";
  *
  * @type {number}
  */
-export let sequenceNumber = 0;
+let sequenceNumber = 0;
+export const getSequenceNumber = ()  => {
+    return sequenceNumber;
+}
+export const incrementSequenceNumber = ()  => {
+    return sequenceNumber;
+}
 export let requestId = 0;
 
 export class InputParser {
@@ -109,12 +115,8 @@ export class InputParser {
                     //     rreq_data.destinationSequenceNumber,
                     //     rreq_data.destinationAddress
                     // );
-                    console.log("Added routes");
-
                     this.client.pushCommand(setBroadcast());
                     // this.client.router.addRouteIfNotExist(newRoute);
-                    console.log('GOT ROUTES:', this.client.router.routes);
-
                         /**
                          * incremental unsigned "binary-like"
                          */
@@ -178,9 +180,6 @@ export class InputParser {
                         rreq_data.destinationAddress,
                         sequenceMax,
                     ));
-
-                this.client.pushCommand(setDestination(source));
-                this.client.pushSendCommand(packages.send.send_hop_ack());
                 break;
             case 'RREP':
                 const rrep_data = packages.read.rrep(packageData);
@@ -258,8 +257,7 @@ export class InputParser {
                  * forward message if route but not sender or receiver
                  * @type {{destinationAddress: *, originAddress: *, hopCount: *, lifetime: *, destinationSequenceNumber: *}}
                  */
-                if (destinationRoute !== null && rrep_data.destinationAddress != process.env.DEVICE_ID && rrep_data.originAddress !=  process.env.DEVICE_ID) {
-                    console.log('current log', JSON.stringify(this.client.router));
+                if (originRoute !== null && rrep_data.destinationAddress != process.env.DEVICE_ID && rrep_data.originAddress !=  process.env.DEVICE_ID) {
                     this.client.pushCommand(setDestination(originRoute.source));
                     this.client.pushSendCommand(
                         packages.send.rrep(
@@ -283,7 +281,13 @@ export class InputParser {
                 // yay we got a message for us, so we can store them
                 if (send_text_request_data.destinationAddress == DEVICEID) {
                     this.client.messageHandler.addChatMessage(send_text_request_data.originAddress, send_text_request_data.message, send_text_request_data.destinationAddress);
+                    this.client.pushCommand(setDestination(source));
+                    this.client.pushSendCommand(
+                        packages.send.send_text_request_ack(send_text_request_data.originAddress,  send_text_request_data.destinationAddress, getSequenceNumber(), send_text_request_data.messageNumber)
+                    );
+                    incrementSequenceNumber();
                     break;
+
                 }
                 /**
                  *
@@ -312,7 +316,9 @@ export class InputParser {
 
                 break;
             case 'SEND_TEXT_REQUEST_ACK':
-                    this.client.pushCommand(setDestination(source));
+                const sendTextAck = packages.read.send_text_request_ack(byteData);
+                const acknowledgeRoute = this.client.router.getRoute(source);
+                    this.client.pushCommand(setDestination(acknowledgeRoute));
                     this.client.pushSendCommand(packages.send.send_text_request_ack());
                 break;
             case 'RERR':

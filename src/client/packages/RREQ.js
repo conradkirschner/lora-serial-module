@@ -9,7 +9,6 @@ export const create = (
     destinationAddress,
     destinationSequenceNumber
 ) => {
-    console.log(uflag, hopCount,  rreq_id,  originAddress,originSequenceNumber, destinationAddress, destinationSequenceNumber)
     return Buffer.from([
         RREQ,
         (uflag) ? uflag : 1,

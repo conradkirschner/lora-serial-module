@@ -1,3 +1,5 @@
+import {log} from '../logger';
+
 export class MessageHandler{
     sequenceNumber = 0;
     chatMessages = {
@@ -33,7 +35,7 @@ export class MessageHandler{
         //this also stops someone scrolling back and viewing sensitive data that may have been logged
         process.stdout.write("\u001b[3J\u001b[2J\u001b[1J");
         console.clear();
-        console.log(JSON.stringify(this.chatMessages));
+        log(JSON.stringify(this.chatMessages));
     }
 
     addText(isOwn, message) {

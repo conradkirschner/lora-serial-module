@@ -1,3 +1,6 @@
+const inputStream = [];
+
+
 export const log = (...logValue) => {
     console.log(...logValue);
 }

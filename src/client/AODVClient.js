@@ -1,7 +1,7 @@
 import commands from "./commands";
 import {DEVICEID} from "../_global_constrains";
 import {log, info} from "../logger";
-import {InputParser, sequenceNumber} from "./InputParser";
+import {getSequenceNumber, incrementSequenceNumber, InputParser, sequenceNumber} from "./InputParser";
 import {setAddress, setDestination} from "./commands/lora";
 import packages from "./packages";
 import {RoutingHandler} from "./routing/RoutingHandler";
@@ -58,11 +58,11 @@ export class AODVClient {
 
         }
         const route = that.router.getRoute(clientId);
-        console.log('ROUTING TABLE: ', JSON.stringify(that.router.routes));
         /**
          * create route if not exist until exists every 30 sec 3 times
          */
-
+        const sequenceNumber= getSequenceNumber();
+        incrementSequenceNumber();
         if (route === null) {
             const rreq = packages.send.rreq(
                 1,
@@ -85,10 +85,9 @@ export class AODVClient {
          * Route found send text message
          */
 
-        console.log('Send Text Message');
         that.pushCommand(setDestination(route.source));
         that.pushSendCommand(packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
-        console.log('GET TEXT', packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
+        log('GET TEXT', packages.send.send_text_request(DEVICEID, clientId, that.messageHandler.currentSequenceNumber, message));
         that.messageHandler.incrementSequenceNumber();
     }
 
@@ -103,7 +102,7 @@ export class AODVClient {
         const port = this.parser;
         return new Promise((resolve, reject) => {
             if (typeof command.command === "string") {
-                console.log('send command', command.command);
+                log('[command][out]', command.command);
                 port.write(command.command + '\r\n', function (err) {
                     if (err) {
                         reject(false);
@@ -115,7 +114,7 @@ export class AODVClient {
 
                 return;
             }
-            console.log('Send Buffer', Buffer.from(command.command.data), Buffer.from(command.command.data).toString('ascii') + '\r\n');
+            log('[command][out]', Buffer.from(command.command.data), Buffer.from(command.command.data).toString('ascii') + '\r\n');
             port.write(Buffer.from(command.command.data).toString('ascii') + '\r\n', function (err) {
                 if (err) {
                     reject(false);
