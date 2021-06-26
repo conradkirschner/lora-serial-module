@@ -22,6 +22,8 @@ console.log(results);
 const getNodeId = () => {
     const isLan = (results['eth0'].length !== 0);
     const id = results['wlan0'][0].split('.')[3];
+    console.log('wlan0[0]',results['wlan0'][0])
+    console.log('results',results)
     let mappedId = undefined;
     for(let node in nodes) {
         if (nodes[node] === id) {
