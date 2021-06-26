@@ -151,6 +151,7 @@ wss.on('connection', function connection(ws, req) {
          */
         if (message.startsWith('@@@BLACKLIST@@@')){
             blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
+            console.log('update blacklist', blacklist);
         }
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
             ws.send('[used][readonly][rejected]'+ message);
