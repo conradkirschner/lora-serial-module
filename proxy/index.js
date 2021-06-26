@@ -25,10 +25,8 @@ const getNodeId = () => {
 
     let mappedId = undefined;
     for(let node in nodes) {
-        console.log('node',nodes[node]);
-        console.log('id', id);
         if (parseInt(nodes[node]) == id) {
-            return node;
+            mappedId= node;
         }
     }
     return {isLan, mappedId}
@@ -133,8 +131,6 @@ wss.on('connection', function connection(ws, req) {
     console.log('req.url',req.url);
     console.log('node information');
     const nodeInformation = getNodeId();
-    console.log('nodeInformation',  nodeInformation);
-    console.log('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
     startSerial();
     ws.on('message', function incoming(message) {
