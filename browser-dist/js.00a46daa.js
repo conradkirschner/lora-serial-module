@@ -3977,7 +3977,7 @@ var hexSliceLookupTable = (function () {
 })()
 
 },{"base64-js":"../node_modules/base64-js/index.js","ieee754":"../node_modules/ieee754/index.js","buffer":"../node_modules/node-libs-browser/node_modules/buffer/index.js"}],"img/terminal_icon.png":[function(require,module,exports) {
-module.exports = "/terminal_icon.910a4ff7.png";
+module.exports = "./terminal_icon.910a4ff7.png";
 },{}],"../src/client/packages/types.js":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 "use strict";
@@ -5417,7 +5417,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62076" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49176" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
