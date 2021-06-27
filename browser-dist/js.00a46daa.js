@@ -4317,7 +4317,50 @@ var _default = {
   send: send
 };
 exports.default = _default;
-},{"./RREP":"../src/client/packages/RREP.js","./RREQ":"../src/client/packages/RREQ.js","./RERR":"../src/client/packages/RERR.js","./RREP-ACK":"../src/client/packages/RREP-ACK.js","./SEND-TEXT-REQUEST":"../src/client/packages/SEND-TEXT-REQUEST.js","./SEND-HOP-ACK":"../src/client/packages/SEND-HOP-ACK.js","./SEND-TEXT-REQUEST-ACK":"../src/client/packages/SEND-TEXT-REQUEST-ACK.js"}],"js/createSerialConsole.js":[function(require,module,exports) {
+},{"./RREP":"../src/client/packages/RREP.js","./RREQ":"../src/client/packages/RREQ.js","./RERR":"../src/client/packages/RERR.js","./RREP-ACK":"../src/client/packages/RREP-ACK.js","./SEND-TEXT-REQUEST":"../src/client/packages/SEND-TEXT-REQUEST.js","./SEND-HOP-ACK":"../src/client/packages/SEND-HOP-ACK.js","./SEND-TEXT-REQUEST-ACK":"../src/client/packages/SEND-TEXT-REQUEST-ACK.js"}],"js/errorModal.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.showError = void 0;
+
+var showError = function showError(errorMessage) {
+  debugger;
+  var isModalShown = false;
+  var modal = document.createElement('div');
+  modal.classList.add('error-modal-wrapper');
+
+  var closeError = function closeError() {
+    modal.innerHTML = '';
+    modal.remove();
+  };
+
+  var showError = function showError(errorMessage) {
+    modal.innerHTML = '';
+    var text = document.createElement('div');
+    var closeButton = document.createElement('div');
+    closeButton.style.position = 'fixed';
+    closeButton.style.top = '0';
+    closeButton.style.right = '0';
+    closeButton.style.margin = '50px';
+    closeButton.style.fontSize = '25px';
+    closeButton.style.borderBottom = '1px solid lightgray';
+    closeButton.innerHTML = 'Ok, verstanden - close';
+    closeButton.addEventListener('click', function () {
+      closeError();
+    });
+    text.innerText = errorMessage;
+    modal.appendChild(closeButton);
+    modal.appendChild(text);
+    document.body.appendChild(modal);
+  };
+
+  showError(errorMessage);
+};
+
+exports.showError = showError;
+},{}],"js/createSerialConsole.js":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 "use strict";
 
@@ -4329,6 +4372,8 @@ exports.createSerialConsole = void 0;
 var _types = require("./../../src/client/packages/types");
 
 var _packages = _interopRequireDefault(require("../../src/client/packages"));
+
+var _errorModal = require("./errorModal");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4394,6 +4439,10 @@ var createSerialConsole = function createSerialConsole(renderInto, connectToDevi
   serialConsole.innerHTML = "\n            <div style=\"width:100%\"> <div data-id=\"header\" class=\"serial-console-header\">\n                <span>Serial Console -  <span data-id=\"device-id\">...</span></span>\n                 <span data-id=\"readonly-label\" class=\"readonly-label hidden\">readonly <a class=\"full-log-toggle\"  href=\"javascript:false\" data-id=\"full-log-toggle\"> (active full log)</a></span>\n                 <span data-id=\"window-close-button\" class=\"serial-console-close-button\">\u274C</span>\n            </div></div>\n            <div class=\"serial-console-wrapper\">\n            <div data-id=\"serial-console-container\" class=\"serial-console-container serial-console-container--active\">\n\n            <div data-id=\"status-bar\">\n                <div> Ist im Wlan: <span data-id=\"is-lan\">...</span></div>\n                <div> Blacklist: <span class=\"blacklist-container\" data-id=\"blacklist\">...</span></div>\n            </div>\n            <div data-id=\"log-container\" class=\"serial-console-log-container\">\n                <div class=\"log-title\">Log</div>\n                <hr>\n                <div data-id=\"log\"></div>\n            </div>\n            <div data-id=\"footer\" class=\"serial-console-footer\">\n                <div data-id=\"send-text-serial\">\n                    <div>Serial Text Input</div>\n                    <input data-id=\"send-text-serial-button-input\" type=\"text\" />\n                    <button data-id=\"send-text-serial-button\">senden</button>\n                </div>\n                 <div data-id=\"show-packages-container\">\n                    <button><label><input data-id=\"follow-log-toggle\" type=\"checkbox\"> follow log </label></button>\n                </div>\n\n            </div>\n            <div data-id=\"expanded-modal\" class=\"modal-container\">\n                <div data-id=\"expanded-modal-menu\">\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-route-request\">Route Request</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-route-reply\">Route Reply</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-route-reply-ack\">Route Reply Acknowledge</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-route-error\">Route Error</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-send-hop-acknowledge\">Send Hop Acknowledge</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-send-text-request\">Send Text Request</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-new-send-text-request-acknowledge\">Send Text Request Acknowledge</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-manage-receiving\">Manage Receiving</button>\n                    <button class=\"expaneded-modal-menu-item\" data-id=\"show-lora-config\">Lora Config</button>\n                </div>\n                <hr>\n                <div data-id=\"expanded-modal-body\">\n                    <div class=\"expaneded-modal-new-input-container \" data-id=\"expaneded-modal-new-route-request\">\n                        <div>Route Request</div>\n                        <div><span>uflag</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Hop Count</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Request Id</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Origin Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Origin Sequence Number</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Destination Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Destination Sequence Number</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><button>senden</button> </div>\n                    </div>\n\n                    <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-route-reply-ack\">\n                        <div>Route Reply Acknowledge </div>\n                        <div><button>senden</button> </div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-route-reply\">\n                        <div>Route Reply</div>\n                        <div><span>Hop Count</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Origin Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Origin Sequence Number</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Destination Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Lifetime</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><button>senden</button> </div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-route-error\">\n                        <div>Route Error</div>\n                        <div><span>Destination Count</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>Unreachable Destination Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Unreachable Destination Sequence Number</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>additionalAddresses</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>additionalSequenceNumber</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><button>senden</button> </div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-send-hop-acknowledge\">\n                        <div>Send Hop Acknowledge</div>\n                        <div><span>messageSequenceNumber</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><button>senden</button> </div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-send-text-request\">\n                        <div>Send Text Request</div>\n                        <div><span>Origin Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>Destination Address</span><span><input type=\"number\" min=\"1\" max=\"20\" value=\"1\"></span> </div>\n                        <div><span>messageSequenceNumber</span><span><input type=\"text\" value=\"1\"></span> </div>\n                        <div><span>message</span><span><input type=\"text\" maxlength=\"30\" value=\"payload\"></span> </div>\n                        <div><button>senden</button> </div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-new-send-text-request-acknowledge\">\n                        <div>Send Text Request Acknowledge</div>\n                        <div><button>senden</button></div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-manage-receiving\">\n                        <div>Lora Receiving Modes</div>\n                        <div><button>ENABLE Receiving</button></div>\n                        <hr>\n                         <div><span>Destination (FFFF = Broadcast)</span><span><input type=\"text\" maxlength=\"30\" value=\"FFFF\"></span> </div>\n                        <div><button>Set Destination</button></div>\n                        <hr>\n                         <div><span>Address (1-20)</span><span><input type=\"text\" maxlength=\"30\" value=\"15\"></span> </div>\n                        <div><button>Set Addressf</button></div>\n                    </div>\n                     <div class=\"expaneded-modal-new-input-container hidden\" data-id=\"expaneded-modal-lora-config\">\n                        <div>Lora Config</div>\n                         <div>\n                             <span>\n                                 <a href=\"javascript:false\" \n                                 title=\"Die Tr\xE4gerfrequenz, wenn das Modul arbeitet, in Dezimalzahlen, ausgedr\xFCckt in 9 Zeichen (410 MHz bis 470 MHz)\">\n                                    Tr\xE4gerfrequenz\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"433000000\">\n                            </span> \n                        </div>\n                         <div>\n                            <div>\n                                <a href=\"javascript:false\" title=\"Sendeleistung, dezimal, ausgedr\xFCckt in 2 Zeichen( 5dBm-20dBm)\">\n                                    Power\n                                </a>\n                            </div>\n                            <span>\n                                <input type=\"text\" value=\"20\">\n                            </span>\n                         </div>\n                         <div>\n                            <div>\n                                <a href=\"javascript:false\" title=\"Die Bandbreite des belegten Kanals wird \xFCbertragen: Je gr\xF6\xDFer die Bandbreite, desto schneller werden die Daten \xFCbertragen, desto geringer ist jedoch die Empfindlichkeit. Im Konfigurationsbefehl wird nur der Bandbreitencode verwendet, und die tats\xE4chliche Bandbreite wird nicht verwendet.\">\n                                    Modulationsbandbreite\n                                </a>\n                            </div>\n                            <span>\n                                <input type=\"text\" value=\"9\" />\n                            </span>\n                         </div>\n                         <div>\n                            <div>\n                                <a href=\"javascript:false\" title=\"Die Schl\xFCsselparameter der Spread-Spectrum-Kommunikation sind, je gr\xF6\xDFer der SpreadingFaktor ist, desto langsamer werden die Daten gesendet, desto h\xF6her ist jedoch die Empfindlichkeit. Im Konfigurationsbefehl wird nur der Code des Spreizfaktors verwendet, und der tats\xE4chliche Spreizfaktor wird nicht angezeigt\">\n                                    Spread-Faktor\n                                </a>\n                            </div>\n                            <div>\n                                <input type=\"text\" value=\"10\" />\n                            </div> \n                            </div>\n                         <div>\n                            <div>\n                                <a href=\"javascript:false\" title=\"F\xFCr die Schl\xFCsselparameter der Spread-Spectrum-Kommunikation wird im Konfigurationsbefehl nur der Code des Fehlerkorrekturcodes verwendet, und der eigentliche Fehlerkorrekturcode wird nicht angezeigt\">\n                                    Fehler beim Korrigieren des Codes\n                                </a>\n                            </div>\n                            <div>\n                                <input type=\"text\" value=\"4\" />\n                             </div>\n                          </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"CRC-Pr\xFCfung der Benutzerdaten\">\n                                    CRC-Pr\xFCfung\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"1\" />\n                            </span>\n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"0 explizit | 1 implizit\">\n                                    Implizite Kopfzeile\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"0\" />\n                            </span>\n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"Empfangsmoduseinstellung (0 kontinuierlich | 1 einmalig)\">\n                                    Einzelempfang\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"0\" />\n                             </span>\n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"0 Wird nicht unterst\xFCtzt | 1 Unterst\xFCtzung\">\n                                    Frequenzsprungeinstellung\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"0\" />\n                            </span> \n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"Timeout-Zeit f\xFCr Datenempfang: Wenn im Einzelempfangsmodus die Datensoftware nicht \xFCber diese Zeit hinaus empfangen wurde, meldet das Modul einen Timeout-Fehler und wechselt automatisch in Dezimal-Schreibweise in Millisekunden in den SLEEP-Modus (1-65535)\">\n                                    Timeout f\xFCr den Empfang von Daten\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"0\" />\n                            </span>\n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"Benutzerdatenl\xE4nge, Dezimaldarstellung: Anwendung im impliziten Header-Modus, gibt die L\xE4nge der vom Modul gesendeten und empfangenen Daten an (diese L\xE4nge = tats\xE4chliche Benutzerdatenl\xE4nge + 4). Der Anzeigekopf ist ung\xFCltig.(5-255)\">\n                                    Benutzerdatenl\xE4nge\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"3000\" />\n                            </span>\n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"Pr\xE4ambell\xE4nge, Dezimaldarstellung(4-65535)\">\n                                    Benutzerdatenl\xE4nge\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"8\" />\n                            </span> \n                         </div>\n                         <div>\n                            <span>\n                                <a href=\"javascript:false\" title=\"\">\n                                    L\xE4nge der Pr\xE4ambel\n                                </a>\n                            </span>\n                            <span>\n                                <input type=\"text\" value=\"10\">\n                            </span>\n                         </div>\n                        <div><button>senden</button></div>\n                    </div>\n                </div>\n            </div>\n            </div>\n            <div class=\"sorted-logs-wrapper\">\n                <div data-id=\"expaneded-modal-new-input-container\">\n                <div>\n                    <div class=\"table-title\">Route Requests</div>\n                    <div class=\"table8\" data-id=\"log-route-request\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>U-Flag</span>\n                            <span>Request Id</span>\n                            <span>Origin Address</span>\n                            <span>Origin SequenceNumber</span>\n                            <span>Destination Address</span>\n                            <span>Destination Sequence Number</span>\n                        </div>\n                    </div>\n                </div>\n                <div>\n                    <div class=\"table-title\">Route Reply</div>\n                    <div class=\"table7\" data-id=\"log-route-reply\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>Hop Count</span>\n                            <span>Origin Address</span>\n                            <span>Destination Address</span>\n                            <span>Destination Sequence Number</span>\n                            <span>Lifetime</span>\n                        </div>\n                    </div>\n                </div>\n                <div>\n                    <div class=\"table-title\">Route Errors</div>\n                    <div class=\"table7\" data-id=\"log-route-error\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>Destination Count</span>\n                            <span>Unreachable Destination Address</span>\n                            <span>Unreachable Destination Sequence Number</span>\n                            <span>Additional Addresses</span>\n                            <span>Additional Sequence Number</span>\n                        </div>\n                    </div>\n                </div>\n                <div>\n                    <div class=\"table-title\">Send Text Request</div>\n                    <div class=\"table6\" data-id=\"log-send-text-request\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>Origin Address</span>\n                            <span>Destination Address</span>\n                            <span>Message Number</span>\n                            <span>Message</span>\n                        </div>\n                    </div>\n                </div>\n                <div>\n                    <div class=\"table-title\">Route Reply Acknowledge</div>\n                    <div class=\"table2\" data-id=\"log-route-reply-ack\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                        </div>\n                    </div>\n                </div>\n                <div>\n                    <div class=\"table-title\">Send Text Request Acknowledge</div>\n                    <div class=\"table3\" data-id=\"log-send-text-ack\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>Origin Address</span>\n                        </div>\n                    </div>\n                </div>\n                  <div>\n                    <div class=\"table-title\">Send Hop Acknowledge</div>\n                    <div class=\"table3\" data-id=\"log-send-hop-ack\">\n                        <div>\n                            <span>Time</span>\n                            <span>Sender</span>\n                            <span>Message Sequence Number</span>\n                        </div>\n                    </div>\n                </div>\n                </div>\n            </div>\n</div>\n    ";
   renderInto.appendChild(serialConsole);
   setTimeout(function () {
+    /**
+     * Websocket Connection
+     * @type {WebSocket}
+     */
     var connection = new WebSocket('ws://localhost:8001/' + connectToDeviceId, ['soap', 'xmpp']);
     var log = [];
     var deviceId = undefined;
@@ -4403,6 +4452,10 @@ var createSerialConsole = function createSerialConsole(renderInto, connectToDevi
     var zIndex = 0;
     var shouldFollow = false;
     var isFullLog = false;
+    var timeout = setTimeout(function () {
+      closeWindow();
+      (0, _errorModal.showError)('Could not connect to node.');
+    }, 1000);
     var $windowCloseButton = document.querySelector(getQuerySelector(id, 'window-close-button'));
     var $header = document.querySelector(getQuerySelector(id, 'header'));
     var $log = document.querySelector(getQuerySelector(id, 'log'));
@@ -4922,9 +4975,7 @@ var createSerialConsole = function createSerialConsole(renderInto, connectToDevi
     }; // When the connection is open, send some data to the server
 
 
-    connection.onopen = function () {
-      connection.send('AT+RST\r\n');
-    }; // Log errors
+    connection.onopen = function () {}; // Log errors
 
 
     connection.onerror = function (error) {
@@ -4933,6 +4984,8 @@ var createSerialConsole = function createSerialConsole(renderInto, connectToDevi
 
 
     connection.onmessage = function (e) {
+      clearTimeout(timeout);
+
       if (e.data.startsWith('[used][readonly][rejected]')) {
         setReadOnly();
         return;
@@ -5050,7 +5103,7 @@ var createSerialConsole = function createSerialConsole(renderInto, connectToDevi
 };
 
 exports.createSerialConsole = createSerialConsole;
-},{"./../../src/client/packages/types":"../src/client/packages/types.js","../../src/client/packages":"../src/client/packages/index.js","buffer":"../node_modules/node-libs-browser/node_modules/buffer/index.js"}],"../src/client/commands/lora.js":[function(require,module,exports) {
+},{"./../../src/client/packages/types":"../src/client/packages/types.js","../../src/client/packages":"../src/client/packages/index.js","./errorModal":"js/errorModal.js","buffer":"../node_modules/node-libs-browser/node_modules/buffer/index.js"}],"../src/client/commands/lora.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -5134,6 +5187,8 @@ var _index = _interopRequireDefault(require("../../src/client/packages/index"));
 
 var commands = _interopRequireWildcard(require("../../src/client/commands/lora"));
 
+var _errorModal = require("./errorModal");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -5141,6 +5196,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var attachEvents = function attachEvents(id) {
+  var retryCounter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
   var $log = document.querySelector(getQuerySelector(id, 'log'));
   var $logContainer = document.querySelector(getQuerySelector(id, 'log-container'));
   var $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
@@ -5155,7 +5211,12 @@ var attachEvents = function attachEvents(id) {
 
   if (window.serialConsoleIds[id].actions === undefined) {
     setTimeout(function () {
-      attachEvents(id);
+      if (3 > retryCounter) {
+        (0, _errorModal.showError)('Could not connect to Node');
+        return;
+      }
+
+      attachEvents(id, ++retryCounter);
     }, 300);
     return;
   }
@@ -5271,7 +5332,7 @@ var attachEvents = function attachEvents(id) {
 exports.attachEvents = attachEvents;
 
 var sendBinaryPackage = function sendBinaryPackage() {};
-},{"../../src/client/packages/index":"../src/client/packages/index.js","../../src/client/commands/lora":"../src/client/commands/lora.js"}],"js/index.js":[function(require,module,exports) {
+},{"../../src/client/packages/index":"../src/client/packages/index.js","../../src/client/commands/lora":"../src/client/commands/lora.js","./errorModal":"js/errorModal.js"}],"js/index.js":[function(require,module,exports) {
 
 "use strict";
 
@@ -5343,7 +5404,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62848" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51177" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
