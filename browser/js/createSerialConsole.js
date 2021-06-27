@@ -692,7 +692,11 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             }
             $loraConfig.classList.remove('hidden');
         }
-        const toggleFullLog = () => {
+        let once = false;
+        const toggleFullLog = (oneTimeFlag) => {
+            if (once && oneTimeFlag === true) {
+                return;
+            }
             if (!isFullLog) {
                 connection.send('@@@UPGRADE@@@');
                 $fullLogToggleButton.innerText = '(deactive full log)';
@@ -702,7 +706,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 $fullLogToggleButton.innerText = '(active full log)';
                 isFullLog = false;
             }
-
+            once = true;
         }
         const toggleFollowLog = () => {
             const toggled = $followLogToggle.checked;
@@ -713,7 +717,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
              * Upgrade Protocol
              * @type {boolean}
              */
-            toggleFullLog();
+            toggleFullLog(true);
             isReadOnly = true;
             $container.classList.add('disabled');
             $sendCommandButtonInput.classList.add('disabled');

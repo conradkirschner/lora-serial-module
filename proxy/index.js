@@ -148,6 +148,13 @@ wss.on('connection', function connection(ws, req) {
          */
         if (message.startsWith('@@@BLACKLIST@@@')){
             blacklist = message.split('@@@BLACKLIST@@@')[1].split(',');
+            const nodeInformation = getNodeId();
+            for (let i = 0; i < connections.length; i++ ) {
+                if (connections[i].uuid === ws.uuid) continue;
+                if (connections[i].upgradedProtocol) {
+                    ws.send('#start#' + JSON.stringify(blacklist) + '#' + nodeInformation.mappedId + '#' + nodeInformation.isLan);
+                }
+            }
         }
         if (isStarted !== ws.uuid && isStarted !== false) { // only one session or if free
             ws.send('[used][readonly][rejected]'+ message);
