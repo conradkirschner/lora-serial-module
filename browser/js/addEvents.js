@@ -1,4 +1,5 @@
 import packages from '../../src/client/packages/index';
+import * as commands from '../../src/client/commands/lora';
 
 export const attachEvents = (id) => {
     const $log = document.querySelector(getQuerySelector(id,'log'));
@@ -57,6 +58,12 @@ export const attachEvents = (id) => {
     currentSerialConsole.elements.$menuButtons[6].addEventListener('click',()=> {
         currentSerialConsole.actions.showNewTextRequestAck();
     })
+    currentSerialConsole.elements.$menuButtons[7].addEventListener('click',()=> {
+        currentSerialConsole.actions.showManageReciving();
+    })
+    currentSerialConsole.elements.$menuButtons[8].addEventListener('click',()=> {
+        currentSerialConsole.actions.showLoraConfig();
+    })
     /**
      * Send Packages
      */
@@ -68,7 +75,6 @@ export const attachEvents = (id) => {
     })
     currentSerialConsole.elements.$menu[1].querySelector('button').addEventListener('click',()=> {
         const inputs = currentSerialConsole.elements.$menu[1].querySelectorAll('input');
-        debugger;
         const messagePackage = packages.send.rrep(parseInt(inputs[0].value), parseInt(inputs[1].value), parseInt(inputs[2].value), parseInt(inputs[3].value), parseInt(inputs[4].value));
         currentSerialConsole.actions.sendMessage(messagePackage);
     })
@@ -87,14 +93,36 @@ export const attachEvents = (id) => {
         currentSerialConsole.actions.sendMessage(messagePackage);
     })
     currentSerialConsole.elements.$menu[5].querySelector('button').addEventListener('click',()=> {
-        debugger;
         const inputs = currentSerialConsole.elements.$menu[5].querySelectorAll('input');
         const messagePackage = packages.send.send_text_request(parseInt(inputs[0].value), parseInt(inputs[1].value), parseInt(inputs[2].value), inputs[3].value);
         currentSerialConsole.actions.sendMessage(messagePackage);
     })
-    currentSerialConsole.elements.$menu[6].querySelector('button').addEventListener('click',()=> {
-        const messagePackage = packages.send.send_text_request_ack();
-        currentSerialConsole.actions.sendMessage(messagePackage);
+    currentSerialConsole.elements.$menu[7].querySelectorAll('button')[0].addEventListener('click',()=> {
+        const messagePackage = commands.getMessages()
+        currentSerialConsole.actions.sendCommand(messagePackage);
+    })
+    currentSerialConsole.elements.$menu[7].querySelectorAll('button')[1].addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[7].querySelectorAll('input');
+        currentSerialConsole.actions.sendCommand(commands.setDestination(inputs[0].value));
+    })
+    currentSerialConsole.elements.$menu[8].querySelector('button').addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[8].querySelectorAll('input');
+        const messagePackage = commands.setConfig(
+            parseInt(inputs[0].value),
+            parseInt(inputs[1].value),
+            parseInt(inputs[2].value),
+            parseInt(inputs[3].value),
+            parseInt(inputs[4].value),
+            parseInt(inputs[5].value),
+            parseInt(inputs[6].value),
+            parseInt(inputs[7].value),
+            parseInt(inputs[8].value),
+            parseInt(inputs[9].value),
+            parseInt(inputs[10].value),
+            parseInt(inputs[11].value),
+            parseInt(inputs[12].value),
+            )
+        currentSerialConsole.actions.sendCommand(messagePackage);
     })
 
     console.log(window.serialConsoleIds[id].actions.getDeviceId());

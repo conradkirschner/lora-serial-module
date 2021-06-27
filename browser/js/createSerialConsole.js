@@ -29,7 +29,7 @@ const formattedTimestamp = () => {
 const formatBinaryInput = ( sended, showText = '' )=> {
     for (let i = 0; i < sended.length; i++) {
         try {
-            debugger;
+
             if (sended instanceof Uint8Array) {
                 showText += parseInt(sended[i].toString(2), 2) + '-';
             } else {
@@ -64,7 +64,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div> Blacklist: <span class="blacklist-container" data-id="blacklist">...</span></div>
             </div>
             <div data-id="log-container" class="serial-console-log-container">
-                Log:
+                <div class="log-title">Log</div>
+                <hr>
                 <div data-id="log"></div>
             </div>
             <div data-id="footer" class="serial-console-footer">
@@ -73,9 +74,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     <input data-id="send-text-serial-button-input" type="text" />
                     <button data-id="send-text-serial-button">senden</button>
                 </div>
-                <button data-id="show-packages-button">Show packages</button>
                  <div data-id="show-packages-container">
-                    <button data-id="show-packages-button"><label><input data-id="follow-log-toggle" type="checkbox"> follow log </label></button>
+                    <button><label><input data-id="follow-log-toggle" type="checkbox"> follow log </label></button>
                 </div>
 
             </div>
@@ -88,6 +88,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     <button class="expaneded-modal-menu-item" data-id="show-new-send-hop-acknowledge">Send Hop Acknowledge</button>
                     <button class="expaneded-modal-menu-item" data-id="show-new-send-text-request">Send Text Request</button>
                     <button class="expaneded-modal-menu-item" data-id="show-new-send-text-request-acknowledge">Send Text Request Acknowledge</button>
+                    <button class="expaneded-modal-menu-item" data-id="show-manage-receiving">Manage Receiving</button>
+                    <button class="expaneded-modal-menu-item" data-id="show-lora-config">Lora Config</button>
                 </div>
                 <hr>
                 <div data-id="expanded-modal-body">
@@ -142,6 +144,148 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                         <div>Send Text Request Acknowledge</div>
                         <div><button>senden</button></div>
                     </div>
+                     <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-manage-receiving">
+                        <div>Lora Receiving Modes</div>
+                        <div><button>ENABLE Receiving</button></div>
+                        <hr>
+                         <div><span>Destination (FFFF = Broadcast)</span><span><input type="text" maxlength="30" value="FFFF"></span> </div>
+                        <div><button>Set Destination</button></div>
+                    </div>
+                     <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-lora-config">
+                        <div>Lora Config</div>
+                         <div>
+                             <span>
+                                 <a href="javascript:false" 
+                                 title="Die Trägerfrequenz, wenn das Modul arbeitet, in Dezimalzahlen, ausgedrückt in 9 Zeichen (410 MHz bis 470 MHz)">
+                                    Trägerfrequenz
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="433000000">
+                            </span> 
+                        </div>
+                         <div>
+                            <div>
+                                <a href="javascript:false" title="Sendeleistung, dezimal, ausgedrückt in 2 Zeichen( 5dBm-20dBm)">
+                                    Power
+                                </a>
+                            </div>
+                            <span>
+                                <input type="text" value="20">
+                            </span>
+                         </div>
+                         <div>
+                            <div>
+                                <a href="javascript:false" title="Die Bandbreite des belegten Kanals wird übertragen: Je größer die Bandbreite, desto schneller werden die Daten übertragen, desto geringer ist jedoch die Empfindlichkeit. Im Konfigurationsbefehl wird nur der Bandbreitencode verwendet, und die tatsächliche Bandbreite wird nicht verwendet.">
+                                    Modulationsbandbreite
+                                </a>
+                            </div>
+                            <span>
+                                <input type="text" value="9" />
+                            </span>
+                         </div>
+                         <div>
+                            <div>
+                                <a href="javascript:false" title="Die Schlüsselparameter der Spread-Spectrum-Kommunikation sind, je größer der SpreadingFaktor ist, desto langsamer werden die Daten gesendet, desto höher ist jedoch die Empfindlichkeit. Im Konfigurationsbefehl wird nur der Code des Spreizfaktors verwendet, und der tatsächliche Spreizfaktor wird nicht angezeigt">
+                                    Spread-Faktor
+                                </a>
+                            </div>
+                            <div>
+                                <input type="text" value="10" />
+                            </div> 
+                            </div>
+                         <div>
+                            <div>
+                                <a href="javascript:false" title="Für die Schlüsselparameter der Spread-Spectrum-Kommunikation wird im Konfigurationsbefehl nur der Code des Fehlerkorrekturcodes verwendet, und der eigentliche Fehlerkorrekturcode wird nicht angezeigt">
+                                    Fehler beim Korrigieren des Codes
+                                </a>
+                            </div>
+                            <div>
+                                <input type="text" value="4" />
+                             </div>
+                          </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="CRC-Prüfung der Benutzerdaten">
+                                    CRC-Prüfung
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="1" />
+                            </span>
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="0 explizit | 1 implizit">
+                                    Implizite Kopfzeile
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="0" />
+                            </span>
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="Empfangsmoduseinstellung (0 kontinuierlich | 1 einmalig)">
+                                    Einzelempfang
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="0" />
+                             </span>
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="0 Wird nicht unterstützt | 1 Unterstützung">
+                                    Frequenzsprungeinstellung
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="0" />
+                            </span> 
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="Timeout-Zeit für Datenempfang: Wenn im Einzelempfangsmodus die Datensoftware nicht über diese Zeit hinaus empfangen wurde, meldet das Modul einen Timeout-Fehler und wechselt automatisch in Dezimal-Schreibweise in Millisekunden in den SLEEP-Modus (1-65535)">
+                                    Timeout für den Empfang von Daten
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="0" />
+                            </span>
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="Benutzerdatenlänge, Dezimaldarstellung: Anwendung im impliziten Header-Modus, gibt die Länge der vom Modul gesendeten und empfangenen Daten an (diese Länge = tatsächliche Benutzerdatenlänge + 4). Der Anzeigekopf ist ungültig.(5-255)">
+                                    Benutzerdatenlänge
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="3000" />
+                            </span>
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="Präambellänge, Dezimaldarstellung(4-65535)">
+                                    Benutzerdatenlänge
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="8" />
+                            </span> 
+                         </div>
+                         <div>
+                            <span>
+                                <a href="javascript:false" title="">
+                                    Länge der Präambel
+                                </a>
+                            </span>
+                            <span>
+                                <input type="text" value="10">
+                            </span>
+                         </div>
+                        <div><button>senden</button></div>
+                    </div>
                 </div>
             </div>
             </div>
@@ -159,16 +303,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                             <span>Origin SequenceNumber</span>
                             <span>Destination Address</span>
                             <span>Destination Sequence Number</span>
-                        </div>
-                        <div>
-                            <span>1:56:7</span>
-                            <span>10</span>
-                            <span>1</span>
-                            <span>1</span>
-                            <span>1</span>
-                            <span>1</span>
-                            <span>1</span>
-                            <span>1</span>
                         </div>
                     </div>
                 </div>
@@ -258,6 +392,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         let zIndex = 0;
         let shouldFollow = false;
         let isFullLog = false;
+
+
         const $windowCloseButton = document.querySelector(getQuerySelector(id,'window-close-button'));
         const $header = document.querySelector(getQuerySelector(id,'header'));
         const $log = document.querySelector(getQuerySelector(id,'log'));
@@ -289,7 +425,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
          * ALWAYS REMOVE TYPE FROM PAYLOAD
          */
         const addTableEntry = (sender, type, payload) => {
-            debugger;
+
             payload = Buffer.from(payload);
             let payloadObject;
             let row;
@@ -311,7 +447,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     break;
                 case 'RREP':
                     payloadObject = packages.read.rrep(payload);
-                    debugger;
+
                     row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
@@ -390,6 +526,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const $showNewTextRequest = document.querySelector(getQuerySelector(id,'show-new-send-text-request'));
         const $showNewTextRequestAck = document.querySelector(getQuerySelector(id,'show-new-send-text-request-acknowledge'));
 
+        const $showManageReceiving = document.querySelector(getQuerySelector(id,'show-manage-receiving'));
+        const $showLoraConfig = document.querySelector(getQuerySelector(id,'show-lora-config'));
         /**
          * Predefined Packages
          **/
@@ -401,6 +539,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const $newTextRequest = document.querySelector(getQuerySelector(id,'expaneded-modal-new-send-text-request'));
         const $newTextRequestAck = document.querySelector(getQuerySelector(id,'expaneded-modal-new-send-text-request-acknowledge'));
 
+        const $manageReceiving = document.querySelector(getQuerySelector(id,'expaneded-modal-manage-receiving'));
+        const $loraConfig = document.querySelector(getQuerySelector(id,'expaneded-modal-lora-config'));
         /**
          * Root Container
          **/
@@ -412,7 +552,9 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $newRouteError,
             $newHopAcknowledge,
             $newTextRequest,
-            $newTextRequestAck
+            $newTextRequestAck,
+            $manageReceiving,
+            $loraConfig,
         ];
         const $menuButtons = [
             $showNewRouteRequest,
@@ -421,7 +563,9 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $showNewRouteError,
             $showNewHopAcknowledge,
             $showNewTextRequest,
-            $showNewTextRequestAck
+            $showNewTextRequestAck,
+            $showManageReceiving,
+            $showLoraConfig,
         ];
 
         const elements = {
@@ -460,13 +604,12 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
          */
         // move to top on move
         const moveToTop = () => {
-            debugger
             zIndex = window.zIndexHandler + 1;
             window.zIndexHandler = zIndex;
             $container.style.zIndex = zIndex;
         }
         let windowFollowMouse = false;
-        $header.addEventListener('mousedown', () => {
+        $container.addEventListener('mousedown', () => {
             windowFollowMouse = true;
             moveToTop();
         }, true);
@@ -538,6 +681,22 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             }
             $newTextRequestAck.classList.remove('hidden');
         }
+        const showManageReciving = () => {
+            for (let i = 0; i < $menu.length ; i++ ){
+                if(!$menu[i].classList.contains('hidden')){
+                    $menu[i].classList.add('hidden');
+                }
+            }
+            $manageReceiving.classList.remove('hidden');
+        }
+        const showLoraConfig = () => {
+            for (let i = 0; i < $menu.length ; i++ ){
+                if(!$menu[i].classList.contains('hidden')){
+                    $menu[i].classList.add('hidden');
+                }
+            }
+            $loraConfig.classList.remove('hidden');
+        }
         const toggleFullLog = () => {
             if (!isFullLog) {
                 connection.send('@@@UPGRADE@@@');
@@ -570,6 +729,23 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $serialConsoleContainer.classList.add('serial-console-container--disabled');
             $container.classList.remove('enabled');
             $readonlyLabel.classList.remove('hidden');
+
+            /**
+             * disable predefined events
+             */
+            elements.$menuButtons.forEach((element) => {
+                element.setAttribute('disabled', "true");
+            })
+
+            for (let i = 0; i < elements.$menu.length; i++) {
+                debugger;
+                elements.$menu[i].querySelectorAll('input').forEach((element) => {
+                    element.setAttribute('disabled', true);
+                })
+                elements.$menu[i].querySelectorAll('* button').forEach((element) => {
+                    element.setAttribute('disabled', true);
+                })
+            }
         }
         const getReadOnlyStatus = () => {
             return isReadOnly;
@@ -579,8 +755,12 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             let showText = 'BINARY PACKAGE:  [';
             if (sended[0] === 'A'  && sended[1] === 'T' ) {
                 showText = sended;
-            } else  {
-               showText = formatBinaryInput(sended, 'sended: ');
+            } else if (sended[0] === 'L'  && sended[1] === 'R' )  {
+
+            } else {
+                const type = getType(sended);
+                _appendLogFormatted(deviceId, type, sended.slice(1, sended.length));
+                return ;
             }
             newLogEntry.innerText = showText;
             $log.appendChild(newLogEntry)
@@ -653,52 +833,55 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 /* try to parse binary packages*/
                 let [LRorAT, sender, size, payloadData] = data.split(',')
                 const type = getType(payloadData);
+                const payloadDataWithoutType = payloadData.slice(1, payloadData.length);
                 if (type == null) {
                     $log.appendChild(logentry);
                     followLogAction();
                     return;
                 }
-                let binaryAsJson = null;
-                switch (type) {
-                    case 'RREQ':
-                        binaryAsJson = packages.read.rreq(payloadData);
-                        break;
-                    case 'RREP':
-                        binaryAsJson = packages.read.rrep(payloadData);
-                        break;
-                    case 'RERR':
-                        binaryAsJson = packages.read.rerr(payloadData);
-                        break;
-                    case 'RREP_ACK':
-                        binaryAsJson = packages.read.rrep_ack(payloadData);
-                        break;
-                    case 'SEND_TEXT_REQUEST':
-                        binaryAsJson = packages.read.send_text_request(payloadData);
-                        break;
-                    case 'SEND_HOP_ACK':
-                        binaryAsJson = packages.read.send_hop_ack(payloadData);
-                        break;
-                    case 'SEND_TEXT_REQUEST_ACK':
-                        binaryAsJson = packages.read.send_text_request_ack(payloadData);
-                      break;
-                }
-
-
-                logentry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
-                $log.appendChild(logentry);
-                followLogAction();
-                /**
-                 * add to sorted log
-                 */
-                debugger;
-                const payloadWithoutType = payloadData.slice(1, payloadData.length);
-                addTableEntry(sender, type, payloadWithoutType);
-                return;
+                _appendLogFormatted(sender, type, payloadDataWithoutType);
             } else {
                 $log.appendChild(logentry);
             }
 
             followLogAction();
+        }
+        const _appendLogFormatted = (sender, type, payloadDataWithoutType) => {
+            let binaryAsJson = null;
+            switch (type) {
+                case 'RREQ':
+                    binaryAsJson = packages.read.rreq(payloadDataWithoutType);
+                    break;
+                case 'RREP':
+                    binaryAsJson = packages.read.rrep(payloadDataWithoutType);
+                    break;
+                case 'RERR':
+                    binaryAsJson = packages.read.rerr(payloadDataWithoutType);
+                    break;
+                case 'RREP_ACK':
+                    binaryAsJson = packages.read.rrep_ack(payloadDataWithoutType);
+                    break;
+                case 'SEND_TEXT_REQUEST':
+                    binaryAsJson = packages.read.send_text_request(payloadDataWithoutType);
+                    break;
+                case 'SEND_HOP_ACK':
+                    binaryAsJson = packages.read.send_hop_ack(payloadDataWithoutType);
+                    break;
+                case 'SEND_TEXT_REQUEST_ACK':
+                    binaryAsJson = packages.read.send_text_request_ack(payloadDataWithoutType);
+                    break;
+            }
+
+
+            let logentry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+            $log.appendChild(logentry);
+            followLogAction();
+            /**
+             * add to sorted log
+             */
+
+            addTableEntry(sender, type, payloadDataWithoutType);
+            return logentry;
         }
         const pushToLog = (data) => {
             log.push(data);
@@ -775,7 +958,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             addTableEntry(deviceId, type, messageWithoutType);
             connection.send(`AT+SEND=${message.length}\r\n`);
             setTimeout(() => {
-                debugger;
+
                 connection.send(message + '\r\n');
                 },350);
 
@@ -795,6 +978,9 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 currentConsole.actions.showNewHopAcknowledge = showNewHopAcknowledge;
                 currentConsole.actions.showNewTextRequest = showNewTextRequest;
                 currentConsole.actions.showNewTextRequestAck = showNewTextRequestAck;
+                currentConsole.actions.showManageReciving = showManageReciving;
+                currentConsole.actions.showLoraConfig = showLoraConfig;
+
                 currentConsole.actions.getReadOnlyStatus = getReadOnlyStatus;
 
                 currentConsole.actions.getDeviceId = getDeviceId;
@@ -806,12 +992,13 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 currentConsole.actions.toggleFollowLog = toggleFollowLog;
             }
         }
-    }, 500);
+        moveToTop();
+    }, 250);
     setTimeout(
         ()=> {
             attachEvents(id);
         },
-        2000
+        500
     );
 
     return {id, connectToDeviceId};
