@@ -1,4 +1,9 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Lora Serial Interface</title><style>.disabled{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lora Serial Interface</title>
+    <style>.disabled{
             background: black !important;
             color:white;
         }
@@ -12,6 +17,12 @@
             text-align: center;
             font-weight: 650;
             letter-spacing: 0.1em;
+        }
+        .own-log-entry {
+            background: rgba(6, 131, 12, 0.4);
+        }
+        .other-log-entry {
+            background: rgba(131, 6, 6, 0.4);
         }
         .blacklist-item {
             margin: 5px;
@@ -235,6 +246,9 @@
             width: 100%;
             background: rgba(167, 167, 167, 0.5);
         }
+        .application-menu--disabled {
+            background: rgba(176, 0, 0, 0.5);
+        }
         .application-menu-spawn-button {
             font-weight: 700;
             font-size: x-large;
@@ -246,4 +260,25 @@
         .application-logo {
             height: 50px;
             width: 75px;
-        }</style></head><body> <header> <div class="application-menu"> <img alt="logo" src=""> <div> <button class="application-menu-spawn-button" id="spawnConsoleButton"> Create new instance to </button> <input class="application-menu-spawn-input" id="spawnConsoleButton-input" type="number" min="1" max="20"> </div> <div></div> </div> </header> <main> </main> <script>window.zIndexHandler=0;</script> <script src="./js.8c8626c2.js"></script> </body></html>
+        }</style>
+</head>
+<body>
+    <header>
+        <div class="application-menu">
+            <img alt="logo" src="">
+            <div>
+                <button class="application-menu-spawn-button" id="spawnConsoleButton">
+                    Create new instance to
+                </button>
+                <input class="application-menu-spawn-input" id="spawnConsoleButton-input" type="number" min="1" max="20">
+            </div>
+            <div></div>
+        </div>
+    </header>
+    <main>
+
+    </main>
+    <script>window.zIndexHandler = 0;</script>
+    <script src="/js.00a46daa.js"></script>
+</body>
+</html>
