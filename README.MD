@@ -19,6 +19,12 @@ There are hardcoded folder paths to like /home/piu/conrad/lora-serial-module/dis
 
 ### Connection
 ``` ssh -L 8001:10.10.10.40:8001  USERNAME@gridgateway.f4.htw-berlin.de ```
+
+### usage
+Connect now with your WebSocketClient, use the path for Device Id.  
+  
+``` ws://localhost:8001/15 ``` - for device 15  
+``` ws://localhost:8001/10 ``` - for device 10  
 ### App
 
 Open [./browser-dist/index.html](./browser-dist/index.html) after you are connected to a Node.
