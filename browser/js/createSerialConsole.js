@@ -20,6 +20,12 @@ function makeid(length) {
     }
     return result;
 }
+const formattedTimestamp = () => {
+    const currentdate = new Date();
+    return currentdate.getHours() + ":"
+        + currentdate.getMinutes() + ":"
+        + currentdate.getSeconds();
+}
 const formatBinaryInput = ( sended, showText = '' )=> {
     for (let i = 0; i < sended.length; i++) {
         try {
@@ -98,7 +104,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     </div>
 
                     <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-route-reply-ack">
-                        <div>Route Request Ack </div>
+                        <div>Route Reply Acknowledge </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-route-reply">
@@ -117,7 +123,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                         <div><span>Unreachable Destination Sequence Number</span><span><input type="text" value="1"></span> </div>
                         <div><span>additionalAddresses</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><span>additionalSequenceNumber</span><span><input type="number" min="1" max="20" value="1"></span> </div>
-                        <div><span>Lifetime</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-new-send-hop-acknowledge">
@@ -142,11 +147,102 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             </div>
             <div class="sorted-logs-wrapper">
                 <div data-id="expaneded-modal-new-input-container">
-                <div>Route Requests</div>
-                <div>Route Replys</div>
-                <div>Route Reply Acks</div>
-                <div>Route Errors</div>
-</div>
+                <div>
+                    <div class="table-title">Route Requests</div>
+                    <div class="table8" data-id="log-route-request">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>U-Flag</span>
+                            <span>Request Id</span>
+                            <span>Origin Address</span>
+                            <span>Origin SequenceNumber</span>
+                            <span>Destination Address</span>
+                            <span>Destination Sequence Number</span>
+                        </div>
+                        <div>
+                            <span>1:56:7</span>
+                            <span>10</span>
+                            <span>1</span>
+                            <span>1</span>
+                            <span>1</span>
+                            <span>1</span>
+                            <span>1</span>
+                            <span>1</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-title">Route Reply</div>
+                    <div class="table7" data-id="log-route-reply">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>Hop Count</span>
+                            <span>Origin Address</span>
+                            <span>Destination Address</span>
+                            <span>Destination Sequence Number</span>
+                            <span>Lifetime</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-title">Route Errors</div>
+                    <div class="table7" data-id="log-route-error">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>Destination Count</span>
+                            <span>Unreachable Destination Address</span>
+                            <span>Unreachable Destination Sequence Number</span>
+                            <span>Additional Addresses</span>
+                            <span>Additional Sequence Number</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-title">Send Text Request</div>
+                    <div class="table6" data-id="log-send-text-request">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>Origin Address</span>
+                            <span>Destination Address</span>
+                            <span>Message Number</span>
+                            <span>Message</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-title">Route Reply Acknowledge</div>
+                    <div class="table2" data-id="log-route-reply-ack">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="table-title">Send Text Request Acknowledge</div>
+                    <div class="table3" data-id="log-send-text-ack">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>Origin Address</span>
+                        </div>
+                    </div>
+                </div>
+                  <div>
+                    <div class="table-title">Send Hop Acknowledge</div>
+                    <div class="table3" data-id="log-send-hop-ack">
+                        <div>
+                            <span>Time</span>
+                            <span>Sender</span>
+                            <span>Message Sequence Number</span>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
 </div>
     `;
@@ -175,6 +271,114 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const $sendCommandButtonInput = document.querySelector(getQuerySelector(id,'send-text-serial-button-input'));
         const $followLogToggle = document.querySelector(getQuerySelector(id,'follow-log-toggle'));
         const $serialConsoleContainer = document.querySelector(getQuerySelector(id,'serial-console-container'));
+
+        /**
+         * Table Log
+         */
+        const $logRouteRequest =  document.querySelector(getQuerySelector(id,'log-route-request'));
+        const $logRouteReply =  document.querySelector(getQuerySelector(id,'log-route-reply'));
+        const $logRouteReplyAck =  document.querySelector(getQuerySelector(id,'log-route-reply-ack'));
+        const $logRouteError =  document.querySelector(getQuerySelector(id,'log-route-error'));
+        const $logSendText =  document.querySelector(getQuerySelector(id,'log-send-text-request'));
+        const $logSendTextAck =  document.querySelector(getQuerySelector(id,'log-send-text-ack'));
+        const $logSendHopAck =  document.querySelector(getQuerySelector(id,'log-send-hop-ack'));
+
+        /**
+         * Add table entries
+         *
+         * ALWAYS REMOVE TYPE FROM PAYLOAD
+         */
+        const addTableEntry = (sender, type, payload) => {
+            debugger;
+            payload = Buffer.from(payload);
+            let payloadObject;
+            let row;
+            switch (type) {
+                case 'RREQ':
+                    payloadObject = packages.read.rreq(payload);
+                    row = document.createElement('div');
+                    row.classList.add('blink-on-create');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.uflag}</span>
+<span>${payloadObject.rreq_id}</span>
+<span>${payloadObject.originAddress}</span>
+<span>${payloadObject.originSequenceNumber}</span>
+<span>${payloadObject.destinationAddress}</span>
+<span>${payloadObject.destinationSequenceNumber}</span>`;
+                    $logRouteRequest.appendChild(row)
+                    break;
+                case 'RREP':
+                    payloadObject = packages.read.rrep(payload);
+                    debugger;
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.hopCount}</span>
+<span>${payloadObject.originAddress}</span>
+<span>${payloadObject.destinationAddress}</span>
+<span>${payloadObject.destinationSequenceNumber}</span>
+<span>${payloadObject.lifetime}</span>`;
+                    $logRouteReply.appendChild(row)
+                    break;
+                case 'RERR':
+                    payloadObject = packages.read.rerr(payload);
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.destinationCount}</span>
+<span>${payloadObject.unreachableDestinationAddress}</span>
+<span>${payloadObject.unreachableDestinationSequenceNumber}</span>
+<span>${payloadObject.additionalAddresses}</span>
+<span>${payloadObject.additionalSequenceNumber}</span>`;
+                    $logRouteError.appendChild(row);
+                    break;
+                case 'RREP_ACK':
+                    payloadObject = packages.read.rrep_ack(payload);
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>`;
+                    $logRouteReplyAck.appendChild(row)
+                    break;
+                case 'SEND_TEXT_REQUEST':
+                    payloadObject = packages.read.send_text_request(payload);
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.originAddress}</span>
+<span>${payloadObject.destinationAddress}</span>
+<span>${payloadObject.messageSequenceNumber}</span>
+<span>${payloadObject.message}</span>`;
+                    $logSendText.appendChild(row)
+                    break;
+                case 'SEND_HOP_ACK':
+                    payloadObject = packages.read.send_hop_ack(payload);
+
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.messageSequenceNumber}</span>`;
+                    $logSendHopAck.appendChild(row)
+                    break;
+                case 'SEND_TEXT_REQUEST_ACK':
+                    payloadObject = packages.read.send_text_request_ack(payload);
+
+                    row = document.createElement('div');
+                    row.innerHTML = `
+<span>${formattedTimestamp()}</span>
+<span>${sender}</span>
+<span>${payloadObject.originAddress}</span>`;
+                    $logSendTextAck.appendChild(row)
+                    break;
+            }
+        }
+
         /**
          * Predefined Packages Show Button
          **/
@@ -266,7 +470,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             windowFollowMouse = true;
             moveToTop();
         }, true);
-        $header.addEventListener('mouseup', () => {
+        document.addEventListener('mouseup', () => {
             windowFollowMouse = false;
         }, true);
         window.addEventListener('mousemove', (event) => {
@@ -447,7 +651,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             let logentry = createLogEntryTemplate(data, type);
             if (data[0] === 'L' && data[1] === 'R') {
                 /* try to parse binary packages*/
-                const [LRorAT, sender, size, payloadData] = data.split(',')
+                let [LRorAT, sender, size, payloadData] = data.split(',')
                 const type = getType(payloadData);
                 if (type == null) {
                     $log.appendChild(logentry);
@@ -478,14 +682,17 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                         binaryAsJson = packages.read.send_text_request_ack(payloadData);
                       break;
                 }
-                const currentdate = new Date();
-                const datetime = "[" + currentdate.getHours() + ":"
-                    + currentdate.getMinutes() + ":"
-                    + currentdate.getSeconds() +']';
 
-                logentry = createLogEntryTemplate(`${datetime}[${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+
+                logentry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
                 $log.appendChild(logentry);
                 followLogAction();
+                /**
+                 * add to sorted log
+                 */
+                debugger;
+                const payloadWithoutType = payloadData.slice(1, payloadData.length);
+                addTableEntry(sender, type, payloadWithoutType);
                 return;
             } else {
                 $log.appendChild(logentry);
@@ -533,40 +740,44 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const sendMessage = (message) => {
             appendLog(`AT+SEND=${message.length}`, 'output'); // optimistic update
             const type = getType(message);
+            const messageWithoutType = message.slice(1,message.length);
             let binaryAsJson = null;
             switch (type) {
                 case 'RREQ':
-                    binaryAsJson = packages.read.rreq(message);
+                    binaryAsJson = packages.read.rreq(messageWithoutType);
                     break;
                 case 'RREP':
-                    binaryAsJson = packages.read.rrep(message);
+                    binaryAsJson = packages.read.rrep(messageWithoutType);
                     break;
                 case 'RERR':
-                    binaryAsJson = packages.read.rerr(message);
+                    binaryAsJson = packages.read.rerr(messageWithoutType);
                     break;
                 case 'RREP_ACK':
-                    binaryAsJson = packages.read.rrep_ack(message);
+                    binaryAsJson = packages.read.rrep_ack();
                     break;
                 case 'SEND_TEXT_REQUEST':
-                    binaryAsJson = packages.read.send_text_request(message);
+                    binaryAsJson = packages.read.send_text_request(messageWithoutType);
                     break;
                 case 'SEND_HOP_ACK':
-                    binaryAsJson = packages.read.send_hop_ack(message);
+                    binaryAsJson = packages.read.send_hop_ack(messageWithoutType);
                     break;
                 case 'SEND_TEXT_REQUEST_ACK':
-                    binaryAsJson = packages.read.send_text_request_ack(message);
+                    binaryAsJson = packages.read.send_text_request_ack(messageWithoutType);
                     break;
             }
-            const currentdate = new Date();
-            const datetime = "[" + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds() +']';
 
-            const formattedLogEntry = createLogEntryTemplate(`${datetime}[${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+            const formattedLogEntry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
             $log.appendChild(formattedLogEntry);
             followLogAction();
+            /**
+             * Add to sorted log
+             */
+            addTableEntry(deviceId, type, messageWithoutType);
             connection.send(`AT+SEND=${message.length}\r\n`);
-            setTimeout(() => {connection.send(message + '\r\n');},250);
+            setTimeout(() => {
+                debugger;
+                connection.send(message + '\r\n');
+                },350);
 
         }
 

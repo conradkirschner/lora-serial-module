@@ -33,31 +33,30 @@
         }
         .serial-console-log-container{
             min-height: 200px;
-            max-height: 600px;
+            max-height: 400px;
             box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
             overflow: scroll;
-            overflow-x: hidden;
         }
         .serial-console-wrapper{
             display: inline-flex;
             justify-content: space-between;
             width: 100%;
-            height: 100%;
+            height: 90%;
         }
         .serial-console-window {
             position: absolute;
             min-height: 700px;
-            min-width:1100px;
+            min-width:1700px;
             box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
             background: rgba(226, 226, 226, 0.7);
             border: 2px double gray;
-            width: 1100px;
+            width: 2050px;
             resize: both;
-            overflow:auto;
+            overflow: hidden;
         }
         .sorted-logs-wrapper{
             background: white;
-            width:300px;
+            min-width:700px;
 
             padding: 2px 5px 2px 5px;
             margin: 5px 2px 5px 2px;
@@ -71,13 +70,13 @@
             color:white;
         }
         .serial-console-container {
-            width: 80%;
             height: 90%;
+            min-width: 750px;
             border: 1px solid lightgray;
             box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
             padding:  5px 2px 5px 2px;
             margin: 5px 2px 5px 2px;
-            grid-template-rows: 4rem auto auto auto auto auto;
+            grid-template-rows: 4rem 1fr auto auto auto auto;
             display: inline-grid;
         }
         .serial-console-close-button {
@@ -120,6 +119,14 @@
             border-color: lightgray;
             border-bottom-style: outset;
             }
+        .sorted-logs-wrapper {
+            height: 100%;
+            max-height: 1000px;
+            overflow: scroll;
+        }
+        .expaneded-modal-new-input-container {
+        height: auto;
+        }
         .expaneded-modal-new-input-container > div  {
             width: 650px;
         }
@@ -138,8 +145,67 @@
         .expaneded-modal-new-input-container >div > span{
             width: 50%;
             display: inline-block;
+        }
+        /**
+        table for showing requests
+         */
+        .table-title {
+            margin: 10px 0 10px 0;
+            text-align: center;
+            size:2rem;
+            font-weight: 700;
+        }
+        .table2 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table3 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table6 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table7 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table8 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table2 > div {
+            width: 50%;
+            display: grid;
+            grid-template-columns: 1fr 1fr ;
+        }
 
+        .table3 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
 
+        .table6 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+        .table7 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+        .table8 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+
+        /**
+        animations
+         */
+        .blink-on-create  {
+             animation: blinker 1s linear;
+         }
+
+        @keyframes blinker {
+            100% {
+                background: black;
+                opacity: 0;
+            }
         }
 </style>
 </head>
