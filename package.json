@@ -17,7 +17,8 @@
     "babel-node": "npx babel-node",
     "test": "jest",
     "tunnel:pis": "node ./proxy/websocket-tunnel.js",
-    "browser:start": "parcel ./browser/index.html"
+    "browser:start": "parcel ./browser/index.html",
+    "browser:build": "parcel build ./browser/index.html -d build"
   },
   "author": "Conrad Magnus Kirschner",
   "license": "ISC",
@@ -25,10 +26,11 @@
     "@babel/cli": "^7.14.5",
     "@babel/core": "^7.14.6",
     "@babel/node": "^7.14.7",
-    "@babel/preset-env": "^7.14.7"
+    "@babel/preset-env": "^7.14.7",
+    "cssnano": "^5.0.6",
+    "postcss": "^8.3.5"
   },
   "dependencies": {
-    "babelify": "^10.0.0",
     "base64-js": "^1.5.1",
     "buffer": "^5.7.1",
     "core-js": "^3.15.0",
@@ -38,12 +40,11 @@
     "jest": "^27.0.4",
     "node-ssh": "^11.1.1",
     "nodemon": "^2.0.7",
-    "npm": "^7.18.1",
     "object-hash": "^2.2.0",
     "onoff": "^6.0.3",
+    "parcel": "^1.12.4",
     "regenerator-runtime": "^0.13.7",
     "serialport": "9.0.8",
-    "ws": "^7.5.0",
-    "xstate": "^4.20.0"
+    "ws": "^7.5.0"
   }
 }
