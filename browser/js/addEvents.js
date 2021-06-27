@@ -105,6 +105,10 @@ export const attachEvents = (id) => {
         const inputs = currentSerialConsole.elements.$menu[7].querySelectorAll('input');
         currentSerialConsole.actions.sendCommand(commands.setDestination(inputs[0].value));
     })
+    currentSerialConsole.elements.$menu[7].querySelectorAll('button')[2].addEventListener('click',()=> {
+        const inputs = currentSerialConsole.elements.$menu[7].querySelectorAll('input');
+        currentSerialConsole.actions.sendCommand(commands.setAddress(inputs[1].value));
+    })
     currentSerialConsole.elements.$menu[8].querySelector('button').addEventListener('click',()=> {
         const inputs = currentSerialConsole.elements.$menu[8].querySelectorAll('input');
         const messagePackage = commands.setConfig(

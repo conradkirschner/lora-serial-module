@@ -145,6 +145,9 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                         <hr>
                          <div><span>Destination (FFFF = Broadcast)</span><span><input type="text" maxlength="30" value="FFFF"></span> </div>
                         <div><button>Set Destination</button></div>
+                        <hr>
+                         <div><span>Address (1-20)</span><span><input type="text" maxlength="30" value="15"></span> </div>
+                        <div><button>Set Addressf</button></div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-lora-config">
                         <div>Lora Config</div>
@@ -419,16 +422,22 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
          *
          * ALWAYS REMOVE TYPE FROM PAYLOAD
          */
-        const addTableEntry = (sender, type, payload) => {
+        const addTableEntry = (sender, type, payload, isOwn) => {
 
             payload = Buffer.from(payload);
             let payloadObject;
             let row;
+            row = document.createElement('div');
+            row.classList.add('blink-on-create');
+            if (isOwn) {
+                row.classList.add('own-log-entry');
+            } else {
+                row.classList.add('other-log-entry');
+            }
             switch (type) {
                 case 'RREQ':
                     payloadObject = packages.read.rreq(payload);
-                    row = document.createElement('div');
-                    row.classList.add('blink-on-create');
+
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -443,7 +452,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 case 'RREP':
                     payloadObject = packages.read.rrep(payload);
 
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -456,7 +464,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     break;
                 case 'RERR':
                     payloadObject = packages.read.rerr(payload);
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -469,7 +476,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     break;
                 case 'RREP_ACK':
                     payloadObject = packages.read.rrep_ack(payload);
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>`;
@@ -477,7 +483,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     break;
                 case 'SEND_TEXT_REQUEST':
                     payloadObject = packages.read.send_text_request(payload);
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -490,7 +495,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 case 'SEND_HOP_ACK':
                     payloadObject = packages.read.send_hop_ack(payload);
 
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -500,7 +504,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 case 'SEND_TEXT_REQUEST_ACK':
                     payloadObject = packages.read.send_text_request_ack(payload);
 
-                    row = document.createElement('div');
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
@@ -607,19 +610,19 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         $container.addEventListener('mousedown', () => {
             windowFollowMouse = true;
             moveToTop();
-        }, true);
+        }, false);
         document.addEventListener('mouseup', () => {
             windowFollowMouse = false;
-        }, true);
+        }, false);
         window.addEventListener('mousemove', (event) => {
             if (windowFollowMouse) {
                 var deltaX = event.movementX;
                 var deltaY = event.movementY;
                 var rect = $container.getBoundingClientRect();
-                $container.style.left = rect.x + deltaX + 'px';
-                $container.style.top  = rect.y + deltaY + 'px';
+                $container.style.left = rect.x + (deltaX*1.6) + 'px';
+                $container.style.top  = rect.y + (deltaY*1.6) + 'px';
             }
-        }, true);
+        }, false);
         const showNewRouteRequest = () => {
             for (let i = 0; i < $menu.length ; i++ ){
                 if(!$menu[i].classList.contains('hidden')){
@@ -719,7 +722,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
              */
             toggleFullLog(true);
             isReadOnly = true;
-            $container.classList.add('disabled');
+            $serialConsoleContainer.classList.add('disabled');
+            $header.classList.add('application-menu--disabled');
             $sendCommandButtonInput.classList.add('disabled');
             $sendCommandButtonInput.setAttribute('disabled', 'true');
             $sendCommandButton.classList.add('disabled');
@@ -758,7 +762,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
             } else {
                 const type = getType(sended);
-                _appendLogFormatted(deviceId, type, sended.slice(1, sended.length));
+                _appendLogFormatted(deviceId, type, sended.slice(1, sended.length), true);
                 return ;
             }
             newLogEntry.innerText = showText;
@@ -826,7 +830,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 $logContainer.scrollTo($logContainer.scrollWidth, $logContainer.scrollHeight);
             }
         }
-        const appendLog = (data, type) => {
+        const appendLog = (data, type, isOwn = false) => {
             let logentry = createLogEntryTemplate(data, type);
             if (data[0] === 'L' && data[1] === 'R') {
                 /* try to parse binary packages*/
@@ -838,14 +842,14 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     followLogAction();
                     return;
                 }
-                _appendLogFormatted(sender, type, payloadDataWithoutType);
+                _appendLogFormatted(sender, type, payloadDataWithoutType, isOwn);
             } else {
                 $log.appendChild(logentry);
             }
 
             followLogAction();
         }
-        const _appendLogFormatted = (sender, type, payloadDataWithoutType) => {
+        const _appendLogFormatted = (sender, type, payloadDataWithoutType, isOwn = false) => {
             let binaryAsJson = null;
             switch (type) {
                 case 'RREQ':
@@ -873,13 +877,18 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
 
             let logentry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(sender).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+            if (isOwn) {
+                logentry.classList.add('own-log-entry');
+            } else {
+                logentry.classList.add('other-log-entry');
+            }
             $log.appendChild(logentry);
             followLogAction();
             /**
              * add to sorted log
              */
 
-            addTableEntry(sender, type, payloadDataWithoutType);
+            addTableEntry(sender, type, payloadDataWithoutType, isOwn);
             return logentry;
         }
         const pushToLog = (data) => {
@@ -916,11 +925,11 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             pushToLog(e.data);
         };
         const sendCommand = (command) => {
-            appendLog(command, 'output'); // optimistic update
+            appendLog(command, 'output', true); // optimistic update
             connection.send(command + '\r\n');
         }
         const sendMessage = (message) => {
-            appendLog(`AT+SEND=${message.length}`, 'output'); // optimistic update
+            appendLog(`AT+SEND=${message.length}`, 'output', true); // optimistic update
             const type = getType(message);
             const messageWithoutType = message.slice(1,message.length);
             let binaryAsJson = null;
@@ -949,12 +958,14 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             }
 
             const formattedLogEntry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
+            $log.classList.add('own-log-entry');
+
             $log.appendChild(formattedLogEntry);
             followLogAction();
             /**
              * Add to sorted log
              */
-            addTableEntry(deviceId, type, messageWithoutType);
+            addTableEntry(deviceId, type, messageWithoutType, true);
             connection.send(`AT+SEND=${message.length}\r\n`);
             setTimeout(() => {
 
