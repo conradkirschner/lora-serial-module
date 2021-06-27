@@ -1,10 +1,5 @@
 import {getType} from "./../../src/client/packages/types";
 import packages from "../../src/client/packages";
-import {DEVICEID, ROUTE_LIFETIME} from "../../src/_global_constrains";
-import {LIFETIME, RouteEntry} from "../../src/client/routing/RouteEntry";
-import {log} from "../../src/logger";
-import {setBroadcast, setDestination} from "../../src/client/commands/lora";
-import {incrementSequenceNumber} from "../../src/client/InputParser";
 
 /**
  * @var renderInto HTMLElement

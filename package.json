@@ -10,7 +10,7 @@
     "start:debug": "npx babel-node --inspect ./src/index.js ",
     "start:bridge": "npm run babel-node -- ./proxy/index.js ",
     "build:bridge": "node ./node_modules/.bin/babel  proxy -d dist",
-    "install": "sudo sh ./scripts/install.sh",
+    "install:bridge": "sudo sh ./scripts/install.sh",
     "start:bridge:remote": "ssh s0566895@gridgateway.f4.htw-berlin.de echo \"1Himbeere\" && ssh pi@10.10.10.40  \"cd conrad/lora-serial-module/ && npm run start:bridge\"",
     "start:bridge:test": "npm run babel-node -- ./proxy/client-test.js ",
     "start:test": "nodemon --exec npm run babel-node -- ./src/test-app.js",
@@ -18,7 +18,7 @@
     "test": "jest",
     "tunnel:pis": "node ./proxy/websocket-tunnel.js",
     "browser:start": "parcel ./browser/index.html",
-    "browser:build": "parcel build ./browser/index.html -d build"
+    "browser:build": "parcel browser-dist ./browser/index.html -d browser-dist"
   },
   "author": "Conrad Magnus Kirschner",
   "license": "ISC",
@@ -29,6 +29,7 @@
     "@babel/preset-env": "^7.14.7",
     "cssnano": "^5.0.6",
     "parcel": "1.12.4",
+    "parcel-bundler": "^1.12.3",
     "postcss": "^8.3.5"
   },
   "dependencies": {
@@ -43,7 +44,7 @@
     "nodemon": "^2.0.7",
     "object-hash": "^2.2.0",
     "onoff": "^6.0.3",
-    "parcel": "^1.12.4",
+    "postcss-discard-comments": "^5.0.1",
     "regenerator-runtime": "^0.13.7",
     "serialport": "9.0.8",
     "ws": "^7.5.0"

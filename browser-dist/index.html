@@ -1,0 +1,249 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Lora Serial Interface</title><style>.disabled{
+            background: black !important;
+            color:white;
+        }
+        .enabled {
+            color:black;
+            background: #bfbdbd;
+        }
+        .log-title {
+            margin-top: 5px;
+            width: 100%;
+            text-align: center;
+            font-weight: 650;
+            letter-spacing: 0.1em;
+        }
+        .blacklist-item {
+            margin: 5px;
+            padding: 5px;
+        }
+        .red-blacklist-status {
+            box-shadow: rgb(214, 3, 3) 0px 0px 0px 3px;
+        }
+        .green-blacklist-status {
+            box-shadow: rgb(91, 214, 3) 0px 0px 0px 3px;
+        }
+        .hidden {
+            display:none;
+        }
+        .full-log-toggle{
+            color: inherit
+        }
+        .blacklist-container{
+            display: inline-flex;
+        }
+        .serial-console-log-container{
+            min-height: 200px;
+            max-height: 400px;
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+            overflow: scroll;
+        }
+        .serial-console-wrapper{
+            display: inline-flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .serial-console-window {
+            position: absolute;
+            min-height: 800px;
+            max-height: 1200px;
+            min-width:1700px;
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+            background: rgba(226, 226, 226, 0.7);
+            border: 2px double gray;
+            width: 2050px;
+            resize: both;
+            overflow: hidden;
+        }
+        .sorted-logs-wrapper{
+            color: black;
+            background: white;
+            min-width:700px;
+
+            padding: 2px 5px 2px 5px;
+            margin: 5px 2px 5px 2px;
+        }
+
+        .serial-console-container--active {
+            background: white;
+        }
+        .serial-console-container--disabled {
+            background: black;
+            color:white;
+        }
+        .serial-console-container {
+            height: 90%;
+            min-width: 750px;
+            border: 1px solid lightgray;
+            box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+            padding:  5px 2px 5px 2px;
+            margin: 5px 2px 5px 2px;
+            grid-template-rows: 4rem 1fr auto minmax(200px, auto);
+            display: inline-grid;
+        }
+        .serial-console-close-button {
+            margin: 5px 10px 5px 10px;
+            padding: 5px;
+            background: whitesmoke;
+            border-radius: 25px;
+        }
+        .serial-console-close-button:hover {
+            color: white;
+            background: red;
+
+        }
+        .serial-console-header{
+            background: rgba(45, 45, 45, 0.4);
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            border-bottom: 1px solid lightgray;
+            margin-bottom: 5px;
+        }
+        .serial-console-footer {
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            border-top: 1px solid lightgray;
+            margin-top: 5px;
+            padding-top: 5px;
+        }
+        /**
+        Expanded Modal
+         */
+        /**
+        Expanded Modal Menu
+         */
+        .expaneded-modal-menu-item {
+            background: white;
+            padding: 5px;
+            margin: 5px;
+
+
+             border-width: 1px;
+            border-color: lightgray;
+            border-bottom-style: outset;
+            }
+        .sorted-logs-wrapper {
+            height: 100%;
+            max-height: 1000px;
+            overflow: scroll;
+        }
+        .expaneded-modal-new-input-container {
+            height: auto;
+            width: 550px;
+        }
+        .expaneded-modal-new-input-container > div  {
+            display: inline-flex;
+            width: 100%;
+        }
+        .expaneded-modal-new-input-container > div:nth-child(1) {
+            text-align: center;
+            font-weight: 700;
+            size:15px;
+        }
+        .expaneded-modal-new-input-container > div:last-child {
+            text-align: center;
+            padding: 5px;
+        }
+        .expaneded-modal-new-input-container > div:last-child > button {
+            background: white;
+        }
+        .expaneded-modal-new-input-container >div > span{
+            width: 50%;
+            display: inline-block;
+        }
+        .expaneded-modal-new-input-container >div > div{
+            width: 50%;
+            display: inline-block;
+        }
+        /**
+        table for showing requests
+         */
+        .table-title {
+            margin: 10px 0 10px 0;
+            text-align: center;
+            size:2rem;
+            font-weight: 700;
+        }
+        .table2 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table3 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table6 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table7 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table8 > div > span {
+            border: 1px solid lightgray;
+        }
+        .table2 > div {
+            width: 50%;
+            display: grid;
+            grid-template-columns: 1fr 1fr ;
+        }
+
+        .table3 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .table6 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+        .table7 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+        .table8 > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+        }
+
+        /**
+        animations
+         */
+        .blink-on-create  {
+             animation: blinker 1s linear;
+         }
+
+        @keyframes blinker {
+            100% {
+                background: black;
+                opacity: 0;
+            }
+        }
+
+        /**
+        Application menu
+         */
+        body {
+            margin: 0;
+        }
+        .application-menu {
+            display: inline-flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 50px;
+            width: 100%;
+            background: rgba(167, 167, 167, 0.5);
+        }
+        .application-menu-spawn-button {
+            font-weight: 700;
+            font-size: x-large;
+        }
+        .application-menu-spawn-input {
+            font-weight: 700;
+            font-size: x-large;
+        }
+        .application-logo {
+            height: 50px;
+            width: 75px;
+        }</style></head><body> <header> <div class="application-menu"> <img alt="logo" src=""> <div> <button class="application-menu-spawn-button" id="spawnConsoleButton"> Create new instance to </button> <input class="application-menu-spawn-input" id="spawnConsoleButton-input" type="number" min="1" max="20"> </div> <div></div> </div> </header> <main> </main> <script>window.zIndexHandler=0;</script> <script src="./js.8c8626c2.js"></script> </body></html>
