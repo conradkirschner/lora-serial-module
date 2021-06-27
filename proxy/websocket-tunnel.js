@@ -2,10 +2,26 @@ const httpProxy = require('http-proxy');
 const http = require("http");
 
 const configMap = {
+    1: '10.10.10.31',
+    2: '10.10.10.32',
+    3: '10.10.10.133',
+    4: '10.10.10.134',
+    5: '10.10.10.135',
+    6: '10.10.10.136',
+    7: '10.10.10.137',
+    8: '10.10.10.138',
+    9: '10.10.10.139',
     10: '10.10.10.40',
     11: '10.10.10.141',
+    12: '10.10.10.42',
+    13: '10.10.10.43',
+    14: '10.10.10.44',
     15: '10.10.10.45',
-    18: '10.10.10.45',
+    16: '10.10.10.146',
+    17: '10.10.10.147',
+    18: '10.10.10.48',
+    19: '10.10.10.149',
+    20: '10.10.10.150',
 }
 const proxyMap = {};
 for (let index in configMap) {
@@ -17,13 +33,7 @@ for (let index in configMap) {
         }
     });
 }
-const proxy = new httpProxy.createProxyServer({
-    target: {
-        host: 'localhost',
-        port: 8001,
-        ws: true
-    }
-});
+
 const proxyServer = http.createServer(function (req, res) {
     try {
         const id = parseInt(req.url.substr(1, req.url.length - 1));

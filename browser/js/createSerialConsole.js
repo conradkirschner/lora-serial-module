@@ -616,8 +616,11 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $container.style.zIndex = zIndex;
         }
         let windowFollowMouse = false;
-        $container.addEventListener('mousedown', () => {
+        $header.addEventListener('mousedown', () => {
             windowFollowMouse = true;
+            moveToTop();
+        }, false);
+        $container.addEventListener('mousedown', () => {
             moveToTop();
         }, false);
         document.addEventListener('mouseup', () => {
@@ -908,7 +911,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
         // When the connection is open, send some data to the server
         connection.onopen = function () {
-
+            connection.send('AT+RST\r\n')
         };
 
         // Log errors
