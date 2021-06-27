@@ -1,5 +1,6 @@
 import {getType} from "./../../src/client/packages/types";
 import packages from "../../src/client/packages";
+import {showError} from "./errorModal";
 
 /**
  * @var renderInto HTMLElement
@@ -381,6 +382,10 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
     renderInto.appendChild(serialConsole);
     setTimeout(()=> {
+        /**
+         * Websocket Connection
+         * @type {WebSocket}
+         */
         const connection = new WebSocket('ws://localhost:8001/'+connectToDeviceId, ['soap', 'xmpp']);
         const log = [];
         let deviceId = undefined;
@@ -390,6 +395,10 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         let zIndex = 0;
         let shouldFollow = false;
         let isFullLog = false;
+        let timeout = setTimeout(()=> {
+            closeWindow();
+            showError('Could not connect to node.')
+        }, 1000);
 
 
         const $windowCloseButton = document.querySelector(getQuerySelector(id,'window-close-button'));
@@ -896,9 +905,10 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             appendLog(data, 'input');
 
         }
+
         // When the connection is open, send some data to the server
         connection.onopen = function () {
-            connection.send('AT+RST\r\n');
+
         };
 
         // Log errors
@@ -908,6 +918,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
         // Log messages from the server
         connection.onmessage = function (e) {
+            clearTimeout(timeout);
             if(e.data.startsWith('[used][readonly][rejected]')) {
                 setReadOnly();
                 return;

@@ -1,7 +1,8 @@
 import packages from '../../src/client/packages/index';
 import * as commands from '../../src/client/commands/lora';
+import {showError} from "./errorModal";
 
-export const attachEvents = (id) => {
+export const attachEvents = (id, retryCounter = 0 ) => {
     const $log = document.querySelector(getQuerySelector(id,'log'));
     const $logContainer = document.querySelector(getQuerySelector(id,'log-container'));
     const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
@@ -16,7 +17,11 @@ export const attachEvents = (id) => {
 
     if (window.serialConsoleIds[id].actions === undefined){
         setTimeout(()=> {
-            attachEvents(id);
+            if (3 > retryCounter) {
+                showError('Could not connect to Node');
+                return;
+            }
+            attachEvents(id, ++retryCounter);
         }, 300);
         return;
     }
