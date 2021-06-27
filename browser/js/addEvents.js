@@ -102,6 +102,10 @@ export const attachEvents = (id, retryCounter = 0 ) => {
         const messagePackage = packages.send.send_text_request(parseInt(inputs[0].value), parseInt(inputs[1].value), parseInt(inputs[2].value), inputs[3].value);
         currentSerialConsole.actions.sendMessage(messagePackage);
     })
+    currentSerialConsole.elements.$menu[6].querySelector('button').addEventListener('click',()=> {
+        const messagePackage = packages.send.send_text_request_ack();
+        currentSerialConsole.actions.sendMessage(messagePackage);
+    })
     currentSerialConsole.elements.$menu[7].querySelectorAll('button')[0].addEventListener('click',()=> {
         const messagePackage = commands.getMessages()
         currentSerialConsole.actions.sendCommand(messagePackage);

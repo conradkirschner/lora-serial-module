@@ -1,3 +1,5 @@
+import terminalIcon from '../img/terminal_icon.png';
+
 import {getType} from "./../../src/client/packages/types";
 import packages from "../../src/client/packages";
 import {showError} from "./errorModal";
@@ -48,7 +50,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
 
     serialConsole.innerHTML = `
             <div style="width:100%"> <div data-id="header" class="serial-console-header">
-                <span>Serial Console -  <span data-id="device-id">...</span></span>
+                <img src="${terminalIcon}" width="32" height="32" /> <span class="serial-console-header-text">Serial Console -  <span data-id="device-id">...</span></span>
                  <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="full-log-toggle"> (active full log)</a></span>
                  <span data-id="window-close-button" class="serial-console-close-button">❌</span>
             </div></div>
@@ -972,7 +974,6 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             }
 
             const formattedLogEntry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
-            $log.classList.add('own-log-entry');
 
             $log.appendChild(formattedLogEntry);
             followLogAction();

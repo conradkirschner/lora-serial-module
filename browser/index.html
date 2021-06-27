@@ -71,6 +71,9 @@
             max-height: 400px;
             box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
             overflow: scroll;
+            padding-bottom: 10px;
+            background: rgba(6, 131, 12, 0.4);
+
         }
         .serial-console-wrapper{
             display: inline-flex;
@@ -78,6 +81,7 @@
             width: 100%;
         }
         .serial-console-window {
+            border-radius: 5px;
             position: absolute;
             min-height: 800px;
             max-height: 1200px;
@@ -133,7 +137,16 @@
             width: 100%;
             justify-content: space-between;
             border-bottom: 1px solid lightgray;
-            margin-bottom: 5px;
+        }
+        .serial-console-header-text {
+            font-weight: 700;
+            font-size: x-large;
+            margin-left: 10px;
+            display: flex;
+            align-content: center;
+        }
+        .serial-console-header > img {
+            margin:5px;
         }
         .serial-console-footer {
             display: inline-flex;
