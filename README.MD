@@ -11,11 +11,11 @@ For Blacklisting Nodes have a look in the values in /install.sh or use the [@@@B
 There are hardcoded folder paths to like /home/piu/conrad/lora-serial-module/dist
 ### Installation
 ``` # ~/ mkdir conrad && cd conrad  &&```
-``` git clone https://github.com/conradkirschner/lora-serial-module.git && cd lora-serial-module && git checkout websocket && npm ci && npm run build:bridge && npm run install:bridge ```
+``` git clone https://github.com/conradkirschner/lora-serial-module.git && cd lora-serial-module && npm ci && npm run build:bridge && npm run install:bridge ```
 
 ### Update
 ``` # ~/ cd conrad/lora-serial-module  &&```
-``` git pull && rm -rf dist && npm run build:bridge && npm run install:bridge ```
+``` git pull && rm -rf dist && npm ci && npm run build:bridge && npm run install:bridge ```
 
 ### Connection
 ``` ssh -L 8001:10.10.10.40:8001  USERNAME@gridgateway.f4.htw-berlin.de ```

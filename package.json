@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set DEVICE_ID=10 && npm run babel-node -- ./src/index.js ",
+    "start": "set DEVICE_ID=8 && npm run babel-node -- ./src/index.js ",
     "start:B": "set DEVICE_ID=11 && npm run babel-node -- ./src/index.js ",
     "start:C": "set DEVICE_ID=15 && npm run babel-node -- ./src/index.js ",
     "start:debug": "npx babel-node --inspect ./src/index.js ",
@@ -33,6 +33,7 @@
     "postcss": "^8.3.5"
   },
   "dependencies": {
+    "babel": "^6.23.0",
     "base64-js": "^1.5.1",
     "buffer": "^5.7.1",
     "core-js": "^3.15.0",

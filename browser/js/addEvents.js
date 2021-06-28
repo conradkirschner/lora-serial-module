@@ -3,18 +3,6 @@ import * as commands from '../../src/client/commands/lora';
 import {showError} from "./errorModal";
 
 export const attachEvents = (id, retryCounter = 0 ) => {
-    const $log = document.querySelector(getQuerySelector(id,'log'));
-    const $logContainer = document.querySelector(getQuerySelector(id,'log-container'));
-    const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
-    const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
-    const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
-    const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
-    const $fullLogToggleButton = document.querySelector(getQuerySelector(id, 'full-log-toggle'));
-    const $sendCommandButton = document.querySelector(getQuerySelector(id,'send-text-serial-button'));
-    const $sendCommandButtonInput = document.querySelector(getQuerySelector(id,'send-text-serial-button-input'));
-    const $followLogToggle = document.querySelector(getQuerySelector(id,'follow-log-toggle'));
-    const $container = document.querySelector('#'+ id);
-
     if (window.serialConsoleIds[id].actions === undefined){
         setTimeout(()=> {
             if (3 > retryCounter) {

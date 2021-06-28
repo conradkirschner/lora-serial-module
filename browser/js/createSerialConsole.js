@@ -3,7 +3,7 @@ import terminalIcon from '../img/terminal_icon.png';
 import {getType} from "./../../src/client/packages/types";
 import packages from "../../src/client/packages";
 import {showError} from "./errorModal";
-
+import {prefillRouteReply, prefillRouteReplyOnClick} from './predefinedRequestFormFiller';
 /**
  * @var renderInto HTMLElement
  * @param renderInto
@@ -40,6 +40,15 @@ const formatBinaryInput = ( sended, showText = '' )=> {
    return showText.substring(0, showText.length -1 ) ;
 }
 export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents) => {
+    const log = [];
+    let deviceId = undefined;
+    let isReadOnly = undefined;
+    let blacklist = undefined;
+    let lan = undefined;
+    let zIndex = 0;
+    let shouldFollow = false;
+    let isFullLog = false;
+
     /**
      * first create container
      **/
@@ -49,13 +58,129 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
     serialConsole.classList.add('serial-console-window');
 
     serialConsole.innerHTML = `
-            <div style="width:100%"> <div data-id="header" class="serial-console-header">
-                <img src="${terminalIcon}" width="32" height="32" /> <span class="serial-console-header-text">Serial Console -  <span data-id="device-id">...</span></span>
-                 <span data-id="readonly-label" class="readonly-label hidden">readonly <a class="full-log-toggle"  href="javascript:false" data-id="full-log-toggle"> (active full log)</a></span>
-                 <span data-id="window-close-button" class="serial-console-close-button">❌</span>
-            </div></div>
-            <div class="serial-console-wrapper">
-            <div data-id="serial-console-container" class="serial-console-container serial-console-container--active">
+            <div style="width:100%">
+                <div data-id="header" class="serial-console-header">
+                    <img src="${terminalIcon}" width="32" height="32" />
+                     <span class="serial-console-header-text">Serial Console -  
+                        <span data-id="device-id">...</span> 
+                        <span data-id="readonly-label" class="readonly-label hidden">
+                             readonly 
+                            <a class="full-log-toggle"  href="javascript:false" data-id="full-log-toggle"> 
+                             (active full log) 
+                            </a>
+                        </span>
+                    </span>
+                    <span data-id="window-close-button" class="serial-console-close-button">❌</span>
+                </div>
+            </div>
+            <div data-id="serial-console-header-sub-menu" class="serial-console-header-sub-menu">
+                <span> 
+                    <button data-id="show-tab-start" >Start</button>
+                    <button data-id="show-tab-routes" >Routes</button>
+                    <button data-id="show-tab-training" >Training</button>
+                </span>
+                <span>
+                    <button data-id="show-tab-about" >About</button>
+                </span>
+            </div>
+            <div data-id="serial-console-container-tab-training" class="serial-console-wrapper hidden">
+                <div class="serial-console-container-tab-training serial-console-container--active">
+                    <div style="text-align: center">
+                        <h3>Training Session</h3>
+                    </div>
+                    <div style="text-align: center">
+                        Here you learn how you have to act when a Package arrives.
+                    </div>
+                    <div style="text-align: center">
+                        <button> START TRAINING SESSION </button>
+                    </div>
+                    <div style="text-align: center">
+                        <button> TRY OUT EXAMPLE </button>
+                    </div>
+                </div>
+
+            </div>
+            <div data-id="serial-console-container-tab-routes" class="serial-console-wrapper hidden">
+                <div class="serial-console-container-tab-routes serial-console-container--active">
+                    <div class="tab-headline">
+                        <h3>Current Routes of Node</h3>
+                    </div>
+                    <div>
+                        <div class="table7" data-id="log-route-table">
+                            <div data-delete="false">
+                                <span>Next Node</span>
+                                <span>Hop Count</span>
+                                <span>Request Id</span>
+                                <span>Sequence Number</span>
+                                <span>Precursors</span>
+                                <span>Expiring Time</span>
+                                <span>Valid</span>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="tab-headline">
+                        <h3>Routes fetched over UI</h3>
+                    </div>
+                    <div>
+                        <div class="table7" data-id="log-route-table">
+                            <div data-delete="false">
+                                <span>Next Node</span>
+                                <span>Hop Count</span>
+                                <span>Request Id</span>
+                                <span>Sequence Number</span>
+                                <span>Precursors</span>
+                                <span>Expiring Time</span>
+                                <span>Valid</span>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="tab-headline">
+                        <h3>Routes from Training</h3>
+                    </div>
+                    <div>
+                        <div class="table7" data-id="log-route-table">
+                            <div data-delete="false">
+                                <span>Next Node</span>
+                                <span>Hop Count</span>
+                                <span>Request Id</span>
+                                <span>Sequence Number</span>
+                                <span>Precursors</span>
+                                <span>Expiring Time</span>
+                                <span>Valid</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-id="serial-console-container-tab-about" class="serial-console-wrapper hidden">
+                <div class="serial-console-container-tab-about serial-console-container--active">
+                   <div class="tab-headline">
+                        <h3>About <span data-id="serial-console-container-tab-about-device-id"></span></h3>
+                    </div>
+                        <div>
+                            <h4>Standort</h4>
+                            <div><a target="_blank" href="https://www.htw-berlin.de/files/Presse/Lageplaene/Lageplan_WH_DE.pdf">Gebäude A - Etage 3</a></div>
+                        </div>
+                        <div>
+                            <h4>Device Infos</h4>
+                        </div>
+                        <div>
+                            <div>
+                                <a href="https://moodle.htw-berlin.de/pluginfile.php/1177782/mod_resource/content/0/HIMO_AT_Cmmands.pdf" target="_blank">
+                                    Ting-01M AT-Befehlssatz
+                                </a> 
+                            </div>
+                            <div>
+                                <a href="https://lora-alliance.org/" target="_blank">
+                                    <img width="200px" height="100px" src="https://lora-alliance.org/wp-content/uploads/2020/09/logo.svg" />
+                                </a> 
+                            </div>
+                        </div>
+                        
+                </div>
+            </div>
+            <div data-id="serial-console-container-tab-start" class="serial-console-wrapper">
+                <div data-id="serial-console-container" class="serial-console-container serial-console-container--active">
 
             <div data-id="status-bar">
                 <div> Ist im Wlan: <span data-id="is-lan">...</span></div>
@@ -111,8 +236,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                         <div>Route Reply</div>
                         <div><span>Hop Count</span><span><input type="text" value="1"></span> </div>
                         <div><span>Origin Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
-                        <div><span>Origin Sequence Number</span><span><input type="text" value="1"></span> </div>
                         <div><span>Destination Address</span><span><input type="number" min="1" max="20" value="1"></span> </div>
+                        <div><span>Origin Sequence Number</span><span><input type="text" value="1"></span> </div>
                         <div><span>Lifetime</span><span><input type="number" min="1" max="20" value="1"></span> </div>
                         <div><button>senden</button> </div>
                     </div>
@@ -149,8 +274,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                          <div><span>Destination (FFFF = Broadcast)</span><span><input type="text" maxlength="30" value="FFFF"></span> </div>
                         <div><button>Set Destination</button></div>
                         <hr>
-                         <div><span>Address (1-20)</span><span><input type="text" maxlength="30" value="15"></span> </div>
-                        <div><button>Set Addressf</button></div>
+                         <div><span>Address (1-20)</span><span><input data-id="set-address-input-device-id" type="text" maxlength="30" value="${deviceId}"></span> </div>
+                        <div><button>Set Address</button></div>
                     </div>
                      <div class="expaneded-modal-new-input-container hidden" data-id="expaneded-modal-lora-config">
                         <div>Lora Config</div>
@@ -290,12 +415,12 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 </div>
             </div>
             </div>
-            <div class="sorted-logs-wrapper">
+                <div class="sorted-logs-wrapper">
                 <div data-id="expaneded-modal-new-input-container">
                 <div>
                     <div class="table-title">Route Requests</div>
                     <div class="table8" data-id="log-route-request">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>U-Flag</span>
@@ -310,7 +435,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div>
                     <div class="table-title">Route Reply</div>
                     <div class="table7" data-id="log-route-reply">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>Hop Count</span>
@@ -324,7 +449,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div>
                     <div class="table-title">Route Errors</div>
                     <div class="table7" data-id="log-route-error">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>Destination Count</span>
@@ -338,7 +463,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div>
                     <div class="table-title">Send Text Request</div>
                     <div class="table6" data-id="log-send-text-request">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>Origin Address</span>
@@ -351,7 +476,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 <div>
                     <div class="table-title">Route Reply Acknowledge</div>
                     <div class="table2" data-id="log-route-reply-ack">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                         </div>
@@ -359,18 +484,20 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 </div>
                 <div>
                     <div class="table-title">Send Text Request Acknowledge</div>
-                    <div class="table3" data-id="log-send-text-ack">
-                        <div>
+                    <div class="table5" data-id="log-send-text-ack">
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>Origin Address</span>
+                            <span>Destination Address</span>
+                            <span>Message Sequence Number</span>
                         </div>
                     </div>
                 </div>
                   <div>
                     <div class="table-title">Send Hop Acknowledge</div>
                     <div class="table3" data-id="log-send-hop-ack">
-                        <div>
+                        <div data-delete="false">
                             <span>Time</span>
                             <span>Sender</span>
                             <span>Message Sequence Number</span>
@@ -379,7 +506,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 </div>
                 </div>
             </div>
-</div>
+            </div>
     `;
 
     renderInto.appendChild(serialConsole);
@@ -388,26 +515,25 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
          * Websocket Connection
          * @type {WebSocket}
          */
-        const connection = new WebSocket('ws://localhost:8001/'+connectToDeviceId, ['soap', 'xmpp']);
-        const log = [];
-        let deviceId = undefined;
-        let isReadOnly = undefined;
-        let blacklist = undefined;
-        let lan = undefined;
-        let zIndex = 0;
-        let shouldFollow = false;
-        let isFullLog = false;
+        const connection = new WebSocket('ws://localhost:8000/'+connectToDeviceId, ['soap', 'xmpp']);
+
         let timeout = setTimeout(()=> {
             closeWindow();
             showError('Could not connect to node.')
         }, 1000);
 
 
+
+        /**
+         *
+         * @type {any}
+         */
         const $windowCloseButton = document.querySelector(getQuerySelector(id,'window-close-button'));
         const $header = document.querySelector(getQuerySelector(id,'header'));
         const $log = document.querySelector(getQuerySelector(id,'log'));
         const $logContainer = document.querySelector(getQuerySelector(id,'log-container'));
         const $deviceId = document.querySelector(getQuerySelector(id, 'device-id'));
+        const $tabAboutDeviceId = document.querySelector(getQuerySelector(id, 'serial-console-container-tab-about-device-id'));
         const $readonlyLabel = document.querySelector(getQuerySelector(id, 'readonly-label'));
         const $blacklist = document.querySelector(getQuerySelector(id ,'blacklist'));
         const $lanContainer = document.querySelector(getQuerySelector(id, 'is-lan'));
@@ -417,6 +543,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const $followLogToggle = document.querySelector(getQuerySelector(id,'follow-log-toggle'));
         const $serialConsoleContainer = document.querySelector(getQuerySelector(id,'serial-console-container'));
 
+        const $setAddressDeviceId = document.querySelector(getQuerySelector(id, 'set-address-input-device-id'));
         /**
          * Table Log
          */
@@ -518,7 +645,9 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                     row.innerHTML = `
 <span>${formattedTimestamp()}</span>
 <span>${sender}</span>
-<span>${payloadObject.originAddress}</span>`;
+<span>${payloadObject.originAddress}</span>
+<span>${payloadObject.destinationAddress}</span>
+<span>${payloadObject.messageNumber}</span>`;
                     $logSendTextAck.appendChild(row)
                     break;
             }
@@ -551,6 +680,42 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const $manageReceiving = document.querySelector(getQuerySelector(id,'expaneded-modal-manage-receiving'));
         const $loraConfig = document.querySelector(getQuerySelector(id,'expaneded-modal-lora-config'));
         /**
+         * Tab Handling
+         */
+        const $showStartButton = document.querySelector(getQuerySelector(id,'show-tab-start'));
+        const $showRoutesButton = document.querySelector(getQuerySelector(id,'show-tab-routes'));
+        const $showAboutButton = document.querySelector(getQuerySelector(id,'show-tab-about'));
+        const $showTrainingButton = document.querySelector(getQuerySelector(id,'show-tab-training'));
+
+        const $tabStart = document.querySelector(getQuerySelector(id,'serial-console-container-tab-start'));
+        const $tabRoutes = document.querySelector(getQuerySelector(id,'serial-console-container-tab-routes'));
+        const $tabAbout = document.querySelector(getQuerySelector(id,'serial-console-container-tab-about'));
+        const $tabTraining = document.querySelector(getQuerySelector(id,'serial-console-container-tab-training'));
+
+        const tabHandlerArray = [
+            {button: $showStartButton, tab: $tabStart},
+            {button: $showRoutesButton, tab: $tabRoutes},
+            {button: $showAboutButton, tab: $tabAbout},
+            {button: $showTrainingButton, tab: $tabTraining},
+        ];
+
+        tabHandlerArray.forEach((currentTab)=> {
+            const currentTabId = currentTab.tab.dataset.id;
+            const currentButtonId = currentTab.button.dataset.id;
+
+            currentTab.button.addEventListener('click',(e)=> {
+                const clickedButtonId = e.target.dataset.id;
+                tabHandlerArray.forEach((loopTab) => {
+                    debugger;
+                    if (clickedButtonId === loopTab.button.dataset.id) {
+                        loopTab.tab.classList.remove('hidden');
+                    } else {
+                        loopTab.tab.classList.add('hidden');
+                    }
+                });
+            })
+        })
+        /**
          * Root Container
          **/
         const $container = document.querySelector('#'+ id);
@@ -576,11 +741,12 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             $showManageReceiving,
             $showLoraConfig,
         ];
-
         const elements = {
+            tabHandlerArray,
             $windowCloseButton,
             $header,
             $log,
+            $setAddressDeviceId,
             $logContainer,
             $deviceId,
             $readonlyLabel,
@@ -628,6 +794,10 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         document.addEventListener('mouseup', () => {
             windowFollowMouse = false;
         }, false);
+        window.addEventListener('mouse-left-window', () => {
+            windowFollowMouse = false;
+        }, false);
+
         window.addEventListener('mousemove', (event) => {
             if (windowFollowMouse) {
                 var deltaX = event.movementX;
@@ -709,6 +879,24 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             }
             $loraConfig.classList.remove('hidden');
         }
+        const tabShowActions = {
+            showNewRouteRequest,
+            showNewRouteReply,
+            showNewRouteReplyAck,
+            showNewRouteError,
+            showNewHopAcknowledge,
+            showNewTextRequest,
+            showNewTextRequestAck,
+            showManageReciving,
+            showLoraConfig
+        }
+
+
+
+        /**
+         *
+         * @type {boolean}
+         */
         let once = false;
         const toggleFullLog = (oneTimeFlag) => {
             if (once && oneTimeFlag === true) {
@@ -772,6 +960,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             let showText = 'BINARY PACKAGE:  [';
             if (sended[0] === 'A'  && sended[1] === 'T' ) {
                 showText = sended;
+                newLogEntry.classList.add('lora-command');
             } else if (sended[0] === 'L'  && sended[1] === 'R' )  {
 
             } else {
@@ -827,6 +1016,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
         const setDeviceId = (newDeviceId) => {
             deviceId = newDeviceId;
             $deviceId.innerText = deviceId;
+            $tabAboutDeviceId.innerText = deviceId;
+            $setAddressDeviceId.value = newDeviceId;
         }
         const getDeviceId = () => {
             return deviceId;
@@ -858,6 +1049,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
                 }
                 _appendLogFormatted(sender, type, payloadDataWithoutType, isOwn);
             } else {
+                logentry.classList.add('lora-command');
                 $log.appendChild(logentry);
             }
 
@@ -896,6 +1088,7 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             } else {
                 logentry.classList.add('other-log-entry');
             }
+            prefillRouteReplyOnClick(logentry, type,deviceId, binaryAsJson, tabShowActions);
             $log.appendChild(logentry);
             followLogAction();
             /**
@@ -976,6 +1169,8 @@ export const createSerialConsole = (renderInto, connectToDeviceId, attachEvents)
             const formattedLogEntry = createLogEntryTemplate(`[${formattedTimestamp()}][${parseInt(deviceId).toString().padStart(2,'0')}] (${type})` + JSON.stringify(binaryAsJson), type);
 
             $log.appendChild(formattedLogEntry);
+            prefillRouteReplyOnClick(formattedLogEntry, type, deviceId, binaryAsJson, tabShowActions);
+
             followLogAction();
             /**
              * Add to sorted log
