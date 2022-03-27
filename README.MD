@@ -1,4 +1,13 @@
 # Serial Lora Multi Hop Chat App 
+## Overview 
+This Project is an Education Software for a Multi-Hop Routing Chat Application.  
+With this, it's possible to create a test network for the lora modules.  
+(You can activate and deactivate the modules)  
+
+It also allows an interception Mode to see if the protocol is correct implemented. 
+## Preview
+![Alt Text](./img/sample-preview.gif)
+
 
 ## WS Bridge
 ### Usage
